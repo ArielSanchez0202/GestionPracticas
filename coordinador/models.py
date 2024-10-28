@@ -21,13 +21,19 @@ class Estudiante(models.Model):
 
 # Modelo Práctica
 class Practica(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-    estado = models.CharField(max_length=50)
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('en_progreso', 'En Progreso'),
+        ('finalizada', 'Finalizada'),
+    ]
+
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='practicas')
+    estado = models.CharField(max_length=50, choices=ESTADO_CHOICES, default='pendiente')
     fecha_inscripcion = models.DateField()
 
     def __str__(self):
-        return f'Práctica {self.pk} - {self.estado}'
-
+        return f'Práctica {self.pk} - {self.get_estado_display()}'
+    
 # Modelo Ficha de Inscripción
 class FichaInscripcion(models.Model):
     practica = models.ForeignKey(Practica, on_delete=models.CASCADE)

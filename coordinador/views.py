@@ -1,3 +1,6 @@
+import secrets
+import string
+from django.conf import settings
 import pandas as pd
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render, redirect
@@ -6,6 +9,11 @@ from .models import Estudiante
 from django.http import HttpResponse
 import openpyxl
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+def generar_contrasena(length=8):
+    """Genera una contraseña aleatoria."""
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(secrets.choice(caracteres) for _ in range(length))
 
 def agregar_estudiante(request):
     if request.method == 'POST':
@@ -16,27 +24,52 @@ def agregar_estudiante(request):
         telefono = request.POST.get('telefono')
         carrera = request.POST.get('carrera')
         
+        # Comprobar si el RUT ya está registrado
         if User.objects.filter(username=rut).exists():
             messages.error(request, "El RUT ya está registrado.")
             return redirect('coordinador:agregar_estudiante')
 
-        usuario = User.objects.create_user(username=rut, email=email, first_name=nombre)
-        usuario.set_password('password123')
-        usuario.save()
+        try:
+            # Generar una contraseña aleatoria
+            contrasena = generar_contrasena()
 
-        grupo, _ = Group.objects.get_or_create(name='Estudiantes')
-        usuario.groups.add(grupo)
+            # Crear el usuario
+            usuario = User.objects.create_user(username=rut, email=email, first_name=nombre)
+            usuario.set_password(contrasena)
+            usuario.save()
 
-        estudiante = Estudiante(
-            usuario=usuario,
-            rut=rut,
-            domicilio=domicilio,
-            carrera=carrera
-        )
-        estudiante.save()
+            # Asignar al grupo 'Estudiantes'
+            grupo, _ = Group.objects.get_or_create(name='Estudiante')
+            usuario.groups.add(grupo)
 
-        messages.success(request, "Estudiante agregado exitosamente.")
-        return redirect('coordinador:listar_estudiantes')
+            # Crear el perfil del estudiante
+            estudiante = Estudiante(
+                usuario=usuario,
+                rut=rut,
+                domicilio=domicilio,
+                carrera=carrera,
+                numero_telefono=telefono  # Asegúrate de que este campo esté en tu modelo
+            )
+            estudiante.save()
+
+            # Enviar el correo electrónico con las credenciales
+            send_mail(
+                'Credenciales de acceso',
+                f'Hola {nombre},\n\nTu cuenta ha sido creada exitosamente.\n'
+                f'Tu RUT: {rut}\nTu contraseña: {contrasena}\n\n'
+                'Por favor, cambia tu contraseña después de iniciar sesión.',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            messages.success(request, f"Estudiante '{nombre}' agregado exitosamente. Las credenciales han sido enviadas al correo.")
+            return redirect('coordinador:listar_estudiantes')
+        
+        except Exception as e:
+            messages.error(request, f"Error al agregar estudiante: {e}")
+            return redirect('coordinador:agregar_estudiante')
+
     return render(request, 'coordinador/agregar_estudiante.html')
 
 
@@ -75,7 +108,7 @@ def previsualizar_estudiantes(request):
                 usuario.set_password('password123')
                 usuario.save()
 
-                grupo, _ = Group.objects.get_or_create(name='Estudiantes')
+                grupo, _ = Group.objects.get_or_create(name='Estudiante')
                 usuario.groups.add(grupo)
 
                 estudiante = Estudiante(

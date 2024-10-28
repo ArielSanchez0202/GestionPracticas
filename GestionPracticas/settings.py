@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'autenticacion',
     'coordinador',
     'core',
     'estudiante',
+    'autenticacion',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
-        'PASSWORD': '692001',
+        'PASSWORD': 'Futrilla',
         'HOST': 'localhost',
         'PORT': '5432',
     }
