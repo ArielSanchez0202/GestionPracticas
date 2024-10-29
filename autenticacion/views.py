@@ -1,6 +1,5 @@
-from django.contrib.auth import logout
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SendMailForm, SetPasswordForm
 from django.contrib.auth.forms import SetPasswordForm
@@ -13,6 +12,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.contrib import messages
 from .models import User 
+
 # Create your views here.
 def user_login(request):
     if request.method == 'POST':
@@ -38,6 +38,7 @@ def user_login(request):
             messages.error(request, "No existe un usuario con ese correo electrónico.")
     
     return render(request, 'login.html')  # Asegúrate de que este template esté en la carpeta correcta
+
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = SetPasswordForm
     success_url = reverse_lazy('password_reset_complete')
@@ -55,6 +56,6 @@ class SendMailConfirmView(View):
             return render(request, 'password_reset_done.html')
         return render(request, 'password_reset_form.html', {'form': form})
 
-#Login Vacío, BORRAR AL IMPLEMENTAR
-def login_view(request):
-    return render(request, 'login.html')
+def logout_view(request):
+    logout(request)
+    return redirect('home')

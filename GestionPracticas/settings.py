@@ -59,7 +59,7 @@ ROOT_URLCONF = 'GestionPracticas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [r"D:\Users\alexm\.git\Git\GestionPracticas\templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
-        'PASSWORD': 'Futrilla',
+        'PASSWORD': '692001',
         'HOST': 'localhost',
         'PORT': '5432',
     }
