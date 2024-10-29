@@ -124,12 +124,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
-STATIC_ROOT = 'core/static/'
+# Ruta para los archivos estáticos en desarrollo
+STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'core','static','core')
+# Directorio donde Django buscará archivos estáticos adicionales
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')  # Esto apunta a la carpeta 'static' en tu proyecto principal
+]
+
+# Directorio donde se recopilarán todos los archivos estáticos cuando se ejecute 'collectstatic'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Esto debería ser un directorio separado
 
 LOGIN_REDIRECT_URL = 'check_profile'
 LOGOUT_REDIRECT_URL = 'login'

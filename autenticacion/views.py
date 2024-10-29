@@ -32,9 +32,6 @@ def user_login(request):
                     return redirect('coordinador:listar_estudiantes')  # Cambia esto por la URL del coordinador
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiante:estudiantes_main')  # Cambia esto por la URL del estudiante
-                else:
-                    return redirect('home')  # URL predeterminada
-
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
         except User.DoesNotExist:
