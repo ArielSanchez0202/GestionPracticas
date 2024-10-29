@@ -1,0 +1,306 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% load static %}
+{% block content %}
+    <style>
+        /* Contenedor principal de la página de carga masiva */
+        .carga-masiva-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #D4D5DB;
+            padding-top: 50px;
+            padding-left: 100px;
+        }
+        /* Estilos para el título */
+        .carga-masiva-container h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            margin-left: -100px;
+        }
+        /* Contenedor para los botones de descargar y subir */
+        .botones-carga {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+        }
+        /* Estilos de los botones */
+        .btn {
+            background-color: #DD211C;
+            color: white;
+            padding: 15px 40px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #C11A18;
+        }
+        .btn-descargar {
+            margin-right: 50px;
+        }
+        /* Estilos del pop-up modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #D9D9D9;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 500px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .modal-content h2 {
+            font-size: 1.8rem;
+            color: #0F0F0F;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            margin-bottom: 40px;
+        }
+        /* Contenedor de carga de archivo con líneas punteadas */
+        .file-upload {
+            border: 2px dashed #000000;
+            padding: 60px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            background-color: #F5F5F5;
+            width: 100%;
+        }
+        .file-upload input[type="file"] {
+            display: none;
+        }
+        .file-upload i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        /* Imagen SVG dentro de la carga de archivo */
+        .file-upload img {
+            width: 80px;
+            margin-bottom: 10px;
+        }
+        /* Asegurar que los elementos internos no se desborden del área del contenedor */
+        .file-upload p {
+            margin: 15px 0;
+            color: #0F0F0F;
+            word-wrap: break-word;
+        }
+        /* Texto de formato soportado */
+        .file-upload .formatos {
+            font-size: 0.9rem;
+            color: #999;
+            margin-top: 10px;
+        }
+        .file-details {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 5px;
+            margin-top: 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            background-color: #f9fff9;
+            max-width: 100%;  /* Ajustar el ancho máximo para evitar desbordamientos */
+            overflow: hidden; /* Evitar desbordamientos */
+            text-overflow: ellipsis; /* Mostrar '...' si el nombre es muy largo */
+        }
+        /* El nombre del archivo no se desborda */
+        .file-details p {
+            margin: 0;
+            font-size: 1rem;
+            color: #0F0F0F;
+            white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .file-details img {
+            width: 30px;
+            height: 26px;
+            cursor: pointer;
+            margin-left: 15px;
+            margin-top: 5px;
+            transition: transform 0.2s ease;
+        }
+        .file-details img:hover {
+            transform: scale(1.1);
+        }
+        .modal .close-btn {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 2.5% 20%;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1rem;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .modal .close-btn:hover {
+            background-color: #C11A18;
+        }
+        /* Estilos para la tabla de previsualización */
+        .table-preview {
+            width: 80%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .table-preview th, .table-preview td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .table-preview th {
+            background-color: #333;
+            color: white;
+        }
+        .btn-add-list {
+            background-color: #DD211C;
+            color: white;
+            padding: 15px 40px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        .form-upload {
+            width: 80%;
+            max-width: 600px; /* Establece un ancho máximo para no excederse */
+            margin: 20px auto; /* Centra el formulario horizontalmente */
+            padding: 85px; /* Agrega espacio interno */
+            background-color: #f0f0f0;
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Sombra para destacar el formulario */
+        }
+        /* Ajustar la altura según sea necesario */
+        .form-upload {
+            height: auto; /* Si quieres que se ajuste automáticamente al contenido */
+            min-height: 300px;
+        }
+    </style>
+    <div class="carga-masiva-container">
+        <h1>Carga Masiva</h1>
+        <div class="botones-carga">
+            <a href="{% url 'coordinador:descargar_plantilla_estudiantes' %}" class="btn btn-descargar">Descargar Plantilla</a>
+            <button class="btn" id="btnSubirCarga">Subir Carga Masiva</button>
+        </div>
+        {% if estudiantes %}
+        <!-- Tabla de previsualización -->
+        <table class="table-preview" id="tablePreview">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>RUT</th>
+                    <th>Domicilio</th>
+                    <th>Correo Electrónico</th>
+                    <th>Carrera</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{ estudiante.Nombre }}</td>
+                    <td>{{ estudiante.RUT }}</td>
+                    <td>{{ estudiante.Domicilio }}</td>
+                    <td>{{ estudiante.CorreoElectronico }}</td>
+                    <td>{{ estudiante.Carrera }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Botón "Añadir Listado" -->
+        <form method="POST" action="{% url 'coordinador:previsualizar_estudiantes' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-add-list">Añadir Listado</button>
+        </form>
+        {% elif error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+    </div>
+    <!-- Modal para subir archivo -->
+    <div id="modalSubirArchivo" class="modal">
+        <div class="modal-content">
+            <form method="POST" enctype="multipart/form-data" id="formSubirArchivo" class="form-upload">
+                {% csrf_token %}
+                <label class="file-upload" for="archivo">
+                    <h2>Subir Carga Masiva</h2>
+                    <img src="{% static 'Subir_png.svg' %}" alt="Icono de subir archivo">
+                    <p>Busca un archivo o arrástralo aquí</p>
+                    <input type="file" id="archivo" name="archivo" accept=".xlsx">
+                    <div id="fileDetails" class="file-details" style="display: none;">
+                        <p id="fileName"></p>
+                        <img src="{% static 'Delete.svg' %}" id="deleteFile" alt="Eliminar archivo">
+                    </div>
+                </label>
+                <button class="close-btn" type="submit" id="submitBtn">Subir Archivo</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        const modal = document.getElementById('modalSubirArchivo');
+        const btnSubirCarga = document.getElementById('btnSubirCarga');
+        const inputFile = document.getElementById('archivo');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('formSubirArchivo');
+        const fileDetails = document.getElementById('fileDetails');
+        const fileName = document.getElementById('fileName');
+        const deleteFile = document.getElementById('deleteFile');
+        // Mostrar modal al hacer clic en "Subir Carga Masiva"
+        btnSubirCarga.onclick = function() {
+            modal.style.display = 'flex';
+        };
+        // Mostrar el nombre del archivo seleccionado
+        inputFile.onchange = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+                fileDetails.style.display = 'flex';
+            }
+        };
+        // Eliminar el archivo seleccionado
+        deleteFile.onclick = function() {
+            inputFile.value = ''; // Limpia el input file
+            fileDetails.style.display = 'none'; // Oculta los detalles del archivo
+        };
+        // Cerrar el modal si se hace clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+{% endblock %}

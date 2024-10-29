@@ -1,0 +1,48 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Estudiantes</title>
+</head>
+<body>
+    <h1>Listado de Estudiantes</h1>
+
+    <!-- Botón para añadir estudiantes -->
+    <div style="margin-bottom: 20px;">
+        <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Añadir Estudiantes</button>
+    </div>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>RUT</th>
+                <th>Domicilio</th>
+                <th>Carrera</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiantes %}
+            <tr>
+                <td>{{ estudiante.pk }}</td>
+                <td>{{ estudiante.usuario.nombre }}</td>
+                <td>{{ estudiante.usuario.correo }}</td>
+                <td>{{ estudiante.rut }}</td>
+                <td>{{ estudiante.domicilio }}</td>
+                <td>{{ estudiante.carrera }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No hay estudiantes registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+{% endblock %}
