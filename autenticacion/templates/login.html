@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Prácticas</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+    </style>
+</head>
+<body class="mainbody">
+    <img class="imagen_login" src="{% static 'images2.jpg' %}">
+    <form id="loginForm" method="post">
+        {% csrf_token %}
+        <img src="{% static 'images3.jpg' %}">
+        <h1>Nombre de usuario</h1>
+        <input type="text" name="username" id="username">
+        <h2>Contraseña</h2>
+        <input type="password" name="password" id="password">
+        <button type="submit">Iniciar sesión</button>
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+
+            loginForm.addEventListener('submit', function(event) {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+
+                if (username === '' || password === '') {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Faltan credenciales',
+                        text: "Los campos de usuario y contraseña no pueden estar vacíos.",
+                        icon: 'error'
+                    });
+                } else {
+                    console.log("Enviando formulario...");  // Para verificar
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

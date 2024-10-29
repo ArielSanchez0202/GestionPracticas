@@ -136,10 +136,10 @@ LOGOUT_REDIRECT_URL = 'login'
 
 #Emails
 DEFAULT_FROM_EMAIL = "envios@dominio.cl"#agregue un correo que aparecerá en el correo enviado, este no necesariamente debe ser una casilla que exista
-EMAIL_HOST = 'mail.dominio.cl'#servidor de salida del proveedor de correo, por lo general se usa smtp.dominio
+EMAIL_HOST = 'smtp.gmail.com' #servidor de salida del proveedor de correo, por lo general se usa smtp.dominio
 EMAIL_PORT = 587 #Puerto del servidor de salida, el proveedor de correo debe indicar el puerto que usará
-EMAIL_HOST_USER = 'correo@dominio.cl'#correo que se usará para el envio, esta casilla debe existir en el servidor
-EMAIL_HOST_PASSWORD = 'XXXXXXX'#contraseña de acceso del correo usado en el paso anterior
+EMAIL_HOST_USER = 'vicente.menaalbornoz@gmail.com'#correo que se usará para el envio, esta casilla debe existir en el servidor
+EMAIL_HOST_PASSWORD = 'wpfp vmlv mcam wjjp'#contraseña de acceso del correo usado en el paso anterior
 EMAIL_USE_TLS = True #habilita el protocolo de seguridad que cifra los correos
 
 MANIFEST_LOADER = {
