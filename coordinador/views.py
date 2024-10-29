@@ -3,7 +3,7 @@ import string
 from django.conf import settings
 import pandas as pd
 from django.contrib.auth.models import User, Group
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from .models import Estudiante
 from django.http import HttpResponse
@@ -139,3 +139,27 @@ def descargar_plantilla_estudiantes(request):
 def listar_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     return render(request, 'coordinador/listar_estudiantes.html', {'estudiantes': estudiantes})
+
+def editar_estudiante(request, estudiante_id):
+    estudiante = get_object_or_404(Estudiante, id=estudiante_id)
+
+    if request.method == 'POST':
+        # Extraer los datos del formulario manualmente
+        estudiante.usuario.first_name = request.POST.get('nombre')
+        estudiante.usuario.email = request.POST.get('correo')
+        estudiante.rut = request.POST.get('rut')
+        estudiante.domicilio = request.POST.get('domicilio')
+        estudiante.carrera = request.POST.get('carrera')
+
+        # Guardar los cambios en el modelo Usuario y Estudiante
+        estudiante.usuario.save()
+        estudiante.save()
+
+        return redirect('coordinador:listado_estudiantes')  # Redirige al listado de estudiantes después de editar
+
+    return render(request, 'coordinador/editar_estudiante.html', {'estudiante': estudiante})
+
+def detalle_estudiante(request, estudiante_id):
+    estudiante = get_object_or_404(Estudiante, id=estudiante_id)
+
+    return render(request, 'coordinador/detalle_estudiante.html', {'estudiante': estudiante})

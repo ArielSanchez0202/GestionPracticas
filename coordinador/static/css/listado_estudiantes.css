@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Jost', sans-serif;
+    background-color: #CBCFD2;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 64px;
+    font-weight: 500;
+    text-align: left;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botón de Añadir Estudiantes */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.button-container button {
+    background-color: #E74C3C;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #C0392B;
+}
+
+/* Barra de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    width: 100%;
+    max-width: 1000px; /* Ancho extendido de la barra de búsqueda */
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #CCC;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-container button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+    background-color: #555;
+}
+
+/* Tarjetas de estudiantes */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Íconos de acción */
+.card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.card-actions button img {
+    width: 24px;
+    height: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.card-actions button:hover img {
+    opacity: 0.7;
+}
+
+/* Responsividad */
+@media (min-width: 768px) {
+    .table-container {
+        flex-direction: column;
+    }
+}
