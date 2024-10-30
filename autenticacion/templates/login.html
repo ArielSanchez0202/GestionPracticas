@@ -5,31 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Incluye tu CSS aquí -->
+    <link rel="stylesheet" href="{% static 'css/styles_login.css' %}">
+    <style>
+        /* Fondo directamente en el HTML */
+        body {
+            background-image: url("{% static 'img/fondo.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Iniciar Sesión</h2>
-        
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <strong>Error:</strong> {{ form.errors.non_field_errors }}
-            </div>
-        {% endif %}
-        
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="email">Correo electrónico:</label>
-                <input type="email" name="email" id="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-        
+    <div class="background">
+        <div class="logo">
+            <img src="{% static 'img/universidad_logo.png' %}" alt="Logo Universidad Autónoma de Chile" style="width: 100%; max-width: 300px;">
+        </div>
+        <div class="container">
+            <h2>Iniciar Sesión</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
