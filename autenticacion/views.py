@@ -8,8 +8,8 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.views import View
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str, force_bytes
 from django.contrib import messages
 from .models import User 
 
@@ -51,9 +51,28 @@ class SendMailConfirmView(View):
     def post(self, request):
         form = SendMailForm(request.POST)
         if form.is_valid():
-            # Lógica para enviar el correo
-            # ...
-            return render(request, 'password_reset_done.html')
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+
+            # Generar el token de restablecimiento de contraseña
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Enviar el correo electrónico con el enlace de restablecimiento
+            password_reset_url = request.build_absolute_uri(
+                reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+            )
+            send_mail(
+                subject='Restablecimiento de contraseña',
+                message=f'Usa el siguiente enlace para restablecer tu contraseña: {password_reset_url}',
+                from_email='tu_email@dominio.com',
+                recipient_list=[email],
+            )
+
+            # Redirigir a la página de confirmación si el correo fue enviado exitosamente
+            return redirect('password_reset_done')
+
+        # Mostrar el error en la misma página si el correo no es válido
         return render(request, 'password_reset_form.html', {'form': form})
 
 def logout_view(request):
