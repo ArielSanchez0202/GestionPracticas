@@ -1,48 +1,52 @@
-{% comment %} {% extends 'base.html' %} {% endcomment %}
-{% block content %}
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Estudiantes</title>
+    <link rel="stylesheet" href="{% static 'css/listado_estudiantes.css' %}">
+    <script src="{% static 'js/busqueda_estudiantes.js' %}" defer></script>
 </head>
 <body>
-    <h1>Listado de Estudiantes</h1>
+    <div class="container">
+        <h1>Listado de Estudiantes</h1>
 
-    <!-- Botón para añadir estudiantes -->
-    <div style="margin-bottom: 20px;">
-        <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Añadir Estudiantes</button>
-    </div>
+        <!-- Botón para añadir estudiantes -->
+        <div class="button-container">
+            <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Añadir Estudiantes</button>
+        </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>RUT</th>
-                <th>Domicilio</th>
-                <th>Carrera</th>
-            </tr>
-        </thead>
-        <tbody>
+        <!-- Barra de búsqueda -->
+        <div class="search-container">
+            <input type="text" placeholder="Busca por Nombre, Correo, RUT, Domicilio o Carrera">
+            <button><img src="{% static 'icons/Search.svg' %}" alt="Buscar"></button>
+        </div>
+
+        <!-- Tarjetas de estudiantes -->
+        <div class="table-container">
             {% for estudiante in estudiantes %}
-            <tr>
-                <td>{{ estudiante.pk }}</td>
-                <td>{{ estudiante.usuario.nombre }}</td>
-                <td>{{ estudiante.usuario.correo }}</td>
-                <td>{{ estudiante.rut }}</td>
-                <td>{{ estudiante.domicilio }}</td>
-                <td>{{ estudiante.carrera }}</td>
-            </tr>
+            <div class="card">
+                <div class="card-content">
+                    <h2>{{ estudiante.usuario.first_name }}</h2>
+                    <p>Correo: {{ estudiante.usuario.email }}</p>
+                    <p>RUT: {{ estudiante.rut }}</p>
+                    <p>Domicilio: {{ estudiante.domicilio }}</p>
+                    <p>Carrera: {{ estudiante.carrera }}</p>
+                </div>
+                <div class="card-actions">
+                    <button onclick="window.location.href='{% url 'coordinador:editar_estudiante' estudiante.pk %}'">
+                        <img src="{% static 'icons/Edit.svg' %}" alt="Editar">
+                    </button>
+                    <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
+                        <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
+                    </button>
+                </div>
+            </div>
             {% empty %}
-            <tr>
-                <td colspan="6">No hay estudiantes registrados.</td>
-            </tr>
+            <p>No hay estudiantes registrados.</p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 </body>
 </html>
-{% endblock %}
