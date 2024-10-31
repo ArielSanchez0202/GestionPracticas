@@ -4,6 +4,10 @@ from django.contrib.auth.models import User  # Importa el modelo de usuario de D
 # Modelo Coordinador
 class Coordinador(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    rut = models.CharField(max_length=20, unique=True)
+    domicilio = models.CharField(max_length=255)
+    carrera = models.CharField(max_length=100)
+    numero_telefono = models.CharField(max_length=20)  # Campo agregado para el número de teléfono
 
     def __str__(self):
         return f'Coordinador: {self.usuario.first_name} {self.usuario.last_name}'

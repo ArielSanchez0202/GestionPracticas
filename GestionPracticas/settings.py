@@ -83,9 +83,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
+<<<<<<< Updated upstream
         'PASSWORD': '692001',
+=======
+        'PASSWORD': 'leon189395',
+>>>>>>> Stashed changes
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 

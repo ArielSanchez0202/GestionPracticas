@@ -11,6 +11,11 @@ urlpatterns = [
     path('descargar_plantilla/', views.descargar_plantilla_estudiantes, name='descargar_plantilla_estudiantes'),
     path('listar_estudiantes/', views.listar_estudiantes, name='listar_estudiantes'),
     path('previsualizar_estudiantes/', views.previsualizar_estudiantes, name='previsualizar_estudiantes'),
+<<<<<<< Updated upstream
     path('editar_estudiante/<int:estudiante_id>/', views.editar_estudiante, name='editar_estudiante'),
     path('detalle_estudiante/<int:estudiante_id>/', views.detalle_estudiante, name='detalle_estudiante'),
+=======
+    path('coordinadores/',views.coordinadores, name='coordinadores'),
+    path('nuevo_coordinador',views.nuevo_coordinador,name='nuevo_coordinador'),
+>>>>>>> Stashed changes
 ]
