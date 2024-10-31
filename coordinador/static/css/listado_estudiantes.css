@@ -7,6 +7,14 @@
     box-sizing: border-box;
 }
 
+.hide {
+    display: none;  /* Oculta el elemento */
+}
+
+.show {
+    display: inline-block;  /* Muestra el elemento */
+}
+
 body {
     font-family: 'Jost', sans-serif;
     background-color: #CBCFD2;
