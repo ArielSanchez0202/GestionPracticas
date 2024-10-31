@@ -15,6 +15,9 @@ def generar_contrasena(length=8):
     caracteres = string.ascii_letters + string.digits + string.punctuation
     return ''.join(secrets.choice(caracteres) for _ in range(length))
 
+def nuevo_coordinador(request):
+    return render(request,'coordinador/nuevo_coordinador.html')
+
 def agregar_estudiante(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -140,6 +143,7 @@ def listar_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     return render(request, 'coordinador/listar_estudiantes.html', {'estudiantes': estudiantes})
 
+<<<<<<< Updated upstream
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)
 
@@ -163,3 +167,7 @@ def detalle_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)
 
     return render(request, 'coordinador/detalle_estudiante.html', {'estudiante': estudiante})
+=======
+def coordinadores(request):
+    return render(request, 'coordinador/coordinadores.html',{'coordinadores':coordinadores})
+>>>>>>> Stashed changes
