@@ -13,4 +13,6 @@ urlpatterns = [
     path('previsualizar_estudiantes/', views.previsualizar_estudiantes, name='previsualizar_estudiantes'),
     path('editar_estudiante/<int:estudiante_id>/', views.editar_estudiante, name='editar_estudiante'),
     path('detalle_estudiante/<int:estudiante_id>/', views.detalle_estudiante, name='detalle_estudiante'),
+    #Lista Coordinadores
+    path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador')
 ]

@@ -10,6 +10,8 @@ from django.http import HttpResponse
 import openpyxl
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from .models import Coordinador
+
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
     caracteres = string.ascii_letters + string.digits + string.punctuation
@@ -139,6 +141,13 @@ def descargar_plantilla_estudiantes(request):
 def listar_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     return render(request, 'coordinador/listar_estudiantes.html', {'estudiantes': estudiantes})
+
+def coordinadores(request):
+    return render(request,'coordinador/coordinadores.html')
+
+def listar_coordinador(request):
+    coordinadores = Coordinador.objects.all()
+    return render(request,'coordinador/listar_coordinador.html',{'coordinadores':coordinadores})
 
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)

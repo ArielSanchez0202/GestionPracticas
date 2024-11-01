@@ -29,7 +29,7 @@ def user_login(request):
                 
                 # Redirección basada en el grupo del usuario
                 if user.groups.filter(name='Coordinador').exists():
-                    return redirect('coordinador:listar_estudiantes')  # Cambia esto por la URL del coordinador
+                    return redirect('coordinador:listar_coordinador')  # Cambia esto por la URL del coordinador
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiante:estudiantes_main')  # Cambia esto por la URL del estudiante
             else:
