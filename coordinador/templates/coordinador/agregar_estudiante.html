@@ -1,5 +1,5 @@
-{% extends 'base_coordinador.html' %}
-
+{% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -15,17 +15,30 @@
             margin: 0;
             padding: 0;
         }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
         /* Estilos del título y la sección de carga masiva */
         .form-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            margin-top: 5%;
             padding: 20px;
         }
         .form-header h1 {
             font-size: 2.5rem;
             font-weight: bold;
+        }
+        .form-header1 h3{
+            display: flex;
+            font-weight: bold;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 20px;
         }
         .btn-carga-masiva {
             background-color: #DD211C;
@@ -43,6 +56,13 @@
             margin-bottom: 20px;
             padding: 0 20px;
         }
+        .form-group1 {
+            display: flex;
+            justify-content: space-between; /* Asegura que los elementos dentro se distribuyan con espacio entre ellos */
+            margin-bottom: 20px;
+            width: 46%;
+        }
+
         .input-column {
             width: 46%;
             display: flex;
@@ -65,9 +85,10 @@
             width: 20%;
             padding: 10px;
             margin: 20px auto;
-            background-color: #E3E3E3;
-            color: #767676;
-            border: 1.5px solid #767676;
+            margin-top: 70px;
+            background-color: #DD211C;
+            color: white;
+            border: none;
             border-radius: 10px;
             font-size: 1rem;
             cursor: pointer;
@@ -75,19 +96,27 @@
     </style>
 </head>
 <body>
-
+    <div class="container">
     <div class="form-header">
-        <h1>AGREGAR ESTUDIANTE</h1>
+        <h1>AGREGAR ALUMNO</h1>
         <button class="btn-carga-masiva" onclick="window.location.href='{% url 'coordinador:carga_masiva_estudiantes' %}'">Carga Masiva</button>
     </div>
-
+    <div class="form-header1">
+        <h3>Datos del estudiante:</h3>
+     </div>
     <form action="{% url 'coordinador:agregar_estudiante' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
+            <div class="form-group1">
             <div class="input-column">
-                <label for="nombre">Nombre Completo</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Ingrese sus nombres y apellidos" required>
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" id="nombre" placeholder="Ingrese sus nombres" required>
             </div>
+            <div class="input-column">
+                <label for="apellido">Apellido</label>
+                <input type="text" name="apellido" id="apellido" placeholder="Ingrese sus apellidos" required>
+            </div>
+             </div>
             <div class="input-column">
                 <label for="rut">RUT</label>
                 <input type="text" name="rut" id="rut" placeholder="Sin puntos y con guión. Ej: 12345678-9" required>
@@ -115,7 +144,7 @@
         </div>
         <button type="submit" class="btn-agregar">Agregar Estudiante</button>
     </form>
-
+</div>
 </body>
 </html>
 {% endblock %}

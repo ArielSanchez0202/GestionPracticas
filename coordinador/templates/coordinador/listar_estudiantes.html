@@ -1,6 +1,8 @@
+{% extends 'base.html' %}
 {% load static %}
+{% block content %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,25 +12,27 @@
 </head>
 <body>
     <div class="container">
-        <h1>Listado de Estudiantes</h1>
-
+        <div class="form-header">
+        <h1>LISTADO DE ESTUDIANTES</h1>
         <!-- Botón para añadir estudiantes -->
         <div class="button-container">
-            <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Añadir Estudiantes</button>
+            <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Agregar Alumno</button>
+        </div>
         </div>
 
         <!-- Barra de búsqueda -->
         <div class="search-container">
             <input type="text" placeholder="Busca por Nombre, Correo, RUT, Domicilio o Carrera">
-            <button><img src="{% static 'icons/Search.svg' %}" alt="Buscar"></button>
+            <button><img src="{% static 'icons/Lupa.svg' %}" alt="Buscar"></button>
         </div>
 
         <!-- Tarjetas de estudiantes -->
         <div class="table-container">
             {% for estudiante in estudiantes %}
             <div class="card">
+                <img src="{% static 'icons\Check_circle.svg' %}" style="margin-bottom: 100px; ">
                 <div class="card-content">
-                    <h2>{{ estudiante.usuario.first_name }}</h2>
+                    <h2>{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</h2>
                     <p>Correo: {{ estudiante.usuario.email }}</p>
                     <p>RUT: {{ estudiante.rut }}</p>
                     <p>Domicilio: {{ estudiante.domicilio }}</p>
@@ -49,4 +53,4 @@
         </div>
     </div>
 </body>
-</html>
+{% endblock %}
