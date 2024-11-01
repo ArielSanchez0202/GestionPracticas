@@ -4,14 +4,16 @@ from django.contrib.auth.models import User  # Importa el modelo de usuario de D
 # Modelo Coordinador
 class Coordinador(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    rut = models.CharField(max_length=20, unique=True)
-    domicilio = models.CharField(max_length=255)
-    carrera = models.CharField(max_length=100)
-    numero_telefono = models.CharField(max_length=20)  # Campo agregado para el número de teléfono
+    nombre = models.CharField(max_length=100,blank=True)
+    apellido = models.CharField(max_length=100,blank=True)
+    rut = models.CharField(max_length=20, blank=True,unique=True)
+    domicilio = models.CharField(max_length=255,blank=True)
+    carrera = models.CharField(max_length=100,blank=True)
+    numero_telefono = models.CharField(max_length=20,blank=True)
 
     def __str__(self):
-        return f'Coordinador: {self.usuario.first_name} {self.usuario.last_name}'
-
+        texto = "{0} ({1})"
+        return texto.format(self.nombre,self.apellido)
 # Modelo Estudiante
 class Estudiante(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

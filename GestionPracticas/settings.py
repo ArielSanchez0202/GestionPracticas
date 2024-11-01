@@ -83,11 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
-<<<<<<< Updated upstream
-        'PASSWORD': '692001',
-=======
         'PASSWORD': 'leon189395',
->>>>>>> Stashed changes
         'HOST': 'localhost',
         'PORT': '5433',
     }
@@ -130,10 +126,8 @@ USE_TZ = True
 
 # Ruta para los archivos estáticos en desarrollo
 STATIC_URL = '/static/'
-
-# Directorio donde Django buscará archivos estáticos adicionales
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')  # Esto apunta a la carpeta 'static' en tu proyecto principal
+    BASE_DIR / "static", 
 ]
 
 # Directorio donde se recopilarán todos los archivos estáticos cuando se ejecute 'collectstatic'

@@ -41,12 +41,6 @@
                     <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
                     </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'desbloquear_usuario' estudiante.pk %}'; }">
-                        <img src="{% static 'icons/Confirm.svg' %}" alt="Desbloquear">
-                    </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'bloquear_usuario' estudiante.pk %}'; }">
-                        <img src="{% static 'icons/X.svg' %}" alt="Bloquear">
-                    </button>
                 </div>
             </div>
             {% empty %}
