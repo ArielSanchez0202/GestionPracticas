@@ -10,6 +10,7 @@ from django.http import HttpResponse
 import openpyxl
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
     caracteres = string.ascii_letters + string.digits + string.punctuation
@@ -143,7 +144,6 @@ def listar_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     return render(request, 'coordinador/listar_estudiantes.html', {'estudiantes': estudiantes})
 
-<<<<<<< Updated upstream
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)
 
@@ -167,7 +167,8 @@ def detalle_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)
 
     return render(request, 'coordinador/detalle_estudiante.html', {'estudiante': estudiante})
-=======
+
+#view coordinadores prueba
 def coordinadores(request):
-    return render(request, 'coordinador/coordinadores.html',{'coordinadores':coordinadores})
->>>>>>> Stashed changes
+    # Tu lógica aquí
+    return render(request, 'ver_coordinador.html')
