@@ -20,11 +20,11 @@
         </div>
         </div>
 
-        <!-- Barra de búsqueda -->
-        <div class="search-container">
+    <!-- Barra de búsqueda -->
+    <div class="search-container">
             <input type="text" placeholder="Busca por Nombre, Correo, RUT, Domicilio o Carrera">
-            <button><img src="{% static 'icons/Lupa.svg' %}" alt="Buscar"></button>
-        </div>
+            <button><img src="{% static 'icons/Search.svg' %}" alt="Buscar"></button>
+    </div>
 
         <!-- Tarjetas de estudiantes -->
         <div class="table-container">
@@ -44,6 +44,12 @@
                     </button>
                     <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
+                    </button>
+                    <button onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'desbloquear_usuario' estudiante.pk %}'; }">
+                        <img src="{% static 'icons/Confirm.svg' %}" alt="Desbloquear">
+                    </button>
+                    <button onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'bloquear_usuario' estudiante.pk %}'; }">
+                        <img src="{% static 'icons/X.svg' %}" alt="Bloquear">
                     </button>
                 </div>
             </div>
