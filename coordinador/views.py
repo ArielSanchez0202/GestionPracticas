@@ -11,6 +11,7 @@ import openpyxl
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import Coordinador
+import uuid
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -148,6 +149,53 @@ def coordinadores(request):
 def listar_coordinador(request):
     coordinadores = Coordinador.objects.all()
     return render(request,'coordinador/listar_coordinador.html',{'coordinadores':coordinadores})
+
+def crear_coordinador(request):
+    usuarios = Coordinador.objects.all()
+    return render(request,'coordinador/crear_coordinador.html',{'usuarios':usuarios})
+
+def registrar_coordinador(request):
+    if request.method == 'POST':
+        nombre = request.POST.get("txtnombre")
+        apellido = request.POST.get("txtapellido")
+        rut = request.POST.get("txtrut")
+        domicilio = request.POST.get("txtdomicilio")
+        carrera = request.POST.get("txtcarrera")
+        
+        # Obtén la instancia completa del usuario usando su ID
+        
+        
+        # Guarda el nuevo coordinador, asociándolo con el usuario
+        coordinador = Coordinador.objects.create(
+            nombre=nombre, 
+            apellido=apellido,
+            rut=rut,
+            domicilio=domicilio,
+            carrera=carrera
+        )
+        
+        return redirect('coordinador:listar_coordinador')
+
+def editar_coordinador(request,rut):
+    usuario = Coordinador.objects.get(rut=rut)
+    return render(request,"coordinador/editar_coordinador.html",{'usuario':usuario})
+
+def editarcoordinador(request):
+        nombre = request.POST.get("txtnombre")
+        apellido = request.POST.get("txtapellido")
+        rut = request.POST.get("txtrut")
+        domicilio = request.POST.get("txtdomicilio")
+        carrera = request.POST.get("txtcarrera")
+
+        usuario = Coordinador.objects.get(rut=rut)
+        usuario.nombre = nombre
+        usuario.apellido = apellido
+        usuario.domicilio = domicilio
+        usuario.carrera = carrera
+        usuario.save()
+
+        return redirect('coordinador:listar_coordinador')
+        
 
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, id=estudiante_id)

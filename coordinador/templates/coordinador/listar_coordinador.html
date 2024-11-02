@@ -1,4 +1,52 @@
 {% extends 'base.html' %}
 
+{% block title %} Lista de Coordinadores {% endblock %}
+
 {% block content %}
+<div class="row">
+    <style>
+        .ms-lg{
+            margin-left: 28rem;
+            text-decoration: none;
+            background-color: #1E1E1E;
+            color: white;
+            
+        }
+
+        .ms-lg:hover{
+            background-color: #565656;
+        }
+    </style>
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive py-5 ms-3">
+            <h1>Lista de Coordinadores <a href="{% url 'coordinador:crear_coordinador' %}" class="btn btn-primary btn-lg ms-lg">Nuevo Coordinador</a></h1>
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Rut</th>
+                        <th>Domicilio</th>
+                        <th>Carrera</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in coordinadores %}
+                    <tr>
+                        <td>{{c.nombre}}</td>
+                        <td>{{c.apellido}}</td>
+                        <td>{{c.rut}}</td>
+                        <td>{{c.domicilio}}</td>
+                        <td>{{c.carrera}}</td>
+                        <td><a href="{% url 'coordinador:editar_coordinador' c.rut %}" class="btn btn-success">Editar</a></td>
+                    </tr>
+                    {% empty %}
+                    <p>No hay Coordinadores Registrados</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
