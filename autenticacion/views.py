@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SendMailForm, SetPasswordForm
@@ -29,7 +29,7 @@ def user_login(request):
                 
                 # Redirección basada en el grupo del usuario
                 if user.groups.filter(name='Coordinador').exists():
-                    return redirect('coordinador:listar_estudiantes')  # Cambia esto por la URL del coordinador
+                    return redirect('coordinador:listar_coordinador')  # Cambia esto por la URL del coordinador
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiante:estudiantes_main')  # Cambia esto por la URL del estudiante
             else:
@@ -78,25 +78,3 @@ class SendMailConfirmView(View):
 def logout_view(request):
     logout(request)
     return redirect('home')
-
-@login_required
-def bloquear_usuario(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if user.is_active:
-        user.is_active = False
-        user.save()
-        messages.success(request, f"El usuario {user.username} ha sido bloqueado.")
-    else:
-        messages.info(request, f"El usuario {user.username} ya está bloqueado.")
-    return redirect('coordinador:listar_estudiantes')
-
-@login_required
-def desbloquear_usuario(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if not user.is_active:
-        user.is_active = True
-        user.save()
-        messages.success(request, f"El usuario {user.username} ha sido desbloqueado.")
-    else:
-        messages.info(request, f"El usuario {user.username} ya está desbloqueado.")
-    return redirect('coordinador:listar_estudiantes')

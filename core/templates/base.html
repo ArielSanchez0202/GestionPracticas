@@ -1,0 +1,131 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* Estilos para el sidebar */
+        .sidebar {
+            height: 100vh; /* Altura completa */
+            background-color: #343A40; /* Color de fondo */
+        }
+        .sidebar img {
+            width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del sidebar */
+            height: auto; /* Mantiene la relación de aspecto */
+            max-height: 100px; /* Establecer altura máxima para la imagen */
+            margin-bottom: 20px; /* Espacio debajo de la imagen */
+        }
+
+        /* Media query para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed; /* Fijo en la pantalla */
+                width: 250px; /* Ancho fijo */
+                transform: translateX(-100%); /* Ocultar inicialmente */
+                transition: transform 0.3s ease; /* Transición suave */
+                z-index: 1050; /* Para que esté por encima de otros elementos */
+            }
+
+            .sidebar.show {
+                transform: translateX(0); /* Mostrar el sidebar */
+            }
+        }
+
+        .sidebar-toggle {
+            display: none; /* Ocultar el botón en pantallas grandes */
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: block; /* Mostrar el botón en pantallas pequeñas */
+                position: fixed; /* Fijo en la pantalla */
+                z-index: 1060; /* Encima del sidebar */
+                top: 10px;
+                left: 10px;
+            }
+        }
+
+        .sidebar li a:hover{
+            background-color: red;
+            color: white;
+        }
+        .sidebar li a{
+            text-decoration: none;
+            color: white;
+            margin-top: 15%;
+            border-radius: 5px;
+        }
+        .sidebar li a:visited {
+            color: white;
+        }
+
+        /* Mantener el color cuando esté activo */
+        .sidebar li a:active {
+
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button class="btn btn-info sidebar-toggle" onclick="toggleSidebar()">Menu</button>
+
+    <div class="d-flex">
+        <nav class="sidebar flex-shrink-0 p-3">
+            <img src="{% static 'Logo.png' %}" alt="Logo" class="img-fluid">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Coordinador</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Listado de prácticas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Solicitudes de prácticas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Informes de avances</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Autoevaluaciones</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Documentos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Informes Finales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'coordinador:listar_estudiantes' %}">Coordinadores</a>
+                </li>
+                <li class="nav-item mt-auto">
+                    <a class="logout-btn" href="{% url 'logout' %}">Cerrar Sesión</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <main>
+                        {% block content %}
+                        {% endblock %}
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('show'); // Alternar la clase "show"
+        }
+    </script>
+</body>
+</html>
+

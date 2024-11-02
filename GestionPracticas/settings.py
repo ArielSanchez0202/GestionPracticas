@@ -59,7 +59,7 @@ ROOT_URLCONF = 'GestionPracticas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [r"D:\Users\alexm\.git\Git\GestionPracticas\templates"],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '692001',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
@@ -126,10 +126,8 @@ USE_TZ = True
 
 # Ruta para los archivos estáticos en desarrollo
 STATIC_URL = '/static/'
-
-# Directorio donde Django buscará archivos estáticos adicionales
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')  # Esto apunta a la carpeta 'static' en tu proyecto principal
+    BASE_DIR / "static", 
 ]
 
 # Directorio donde se recopilarán todos los archivos estáticos cuando se ejecute 'collectstatic'
