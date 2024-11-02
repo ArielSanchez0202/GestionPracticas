@@ -21,41 +21,42 @@ def generar_contrasena(length=8):
 def agregar_estudiante(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
         email = request.POST.get('email')
         rut = request.POST.get('rut')
         domicilio = request.POST.get('domicilio')
         telefono = request.POST.get('telefono')
         carrera = request.POST.get('carrera')
-        
+
         # Comprobar si el RUT ya está registrado
         if User.objects.filter(username=rut).exists():
             messages.error(request, "El RUT ya está registrado.")
             return redirect('coordinador:agregar_estudiante')
+        
+                # Comprobar si el RUT ya está registrado
+        if User.objects.filter(email=rut).exists():
+            messages.error(request, "El correo ya está registrado.")
+            return redirect('coordinador:agregar_estudiante')
 
         try:
-            # Generar una contraseña aleatoria
             contrasena = generar_contrasena()
 
-            # Crear el usuario
-            usuario = User.objects.create_user(username=rut, email=email, first_name=nombre)
+            usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
             usuario.set_password(contrasena)
             usuario.save()
 
-            # Asignar al grupo 'Estudiantes'
             grupo, _ = Group.objects.get_or_create(name='Estudiante')
             usuario.groups.add(grupo)
 
-            # Crear el perfil del estudiante
             estudiante = Estudiante(
                 usuario=usuario,
                 rut=rut,
                 domicilio=domicilio,
                 carrera=carrera,
-                numero_telefono=telefono  # Asegúrate de que este campo esté en tu modelo
+                numero_telefono=telefono
             )
             estudiante.save()
 
-            # Enviar el correo electrónico con las credenciales
             send_mail(
                 'Credenciales de acceso',
                 f'Hola {nombre},\n\nTu cuenta ha sido creada exitosamente.\n'
@@ -66,9 +67,9 @@ def agregar_estudiante(request):
                 fail_silently=False,
             )
 
-            messages.success(request, f"Estudiante '{nombre}' agregado exitosamente. Las credenciales han sido enviadas al correo.")
+            messages.success(request, f"Estudiante '{nombre} {apellido}' agregado exitosamente. Las credenciales han sido enviadas al correo.")
             return redirect('coordinador:listar_estudiantes')
-        
+
         except Exception as e:
             messages.error(request, f"Error al agregar estudiante: {e}")
             return redirect('coordinador:agregar_estudiante')

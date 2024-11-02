@@ -10,9 +10,7 @@
 body {
     font-family: 'Jost', sans-serif;
     background-color: #CBCFD2;
-    display: flex;
     justify-content: center;
-    padding: 20px;
 }
 
 .container {
@@ -67,17 +65,24 @@ h1 {
 }
 
 .search-container button {
-    background-color: #333;
-    color: white;
+    background-color: white;
+    color: none;
     border: none;
     padding: 10px;
-    border-radius: 0 5px 5px 0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.search-container button:hover {
-    background-color: #555;
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1%;
+    padding: 20px;
+}
+.form-header h1 {
+    color: black;
+    font-size: 2.5rem;
+    font-weight: bold;
 }
 
 /* Tarjetas de estudiantes */
@@ -89,18 +94,19 @@ h1 {
 }
 
 .card {
+    flex-direction: row;
     background-color: white;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap:wrap;
     width: 100%;
 }
 
 .card-content {
+    margin-left: 4%;
     flex: 1;
 }
 

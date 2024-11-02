@@ -59,7 +59,7 @@ ROOT_URLCONF = 'GestionPracticas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [r"D:\Users\alexm\.git\Git\GestionPracticas\templates"],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
