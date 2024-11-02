@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/listado_estudiantes.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="form-header">
+        <h1>Detalle del Estudiante</h2>
+    </div>
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</h5>
+        <p class="card-text"><strong>Correo Electrónico:</strong> {{ estudiante.usuario.email }}</p>
+        <p class="card-text"><strong>RUT:</strong> {{ estudiante.rut }}</p>
+        <p class="card-text"><strong>Domicilio:</strong> {{ estudiante.domicilio }}</p>
+        <p class="card-text"><strong>Número de Teléfono:</strong> {{ estudiante.numero_telefono }}</p>
+        <p class="card-text"><strong>Carrera:</strong> {{ estudiante.carrera }}</p>
+    </div>
+</div>
+<a href="{% url 'coordinador:listar_estudiantes' %}" class="btn btn-secondary mt-3">Regresar</a>
+</div>
+{% endblock %}

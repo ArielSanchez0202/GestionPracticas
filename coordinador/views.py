@@ -86,7 +86,7 @@ def carga_masiva_estudiantes(request):
 
         try:
             df = pd.read_excel(archivo, engine='openpyxl')
-            df.columns = ['Nombre', 'CorreoElectronico', 'RUT', 'Domicilio', 'Carrera']
+            df.columns = ['Nombre','Apellido','RUT','Domicilio','numero_telefono','CorreoElectronico', 'Carrera']
 
             estudiantes = df.to_dict(orient='records')
             request.session['alumnos_preview'] = estudiantes
@@ -102,13 +102,15 @@ def previsualizar_estudiantes(request):
     if request.method == 'POST':
         for alumno in alumnos:
             rut = alumno['RUT']
+            apellido = alumno['Apellido']
             email = alumno['CorreoElectronico']
             nombre = alumno['Nombre']
             domicilio = alumno['Domicilio']
+            numero_telefono = alumno['numero_telefono']
             carrera = alumno['Carrera']
 
             if not User.objects.filter(username=rut).exists():
-                usuario = User.objects.create_user(username=rut, email=email, first_name=nombre)
+                usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
                 usuario.set_password('password123')
                 usuario.save()
 
@@ -118,6 +120,7 @@ def previsualizar_estudiantes(request):
                 estudiante = Estudiante(
                     usuario=usuario,
                     rut=rut,
+                    numero_telefono=numero_telefono,
                     domicilio=domicilio,
                     carrera=carrera
                 )
@@ -130,7 +133,7 @@ def previsualizar_estudiantes(request):
 
 
 def descargar_plantilla_estudiantes(request):
-    columnas = ['Nombre', 'Correo Electrónico', 'RUT', 'Domicilio', 'Carrera']
+    columnas = ['Nombre','Apellido','Rut','Domicilio','numero_telefono', 'Correo Electrónico','Carrera']
     df = pd.DataFrame(columns=columnas)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -199,25 +202,25 @@ def editarcoordinador(request):
         
 
 def editar_estudiante(request, estudiante_id):
-    estudiante = get_object_or_404(Estudiante, id=estudiante_id)
+    estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
 
     if request.method == 'POST':
-        # Extraer los datos del formulario manualmente
         estudiante.usuario.first_name = request.POST.get('nombre')
+        estudiante.usuario.last_name = request.POST.get('apellido')
         estudiante.usuario.email = request.POST.get('correo')
         estudiante.rut = request.POST.get('rut')
         estudiante.domicilio = request.POST.get('domicilio')
+        estudiante.numero_telefono = request.POST.get('numero_telefono')  # Agregar número de teléfono
         estudiante.carrera = request.POST.get('carrera')
 
-        # Guardar los cambios en el modelo Usuario y Estudiante
         estudiante.usuario.save()
         estudiante.save()
 
-        return redirect('coordinador:listado_estudiantes')  # Redirige al listado de estudiantes después de editar
+        return redirect('coordinador:listar_estudiantes')
 
     return render(request, 'coordinador/editar_estudiante.html', {'estudiante': estudiante})
 
 def detalle_estudiante(request, estudiante_id):
-    estudiante = get_object_or_404(Estudiante, id=estudiante_id)
+    estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
 
     return render(request, 'coordinador/detalle_estudiante.html', {'estudiante': estudiante})

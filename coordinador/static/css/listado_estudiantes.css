@@ -50,8 +50,6 @@ h1 {
 
 /* Barra de búsqueda */
 .search-container {
-    display: flex;
-    justify-content: center;
     margin-bottom: 20px;
 }
 
@@ -145,6 +143,29 @@ h1 {
     opacity: 0.7;
 }
 
+/* Estilos para la tarjeta de detalles del estudiante */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-body .card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-body strong {
+    font-weight: bold;
+    color: #333;
+}
 /* Responsividad */
 @media (min-width: 768px) {
     .table-container {
