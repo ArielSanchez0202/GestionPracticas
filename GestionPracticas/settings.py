@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
-        'PASSWORD': '692001',
+        'PASSWORD': 'Futrilla',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -162,5 +162,5 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración para la duración de la sesión
-SESSION_COOKIE_AGE = 1209600  # 14 días en segundos
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Cambia esto a True si deseas que la sesión expire al cerrar el navegador
+SESSION_COOKIE_AGE = 1209600  # 2 semanas (ajusta el valor según tus necesidades)

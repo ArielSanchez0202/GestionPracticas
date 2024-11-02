@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GestiónPrácticas{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- Estilos generales -->
+    <link rel="stylesheet" href="{% static 'css/base_coordinador.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="contenedor-grid">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Logos -->
+            <div class="logo-container">
+                <img src="{% static 'img/logoUA.png' %}" alt="Logo Universidad Autonoma de Chile">
+            </div>
+            <hr class="divider">
+            <!-- Rol del Usuario -->
+            <div class="user-role">
+                <span>Coordinador</span>
+            </div>
+            <ul class="menu">
+                <li><a href="#" class="active">Listado de Prácticas</a></li>
+                <li><a href="#">Solicitudes de Prácticas</a></li>
+                <li><a href="#">Informes de Avances</a></li>
+                <li><a href="#">Autoevaluaciones</a></li>
+                <li><a href="#">Documentos</a></li>
+                <li><a href="#">Informes Finales</a></li>
+            </ul>
+            <hr class="divider">
+            <!-- Logout -->
+            <div class="logout">
+                <a href="#">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer">
+            <p>&copy; Universidad Autónoma de Chile</p>
+        </footer>
+    </div>
+    
+    <script src="{% static 'js/activeMenu.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

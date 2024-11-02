@@ -13,24 +13,36 @@
 <body>
     <div class="container">
         <div class="form-header">
-        <h1>LISTADO DE ESTUDIANTES</h1>
-        <!-- Botón para añadir estudiantes -->
-        <div class="button-container">
-            <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Agregar Alumno</button>
-        </div>
+            <h1>LISTADO DE ESTUDIANTES</h1>
+            <!-- Botón para añadir estudiantes -->
+            <div class="button-container">
+                <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Agregar Alumno</button>
+            </div>
         </div>
 
-    <!-- Barra de búsqueda -->
-    <div class="search-container">
+        <!-- Barra de búsqueda -->
+        <div class="search-container">
             <input type="text" placeholder="Busca por Nombre, Correo, RUT, Domicilio o Carrera">
             <button><img src="{% static 'icons/Search.svg' %}" alt="Buscar"></button>
-    </div>
+        </div>
+
+        <!-- Filtros por estado -->
+        <div class="filter-container">
+            <form method="GET" action="{% url 'coordinador:listar_estudiantes' %}">
+                <label for="estado">Filtrar por estado:</label>
+                <select name="estado" id="estado" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="activo" {% if request.GET.estado == 'activo' %}selected{% endif %}>Activos</option>
+                    <option value="inactivo" {% if request.GET.estado == 'inactivo' %}selected{% endif %}>Inactivos</option>
+                </select>
+            </form>
+        </div>
 
         <!-- Tarjetas de estudiantes -->
         <div class="table-container">
             {% for estudiante in estudiantes %}
             <div class="card">
-                <img src="{% static 'icons\Check_circle.svg' %}" style="margin-bottom: 100px; ">
+                <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px; ">
                 <div class="card-content">
                     <h2>{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</h2>
                     <p>Correo: {{ estudiante.usuario.email }}</p>
