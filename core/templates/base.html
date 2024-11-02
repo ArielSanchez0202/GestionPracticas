@@ -58,6 +58,8 @@
             color: white;
             margin-top: 15%;
             border-radius: 5px;
+            display: block; /* Asegura que el enlace ocupe todo el ancho */
+            padding: 10px; /* Espaciado alrededor del texto */
         }
         .sidebar li a:visited {
             color: white;
@@ -65,8 +67,14 @@
 
         /* Mantener el color cuando esté activo */
         .sidebar li a:active {
-
             color: white;
+        }
+
+        /* Estilo específico para el botón de cerrar sesión */
+        .sidebar li a.btn-danger {
+            border-top: 2px solid black; /* Borde superior */
+            border-bottom: 2px solid black; /* Borde inferior */
+            margin-top: 35%; /* Margen superior */
         }
     </style>
 </head>
@@ -101,8 +109,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'coordinador:listar_estudiantes' %}">Coordinadores</a>
                 </li>
-                <li class="nav-item mt-auto">
-                    <a class="logout-btn" href="{% url 'logout' %}">Cerrar Sesión</a>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post" style="margin-top: 15%;">
+                        {% csrf_token %}
+                        <a href="#" onclick="this.closest('form').submit()" class="nav-link btn btn-danger" style="border-radius: 5px;">Cerrar Sesión</a>
+                    </form>
                 </li>
             </ul>
         </nav>
@@ -128,4 +139,3 @@
     </script>
 </body>
 </html>
-

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SendMailForm, SetPasswordForm
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.views import PasswordResetConfirmView, LogoutView
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.views import View
@@ -74,7 +74,7 @@ class SendMailConfirmView(View):
 
         # Mostrar el error en la misma página si el correo no es válido
         return render(request, 'password_reset_form.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
+    
+def user_logout(request):
+    logout(request)  # Cierra la sesión del usuario
     return redirect('home')
