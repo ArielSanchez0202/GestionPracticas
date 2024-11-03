@@ -1,25 +1,57 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    .input1{
+        position: relative;
+        top: 40px;
+        left: 70px;
+    }
+    .input1 h1,input{
+        margin-top: 30px;
+    }
+    .input2{
+        position: relative;
+        top: -325px;
+        left: 600px;
+    }
+    .input2 h1,input{
+        margin-top: 30px;
+    }
+</style>
 <div class="col-md-7 col-lg-6 col-sm-8 col-xl-5">
     <h1>Nuevo Coordinador</h1>
-    <form action="{% url 'coordinador:registrar_coordinador' %}" method="post" class="col-xl-5 col-lg-6 col-md-8">
+    <form action="{% url 'coordinador:registrar_coordinador' %}" method="post" class="col-xl-9 col-lg-6 col-md-8 py-4">
+        <h2 style="position: relative; left: 70px;">Datos del Coordinador:</h2>
         {% csrf_token %}
-        <div class="form-group">
-            <input type="text" id="txtnombre" name="txtnombre" class="form-control" placeholder="Nombre" minlength="3" maxlength="20" required>
+        <div class="input1">
+            <div class="form-group">
+                <h1 class="fs-5">Nombre Completo</h1>
+                <input type="text" id="txtnombre" name="txtnombre" class="form-control" placeholder="Nombre" minlength="3" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <h1 class="fs-5">Domicilio</h1>
+                <input type="text" id="txtdomicilio" name="txtdomicilio" class="form-control" placeholder="Domicilio" minlength="3" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <h1 class="fs-5">Rut</h1>
+                <input type="text" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo" minlength="3" maxlength="30" required>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" id="txtapellido" name="txtapellido" class="form-control" placeholder="Apellido" minlength="3" maxlength="20" required>
+        <div class="input2">
+            <div class="form-group">
+                <h1 class="fs-5">Rut</h1>
+                <input type="text" id="txtrut" name="txtrut" class="form-control" placeholder="RUT" minlength="3" maxlength="9" required>
+            </div >
+            <div class="form-group">
+                <h1 class="fs-5">Numero Telefonico</h1>
+                <input type="text" id="txtnumero" name="txtnumero" class="form-control" placeholder="Numero" minlength="3" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <h1 class="fs-5">Carrera</h1>
+                <input type="text" id="txtcarrera" name="txtcarrera" class="form-control" placeholder="Carrera" minlength="3" maxlength="20" required>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" id="txtrut" name="txtrut" class="form-control" placeholder="RUT" minlength="3" maxlength="9" required>
-        </div >
-        <div class="form-group">
-            <input type="text" id="txtdomicilio" name="txtdomicilio" class="form-control" placeholder="Domicilio" minlength="3" maxlength="20" required>
-        </div>
-        <div class="form-group">
-            <input type="text" id="txtcarrera" name="txtcarrera" class="form-control" placeholder="Carrera" minlength="3" maxlength="20" required>
-        </div>
-        <div class="form-group">
+        <div class="form-group" style="position: relative; top: -220px; left: 450px;">
             <button type="submit" class="btn btn-success btn-block text-white">Crear Coordinador</button>
         </div>
     </form>

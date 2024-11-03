@@ -10,6 +10,7 @@
     <style>
         /* Estilos para el sidebar */
         .sidebar {
+            position: fixed;
             height: 100vh; /* Altura completa */
             background-color: #343A40; /* Color de fondo */
             overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
@@ -64,7 +65,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color: #CBCFD2;">
 
     <div class="d-flex">
         <nav class="sidebar flex-shrink-0 p-3">
@@ -100,7 +101,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <main>
+                    <main style="margin-left: 280px;">
                         {% block content %}
                         {% endblock %}
                     </main>

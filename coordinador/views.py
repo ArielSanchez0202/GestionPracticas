@@ -158,10 +158,11 @@ def crear_coordinador(request):
 def registrar_coordinador(request):
     if request.method == 'POST':
         nombre = request.POST.get("txtnombre")
-        apellido = request.POST.get("txtapellido")
+        numero = request.POST.get("txtnumero")
         rut = request.POST.get("txtrut")
         domicilio = request.POST.get("txtdomicilio")
         carrera = request.POST.get("txtcarrera")
+        correo = request.POST.get("txtcorreo")
         
         # Obtén la instancia completa del usuario usando su ID
         
@@ -169,10 +170,11 @@ def registrar_coordinador(request):
         # Guarda el nuevo coordinador, asociándolo con el usuario
         coordinador = Coordinador.objects.create(
             nombre=nombre, 
-            apellido=apellido,
+            numero=numero,
             rut=rut,
             domicilio=domicilio,
-            carrera=carrera
+            carrera=carrera,
+            correo=correo,
         )
         
         return redirect('coordinador:listar_coordinador')
@@ -183,16 +185,18 @@ def editar_coordinador(request,rut):
 
 def editarcoordinador(request):
         nombre = request.POST.get("txtnombre")
-        apellido = request.POST.get("txtapellido")
+        numero = request.POST.get("txtnumero")
         rut = request.POST.get("txtrut")
         domicilio = request.POST.get("txtdomicilio")
         carrera = request.POST.get("txtcarrera")
+        correo = request.POST.get("txtcorreo")
 
         usuario = Coordinador.objects.get(rut=rut)
         usuario.nombre = nombre
-        usuario.apellido = apellido
+        usuario.numero = numero
         usuario.domicilio = domicilio
         usuario.carrera = carrera
+        usuario.correo = correo
         usuario.save()
 
         return redirect('coordinador:listar_coordinador')

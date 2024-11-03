@@ -6,11 +6,11 @@ import uuid
 class Coordinador(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=100, blank=True)
-    apellido = models.CharField(max_length=100, blank=True)
+    correo = models.CharField(max_length=100 ,blank=True)
     rut = models.CharField(max_length=20, blank=True, unique=True)
     domicilio = models.CharField(max_length=255, blank=True)
     carrera = models.CharField(max_length=100, blank=True)
-    numero_telefono = models.CharField(max_length=20, blank=True)
+    numero = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         texto = "{0} ({1})"
