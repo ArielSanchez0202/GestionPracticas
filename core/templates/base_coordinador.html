@@ -111,25 +111,25 @@
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link {% if active_page == 'listar_estudiantes' %}active{% endif %}" aria-current="page" href="{% url 'coordinador:listar_estudiantes' %}">Listado de prácticas</a>
+                    <a class="nav-link {% if active_page == 'listar_estudiantes' %}active{% endif %}" aria-current="page" href="{% url 'coordinador:listar_estudiantes' %}">Listado de Estudiantes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Solicitudes de prácticas</a>
+                    <a class="nav-link" href="{% url 'coordinador:solicitudes_practica' %}">Solicitudes de Práctica</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Informes de avances</a>
+                    <a class="nav-link" href="{% url 'coordinador:informes_avances' %}">Informes de Avances</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Autoevaluaciones</a>
+                    <a class="nav-link" href="{% url 'coordinador:autoevaluaciones' %}">Autoevaluaciones</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documentos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Informes Finales</a>
+                    <a class="nav-link" href="{% url 'coordinador:informes_finales' %}">Informes Finales</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if active_page == 'listar_coordinador' %}active{% endif %}" href="{% url 'coordinador:listar_coordinador' %}">Listado de Coordinadores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'coordinador:documentos' %}">Documentos</a>
                 </li>
                 <li class="nav-item">
                     <form action="{% url 'logout' %}" method="post" style="margin-top: 15%;">
@@ -139,6 +139,7 @@
                 </li>
             </ul>
         </nav>
+        
 
         <div class="container-fluid">
             <div class="row">

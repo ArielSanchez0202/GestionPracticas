@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'practicas',
         'USER': 'postgres',
-        'PASSWORD': '692001',
+        'PASSWORD': 'Futrilla',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -133,7 +133,7 @@ STATICFILES_DIRS = [
 # Directorio donde se recopilarán todos los archivos estáticos cuando se ejecute 'collectstatic'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Esto debería ser un directorio separado
 
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'autenticacion:home'
 
 #Emails
 DEFAULT_FROM_EMAIL = "envios@dominio.cl"#agregue un correo que aparecerá en el correo enviado, este no necesariamente debe ser una casilla que exista

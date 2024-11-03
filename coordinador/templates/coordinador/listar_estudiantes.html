@@ -31,8 +31,8 @@
             <form method="GET" action="{% url 'coordinador:listar_estudiantes' %}">
                 <label for="estado">Filtrar por estado:</label>
                 <select name="estado" id="estado" onchange="this.form.submit()">
-                    <option value="">Todos</option>
-                    <option value="activo" {% if request.GET.estado == 'activo' %}selected{% endif %}>Activos</option>
+                    <option value="Todos" {% if request.GET.estado == 'Todos' %}selected{% endif %}>Todos</option>
+                    <option value="activo" {% if request.GET.estado == 'activo' or request.GET.estado == None %}selected{% endif %}>Activos</option>
                     <option value="inactivo" {% if request.GET.estado == 'inactivo' %}selected{% endif %}>Inactivos</option>
                 </select>
             </form>
@@ -64,10 +64,10 @@
                     <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
                     </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'desbloquear_usuario' estudiante.pk %}'; }">
+                    <button onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'autenticacion:desbloquear_usuario' estudiante.pk %}'; }">
                         <img src="{% static 'icons/Confirm.svg' %}" alt="Desbloquear">
                     </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'bloquear_usuario' estudiante.pk %}'; }">
+                    <button onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'autenticacion:bloquear_usuario' estudiante.pk %}'; }">
                         <img src="{% static 'icons/X.svg' %}" alt="Bloquear">
                     </button>
                 </div>

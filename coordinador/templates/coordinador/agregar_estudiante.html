@@ -1,17 +1,10 @@
 {% extends 'base_coordinador.html' %}
 {% load static %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Estudiante</title>
     <link rel="stylesheet" href="{% static 'css/agregar_estudiantes.css' %}">
     <link rel="stylesheet" href="{% static 'css/messages.css' %}">
     <script src="{% static 'js/validaciones.js' %}"></script>
-</head>
-<body>
+
     <div class="container">
         <div class="form-header">
             <h1>AGREGAR ALUMNO</h1>
@@ -90,6 +83,4 @@
         }
     </script>
     {% endif %}
-</body>
-</html>
 {% endblock %}

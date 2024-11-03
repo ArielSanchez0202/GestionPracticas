@@ -53,7 +53,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class SendMailConfirmView(View):
     def get(self, request):
         form = SendMailForm()
-        return render(request, 'password_reset_form.html', {'form': form})
+        return render(request, 'autenticacion:password_reset_form.html', {'form': form})
 
     def post(self, request):
         form = SendMailForm(request.POST)
@@ -67,7 +67,7 @@ class SendMailConfirmView(View):
 
             # Enviar el correo electrónico con el enlace de restablecimiento
             password_reset_url = request.build_absolute_uri(
-                reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+                reverse_lazy('autenticacion:password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
             )
             send_mail(
                 subject='Restablecimiento de contraseña',
@@ -77,10 +77,10 @@ class SendMailConfirmView(View):
             )
 
             # Redirigir a la página de confirmación si el correo fue enviado exitosamente
-            return redirect('password_reset_done')
+            return redirect('autenticacion:password_reset_done')
 
         # Mostrar el error en la misma página si el correo no es válido
-        return render(request, 'password_reset_form.html', {'form': form})
+        return render(request, 'autenticacion:password_reset_form.html', {'form': form})
     
 def user_logout(request):
     logout(request)  # Cierra la sesión del usuario
