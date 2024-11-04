@@ -78,9 +78,9 @@
                     <p>Carrera: {{c.carrera}}</p>
                     <p>número: {{c.numero}}</p>
                     <div class="card-buttons">
-                        <button onclick="window.location.href= ''">Ver Información</button>
+                        <button onclick="window.location.href= '{% url 'coordinador:ver_coordinador' c.rut %}'">Ver Información</button>
                         <button onclick="window.location.href= '{% url 'coordinador:editar_coordinador' c.rut %}'" 
-                        style="margin-left: 10pxcccccc;">Editar</button>
+                        style="margin-left: 10px;">Editar</button>
                     </div>
                 </div>
                 {% endfor %}

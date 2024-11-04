@@ -183,6 +183,10 @@ def editar_coordinador(request,rut):
     usuario = Coordinador.objects.get(rut=rut)
     return render(request,"coordinador/editar_coordinador.html",{'usuario':usuario})
 
+def ver_coordinador(request,rut):
+    usuario = Coordinador.objects.get(rut=rut)
+    return render(request,"coordinador/ver_coordinador.html",{'usuario':usuario})
+
 def editarcoordinador(request):
         nombre = request.POST.get("txtnombre")
         numero = request.POST.get("txtnumero")

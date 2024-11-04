@@ -19,4 +19,5 @@ urlpatterns = [
     path('registrar_coordinador/',views.registrar_coordinador,name='registrar_coordinador'),
     path('editar_coordinador/<rut>',views.editar_coordinador,name='editar_coordinador'),
     path('editarcoordinador/',views.editarcoordinador,name='editarcoordinador'),
+    path('ver_coordinador/<rut>',views.ver_coordinador,name='ver_coordinador'),
 ]
