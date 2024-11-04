@@ -20,4 +20,5 @@ urlpatterns = [
     path('registrar_coordinador/',views.registrar_coordinador,name='registrar_coordinador'),
     path('editar_coordinador/<rut>',views.editar_coordinador,name='editar_coordinador'),
     path('editarcoordinador/',views.editarcoordinador,name='editarcoordinador'),
+    path('verificar_rut/', views.verificar_rut, name='verificar_rut'),
 ]

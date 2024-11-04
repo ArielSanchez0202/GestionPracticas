@@ -37,7 +37,14 @@
                 </select>
             </form>
         </div>
-
+        
+        <div>
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
         <!-- Tarjetas de estudiantes -->
         <div class="table-container">
             {% for estudiante in estudiantes %}
