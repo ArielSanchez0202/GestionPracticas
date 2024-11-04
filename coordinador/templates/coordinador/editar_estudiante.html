@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/editar_estudiantes.css' %}">
+    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="form-header">
+        <h1>Editar Estudiante</h2>
+    </div>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+        title="El nombre solo debe contener letras y espacios." class="form-control" value="{{ estudiante.usuario.first_name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" name="apellido" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+        title="El apellido solo debe contener letras y espacios." class="form-control" value="{{ estudiante.usuario.last_name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="correo">Correo Electrónico</label>
+        <input type="email" id="correo" name="correo" class="form-control" value="{{ estudiante.usuario.email }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="rut">RUT</label>
+        <input type="text" id="rut" name="rut" class="form-control" value="{{ estudiante.rut }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="domicilio">Domicilio</label>
+        <input type="text" id="domicilio" name="domicilio" class="form-control" value="{{ estudiante.domicilio }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="numero_telefono">Número de Teléfono</label>
+        <input type="text" id="numero_telefono" name="numero_telefono" class="form-control" value="{{ estudiante.numero_telefono }}" required pattern="9[0-9]{8}" title="El número de teléfono debe comenzar con 9 y tener 9 dígitos.">
+    </div>
+
+    <div class="form-group">
+        <label for="carrera">Carrera</label>
+        <input type="text" id="carrera" name="carrera" class="form-control" value="{{ estudiante.carrera }}" required>
+    </div>
+
+    <button type="submit" style="margin-top: 30px;" class="btn btn-primary">Guardar Cambios</button>
+    <a href="{% url 'coordinador:listar_estudiantes' %}" style="margin-top: 30px;" class="btn btn-secondary">Cancelar</a>
+</form>
+</div>
+{% if messages %}
+    <div id="myModal" class="modalms">
+        <div class="modal-contentms">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            <button class="close-button" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+    
+    <script>
+        // Mostrar el modal si hay mensajes
+        window.onload = function() {
+            var modal = document.getElementById("myModal");
+            if (modal) {
+                modal.style.display = "block"; // Mostrar el modal
+            }
+        }
+
+        // Cerrar el modal
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
+    {% endif %}
+</body>
+{% endblock %}

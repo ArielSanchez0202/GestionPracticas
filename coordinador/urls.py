@@ -13,11 +13,11 @@ urlpatterns = [
     path('previsualizar_estudiantes/', views.previsualizar_estudiantes, name='previsualizar_estudiantes'),
     path('editar_estudiante/<int:estudiante_id>/', views.editar_estudiante, name='editar_estudiante'),
     path('detalle_estudiante/<int:estudiante_id>/', views.detalle_estudiante, name='detalle_estudiante'),
+    path('coordinadores/',views.coordinadores, name='coordinadores'),
     #Lista Coordinadores
     path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador'),
     path('crear_coordinador/',views.crear_coordinador,name='crear_coordinador'),
     path('registrar_coordinador/',views.registrar_coordinador,name='registrar_coordinador'),
     path('editar_coordinador/<rut>',views.editar_coordinador,name='editar_coordinador'),
     path('editarcoordinador/',views.editarcoordinador,name='editarcoordinador'),
-    path('ver_coordinador/<rut>',views.ver_coordinador,name='ver_coordinador'),
 ]

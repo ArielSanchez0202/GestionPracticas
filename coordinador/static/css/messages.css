@@ -1,0 +1,62 @@
+/* Estilo para el modal */
+.modalms {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+}
+
+.modal-contentms {
+    background-color: #ffffff;
+    margin: 5% auto; /* Reducir margen superior para centrar mejor */
+    padding: 20px;
+    width: 95%; /* Aumentar el ancho */
+    max-width: 800px; /* Aumentar el tamaño máximo del modal */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.alert-success {
+    background-color: #e6f9e6;
+    color: #2d6a2d;
+    border-left: 5px solid #4CAF50;
+}
+
+.alert-error {
+    background-color: #f9e6e6;
+    color: #8a2c2c;
+    border-left: 5px solid #F44336;
+}
+
+/* Botón de cierre */
+.close-button {
+    display: block;
+    width: 40%;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: 15px auto 0 auto; /* Centrar el botón horizontalmente */
+    transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+    background-color: #555;
+}

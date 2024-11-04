@@ -50,8 +50,6 @@ h1 {
 
 /* Barra de búsqueda */
 .search-container {
-    display: flex;
-    justify-content: center;
     margin-bottom: 20px;
 }
 
@@ -145,9 +143,153 @@ h1 {
     opacity: 0.7;
 }
 
-/* Responsividad */
-@media (min-width: 768px) {
-    .table-container {
-        flex-direction: column;
+/* Estilos para la tarjeta de detalles del estudiante */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-body .card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-body strong {
+    font-weight: bold;
+    color: #333;
+}
+/* Estilos de responsividad */
+
+/* Para pantallas pequeñas, como teléfonos (hasta 600px de ancho) */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
     }
+    
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .form-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .card {
+        width: 100%; /* La tarjeta ocupa el ancho completo */
+        max-width: 100%; /* Evitar desbordamiento */
+        padding: 15px;
+        word-wrap: break-word; /* Permite que las palabras largas se ajusten al ancho */
+        overflow-wrap: break-word;
+        display: flex;
+        flex-direction: column; /* Asegura que los elementos internos se apilen */
+    }
+
+    .card-body {
+        width: 100%; /* Ocupa el ancho completo de la tarjeta */
+        text-align: center; /* Centrar el texto */
+    }
+
+    .card-text {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .card-content {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .card-actions {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .search-container input {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        justify-content: center;
+    }
+
+    .button-container button {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+}
+
+/* Para pantallas medianas, como tablets (hasta 768px de ancho) */
+@media (max-width: 768px) {
+    .form-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .search-container input {
+        max-width: 80%;
+    }
+
+    .card {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+        word-wrap: break-word; /* Ajuste de palabras largas */
+        overflow-wrap: break-word;
+    }
+
+    .card-body {
+        width: 100%;
+        text-align: left;
+    }
+
+    .card-content {
+        margin-left: 0;
+    }
+
+    .card-actions {
+        justify-content: flex-start;
+        gap: 5px;
+    }
+}
+
+/* Para pantallas grandes, como laptops o desktops (entre 768px y 1024px de ancho) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        padding: 20px;
+    }
+
+    .form-header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .button-container {
+        justify-content: flex-end;
+    }
+
+    .card {
+        padding: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+}
+
+/* Ajuste general para evitar desbordamiento de texto en tarjetas */
+.card-body, .card-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    width: 100%; /* Asegura que no haya desbordamiento */
 }

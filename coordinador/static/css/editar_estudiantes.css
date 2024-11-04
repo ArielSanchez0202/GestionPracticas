@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+
+/* Reset de márgenes y paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Jost', sans-serif;
+    background-color: #CBCFD2;
+    justify-content: center;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 64px;
+    font-weight: 500;
+    text-align: left;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botón de Añadir Estudiantes */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.button-container button {
+    background-color: #E74C3C;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #C0392B;
+}
+
+/* Barra de búsqueda */
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    width: 100%;
+    max-width: 1000px; /* Ancho extendido de la barra de búsqueda */
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #CCC;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-container button {
+    background-color: white;
+    color: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1%;
+    padding: 20px;
+}
+.form-header h1 {
+    color: black;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.form-control{
+    margin-bottom: 10px;
+}
+/* Tarjetas de estudiantes */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.card {
+    flex-direction: row;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap:wrap;
+    width: 100%;
+}
+
+.card-content {
+    margin-left: 4%;
+    flex: 1;
+}
+
+.card h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Íconos de acción */
+.card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.card-actions button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.card-actions button img {
+    width: 24px;
+    height: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.card-actions button:hover img {
+    opacity: 0.7;
+}
+
+/* Estilos para la tarjeta de detalles del estudiante */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-body .card-text {
+    font-size: 1rem;
+    color: #555;
+}
+
+.card-body strong {
+    font-weight: bold;
+    color: #333;
+}
+/* Responsividad */
+@media (min-width: 768px) {
+    .table-container {
+        flex-direction: column;
+    }
+}
+/* Para tablets (ancho de pantalla entre 600px y 1024px) */
+@media (max-width: 1024px) and (min-width: 600px) {
+    h1 {
+        font-size: 48px;
+        text-align: center;
+    }
+    .container {
+        max-width: 90%;
+    }
+    .button-container {
+        justify-content: center;
+    }
+    .search-container input {
+        max-width: 90%;
+        padding: 8px;
+    }
+    .card {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .card h2 {
+        font-size: 1.1rem;
+    }
+    .card p {
+        font-size: 0.85rem;
+    }
+    .card-actions {
+        justify-content: center;
+    }
+    .form-header h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+}
+
+/* Para móviles (ancho de pantalla de 600px o menos) */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 36px;
+        text-align: center;
+    }
+    .container {
+        padding: 10px;
+    }
+    .button-container {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .button-container button {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    .search-container input {
+        max-width: 100%;
+        padding: 8px;
+    }
+    .table-container {
+        gap: 15px;
+    }
+    .card {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .card-content {
+        margin-left: 0;
+        text-align: center;
+    }
+    .card h2 {
+        font-size: 1rem;
+    }
+    .card p {
+        font-size: 0.8rem;
+    }
+    .card-body h5 {
+        font-size: 1.5rem;
+    }
+    .card-body .card-text {
+        font-size: 0.9rem;
+    }
+    .card-actions {
+        justify-content: center;
+        gap: 5px;
+    }
+}

@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from autenticacion.decorators import *
 from .forms import SendMailForm, SetPasswordForm
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.views import PasswordResetConfirmView, LogoutView
 from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.views import View
@@ -12,13 +13,18 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_str, force_bytes
 from django.contrib import messages
 from .models import User 
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
 
-# Create your views here.
+
 def user_login(request):
     if request.method == 'POST':
         email = request.POST['email']
-        password = request.POST['password']
-        
+        password = request.POST['password'] 
+
+                # Autenticar usuario basado en email y contraseña
         try:
             user = User.objects.get(email=email)
             user = authenticate(request, username=user.username, password=password)
@@ -32,10 +38,11 @@ def user_login(request):
                     return redirect('coordinador:listar_coordinador')  # Cambia esto por la URL del coordinador
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiante:estudiantes_main')  # Cambia esto por la URL del estudiante
+
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
         except User.DoesNotExist:
-            messages.error(request, "No existe un usuario con ese correo electrónico.")
+            messages.error(request, "No existe un usuario activo con ese correo electrónico.")
     
     return render(request, 'login.html')  # Asegúrate de que este template esté en la carpeta correcta
 
@@ -74,7 +81,31 @@ class SendMailConfirmView(View):
 
         # Mostrar el error en la misma página si el correo no es válido
         return render(request, 'password_reset_form.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
+    
+def user_logout(request):
+    logout(request)  # Cierra la sesión del usuario
     return redirect('home')
+
+@coordinador_required
+def bloquear_usuario(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if  user.is_active:
+        user.is_active = False
+        user.save()
+        messages.success(request, f"El usuario {user.username} ha sido bloqueado.")
+    else:
+        messages.info(request, f"El usuario {user.username} ya está bloqueado.")
+    return redirect('coordinador:listar_estudiantes')
+
+@coordinador_required
+def desbloquear_usuario(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user.is_active:
+        user.is_active = True
+        user.save()
+        messages.success(request, f"El usuario {user.username} ha sido desbloqueado.")
+    else:
+        messages.info(request, f"El usuario {user.username} ya está desbloqueado.")
+    return redirect('coordinador:listar_estudiantes')
+
+
