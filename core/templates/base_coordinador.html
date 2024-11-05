@@ -10,6 +10,7 @@
     <style>
         /* Estilos para el sidebar */
         .sidebar {
+            position: fixed;
             height: 100vh; /* Altura completa */
             background-color: #343A40; /* Color de fondo */
             overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
@@ -60,7 +61,7 @@
         }
 
         .sidebar li a:hover{
-            background-color: red;
+            background-color: #DD211C;;
             color: white;
         }
         .sidebar li a{
@@ -99,18 +100,18 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color: #CBCFD2;">
 
     <div class="d-flex">
         <nav class="sidebar flex-shrink-0 p-3">
-            <img src="{% static 'Logo.png' %}" alt="Logo" class="img-fluid">
+            <img src="{% static 'img/logoUA.png' %}" alt="Logo" class="img-fluid">
             <div class="coordinador-section">
                 <img src="{% static 'img/Group 2.svg' %}" alt="Coordinador Icono">
                 <span>Coordinador</span>
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Listado de prácticas</a>
+                    <a class="nav-link {% if active_page == 'listar_estudiantes' %}active{% endif %}" aria-current="page" href="{% url 'coordinador:listar_estudiantes' %}">Listado de prácticas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Solicitudes de prácticas</a>
@@ -128,7 +129,7 @@
                     <a class="nav-link" href="#">Informes Finales</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'coordinador:listar_estudiantes' %}">Listado Estudiantes</a>
+                    <a class="nav-link {% if active_page == 'listar_coordinador' %}active{% endif %}" href="{% url 'coordinador:listar_coordinador' %}">Listado de Coordinadores</a>
                 </li>
                 <li class="nav-item">
                     <form action="{% url 'logout' %}" method="post" style="margin-top: 15%;">
@@ -142,7 +143,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <main>
+                    <main style="margin-left: 280px; margin-top: 10px;">
                         {% block content %}
                         {% endblock %}
                     </main>
