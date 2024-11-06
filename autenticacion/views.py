@@ -19,14 +19,27 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 
 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
 def user_login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password'] 
 
-                # Autenticar usuario basado en email y contraseña
+        # Intentar obtener el usuario basado en el email
         try:
             user = User.objects.get(email=email)
+            
+            # Verificar si el usuario está inactivo antes de autenticar
+            if not user.is_active:
+                messages.error(request, "Tu cuenta ha sido bloqueada. Comuníquese con un administrador.")
+                return render(request, 'login.html')
+            
+            # Autenticar usuario basado en username y contraseña
             user = authenticate(request, username=user.username, password=password)
 
             if user is not None:
@@ -35,16 +48,17 @@ def user_login(request):
                 
                 # Redirección basada en el grupo del usuario
                 if user.groups.filter(name='Coordinador').exists():
-                    return redirect('coordinador:listar_coordinador')  # Cambia esto por la URL del coordinador
+                    return redirect('coordinador:listar_estudiantes')  # Cambia esto por la URL del coordinador
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiante:estudiantes_main')  # Cambia esto por la URL del estudiante
-
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+                
         except User.DoesNotExist:
             messages.error(request, "No existe un usuario activo con ese correo electrónico.")
     
     return render(request, 'login.html')  # Asegúrate de que este template esté en la carpeta correcta
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = SetPasswordForm
