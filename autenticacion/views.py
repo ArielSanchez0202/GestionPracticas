@@ -33,7 +33,7 @@ def user_login(request):
                 if user.groups.filter(name='Coordinador').exists():
                     return redirect('coordinador:listar_estudiantes')
                 elif user.groups.filter(name='Estudiante').exists():
-                    return redirect('estudiante:estudiantes_main')
+                    return redirect('estudiantes_main')
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
                 

@@ -23,7 +23,7 @@
             margin-bottom: 20px;
         }
 
-        .sidebar .coordinador-section {
+        .sidebar .estudiante-section {
             display: flex;
             align-items: center;
             margin-top: 20px;
@@ -34,7 +34,7 @@
             text-align: left;
         }
 
-        .sidebar .coordinador-section img {
+        .sidebar .estudiante-section img {
             width: 30px;
             height: 30px;
             margin-left: 10px;
@@ -43,7 +43,7 @@
             vertical-align: middle;
         }
 
-        .sidebar .coordinador-section span {
+        .sidebar .estudiante-section span {
             display: inline-block;
             text-align: center;
             flex: 5;
@@ -110,7 +110,7 @@
 <div class="d-flex">
     <nav class="sidebar flex-shrink-0 p-3">
         <img src="{% static 'img/logoUA.png' %}" alt="Logo" class="img-fluid">
-        <div class="coordinador-section">
+        <div class="estudiante-section">
             <img src="{% static 'img/Group 2.svg' %}" alt="usuario Icono">
             <span>{{ request.user.get_full_name|default:request.user.username }}</span>
         </div>

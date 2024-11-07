@@ -1,0 +1,37 @@
+{% extends 'base_estudiante.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Estudiante</title>
+        
+        <!-- Aquí se enlaza directamente el archivo de estilos específico para esta plantilla -->
+        <link rel="stylesheet" href="{% static 'css/estudiante.css' %}">
+    </head>
+
+    <h1>PRÁCTICAS</h1>
+
+    <form action="/estudiante/inscripcion_practica/" method="get">
+        <button type="submit">Ingresar nueva práctica</button>
+    </form>
+
+    <div class="practicas-container">
+        {% for practica in practicas %}
+        <div class="practica-item">
+            <div>
+                <span class="icon">&#x2705;</span>
+                <strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong><br>
+                Estado: {{ practica.get_estado_display }}<br>  <!-- Si usas un campo ChoiceField para estado -->
+                Nota: {{ practica.nota }}  <!-- Asegúrate de que existe un campo nota en tu modelo -->
+            </div>
+            <button class="detalle-btn">Detalle</button>
+        </div>
+        {% empty %}
+        <p>No hay prácticas registradas.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

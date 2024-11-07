@@ -1,0 +1,51 @@
+/* Reset general para estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fijar la sidebar a la izquierda */
+.sidebar {
+    position: fixed; /* Fija la sidebar */
+    top: 0;
+    left: 0;
+    width: 280px; /* Ancho de la sidebar */
+    height: 100vh; /* Altura completa de la pantalla */
+    background-color: #343A40; /* Color de fondo de la sidebar */
+    overflow-y: auto;
+    padding-top: 20px; /* Espaciado superior */
+}
+
+/* Estilo para el cuerpo y contenido */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #c4c4c4; /* Color gris más oscuro */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alineación a la izquierda */
+}
+
+/* Ajustar el contenido para que no se solape con la sidebar */
+.container-fluid {
+    margin-left: 300px; /* Margen izquierdo para dejar espacio a la sidebar */
+    width: calc(100% - 300px); /* Ajusta el contenido al resto del espacio */
+    padding: 20px; /* Espaciado en el contenedor */
+}
+
+/* Título */
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 30px;
+}
+
+/* Botón de "Ingresar nueva práctica" */
+form {
+    display: flex;
+    justify-content: flex-end; /* Ajusta la posición del botón */
+    margin-bottom: 20px;
+    width: 100%; /* Ajusta
