@@ -64,11 +64,19 @@
                     <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
                     </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'autenticacion:desbloquear_usuario' estudiante.pk %}'; }">
-                        <img src="{% static 'icons/Confirm.svg' %}" alt="Desbloquear">
+                    <button 
+                    class="btn-unlock" 
+                    onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'autenticacion:desbloquear_usuario' estudiante.pk %}'; }"
+                    onmouseover="this.querySelector('img').src='{% static 'icons/Desbloquear.svg' %}'"
+                    onmouseout="this.querySelector('img').src='{% static 'icons/Bloquear.svg' %}'">
+                    <img src="{% static 'icons/Bloquear.svg' %}" alt="Desbloquear">
                     </button>
-                    <button onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'autenticacion:bloquear_usuario' estudiante.pk %}'; }">
-                        <img src="{% static 'icons/X.svg' %}" alt="Bloquear">
+                    <button 
+                    class="btn-lock" 
+                    onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'autenticacion:bloquear_usuario' estudiante.pk %}'; }"
+                    onmouseover="this.querySelector('img').src='{% static 'icons/Bloquear.svg' %}'"
+                    onmouseout="this.querySelector('img').src='{% static 'icons/Desbloquear.svg' %}'">
+                    <img src="{% static 'icons/Desbloquear.svg' %}" alt="Bloquear">
                     </button>
                 </div>
             </div>
