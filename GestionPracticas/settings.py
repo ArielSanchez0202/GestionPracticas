@@ -128,6 +128,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static", 
+    BASE_DIR / "estudiante" / "static",
 ]
 
 # Directorio donde se recopilarán todos los archivos estáticos cuando se ejecute 'collectstatic'

@@ -1,23 +1,52 @@
 {% extends 'base_estudiante.html' %}
 
 {% load static %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal Estudiante</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Ajusta la ruta según tu estructura de archivos -->
-</head>
-<body>
-    <header>
-        <h1>Bienvenido, Estudiante</h1>
-    </header>
-    <main>
-        <p>Esta es la página principal para estudiantes.</p>
-    </main>
-    <footer>
-        <p>&copy; 2024 Gestión de Prácticas</p>
-    </footer>
-</body>
-</html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Listado de Prácticas</title>
+        <link rel="stylesheet" href="{% static 'css/listado_practicas.css' %}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="form-header">
+                <h1>PRÁCTICAS</h1>
+                <!-- Botón para añadir nueva práctica -->
+                <div class="button-container">
+                    <button onclick="window.location.href='{% url 'estudiante:agregar_practica' %}'">Ingresar nueva práctica</button>
+                </div>
+            </div>
+
+            <!-- Tarjetas de prácticas -->
+            <div class="table-container">
+                {% for practica in practicas %}
+                <div class="card">
+                    <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px;">
+                    <div class="card-content">
+                        <h2>{{ practica.estudiante.usuario.first_name }} {{ practica.estudiante.usuario.last_name }}</h2>
+                        <p>Correo: {{ practica.estudiante.usuario.email }}</p>
+                        <p>RUT: {{ practica.estudiante.rut }}</p>
+                        <p>Domicilio: {{ practica.estudiante.domicilio }}</p>
+                        <p>Carrera: {{ practica.estudiante.carrera }}</p>
+                        <p>Estado: {{ practica.get_estado_display }}</p>
+                        <p>Fecha Inscripción: {{ practica.fecha_inscripcion }}</p>
+                    </div>
+                    <div class="card-actions">
+                        <button onclick="window.location.href='{% url 'estudiante:editar_practica' practica.pk %}'">
+                            <img src="{% static 'icons/Edit.svg' %}" alt="Editar">
+                        </button>
+                        <button onclick="window.location.href='{% url 'estudiante:detalle_practica' practica.pk %}'">
+                            <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No hay prácticas registradas.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+{% endblock %}
