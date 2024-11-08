@@ -77,10 +77,10 @@
 
     <div class="form-header">
         <h1>Agregar coordinador</h1>
-        <button class="btn-carga-masiva" onclick="window.location.href='{% url 'coordinador:carga_masiva_estudiantes' %}'">Carga Masiva</button>
+        <button class="btn-carga-masiva" onclick="window.location.href='{% url 'carga_masiva_estudiantes' %}'">Carga Masiva</button>
     </div>
 
-    <form action="{% url 'coordinador:agregar_estudiante' %}" method="post">
+    <form action="{% url 'agregar_estudiante' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
             <div class="input-column">

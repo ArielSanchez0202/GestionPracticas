@@ -64,6 +64,8 @@
                     <button onclick="window.location.href='{% url 'detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
                     </button>
+                    <!-- Mostrar botón para desbloquear si el estudiante está inactivo -->
+                    {% if not estudiante.usuario.is_active %}
                     <button 
                     class="btn-unlock" 
                     onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'desbloquear_usuario' estudiante.pk %}'; }"
@@ -71,6 +73,8 @@
                     onmouseout="this.querySelector('img').src='{% static 'icons/Bloquear.svg' %}'">
                     <img src="{% static 'icons/Bloquear.svg' %}" alt="Desbloquear">
                     </button>
+                    {% elif estudiante.usuario.is_active %}
+                    <!-- Mostrar botón para bloquear si el estudiante está activo -->
                     <button 
                     class="btn-lock" 
                     onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'bloquear_usuario' estudiante.pk %}'; }"
@@ -78,6 +82,7 @@
                     onmouseout="this.querySelector('img').src='{% static 'icons/Desbloquear.svg' %}'">
                     <img src="{% static 'icons/Desbloquear.svg' %}" alt="Bloquear">
                     </button>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}

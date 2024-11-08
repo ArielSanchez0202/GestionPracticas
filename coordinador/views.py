@@ -137,7 +137,7 @@ def agregar_estudiante(request):
 
             # Guarda el mensaje en la sesión para mostrarlo en `listar_estudiantes`
             request.session['message_success'] = f"Estudiante '{nombre} {apellido}' agregado exitosamente. Las credenciales han sido enviadas al correo."
-            return redirect('coordinador:listar_estudiantes')
+            return redirect('listar_estudiantes')
 
         except BadHeaderError:
             messages.error(request, "Cabecera del correo inválida.")
@@ -166,7 +166,7 @@ def carga_masiva_estudiantes(request):
         archivo = request.FILES.get('archivo')
         if not archivo:
             messages.error(request, "Por favor, selecciona un archivo.")
-            return redirect('coordinador:carga_masiva_estudiantes')
+            return redirect('carga_masiva_estudiantes')
 
         try:
             df = pd.read_excel(archivo, engine='openpyxl')
@@ -177,7 +177,7 @@ def carga_masiva_estudiantes(request):
             return render(request, 'coordinador/carga_masiva_estudiantes.html', {'estudiantes': estudiantes})
         except Exception as e:
             messages.error(request, f"Error al procesar el archivo: {e}")
-            return redirect('coordinador:carga_masiva_estudiantes')
+            return redirect('carga_masiva_estudiantes')
     return render(request, 'coordinador/carga_masiva_estudiantes.html')
 
 @coordinador_required
@@ -212,7 +212,7 @@ def previsualizar_estudiantes(request):
 
         request.session.pop('alumnos_preview', None)
         messages.success(request, "Estudiantes añadidos exitosamente.")
-        return redirect('coordinador:listar_estudiantes')
+        return redirect('listar_estudiantes')
     return render(request, 'coordinador/carga_masiva_preview.html', {'alumnos': alumnos})
 
 @coordinador_required
@@ -445,7 +445,7 @@ def editar_estudiante(request, estudiante_id):
             estudiante.save()
 
             messages.success(request, f"Estudiante '{nombre} {apellido}' actualizado exitosamente.")
-            return redirect('coordinador:listar_estudiantes')
+            return redirect('listar_estudiantes')
 
         except Exception as e:
             messages.error(request, f"Error al actualizar estudiante: {e}")
