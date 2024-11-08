@@ -119,7 +119,7 @@ def bloquear_usuario(request, user_id):
         messages.success(request, f"El usuario {user.username} ha sido bloqueado.")
     else:
         messages.info(request, f"El usuario {user.username} ya está bloqueado.")
-    return redirect('coordinador:listar_estudiantes')
+    return redirect('listar_estudiantes')
 
 @coordinador_required
 def desbloquear_usuario(request, user_id):
@@ -130,4 +130,4 @@ def desbloquear_usuario(request, user_id):
         messages.success(request, f"El usuario {user.username} ha sido desbloqueado.")
     else:
         messages.info(request, f"El usuario {user.username} ya está desbloqueado.")
-    return redirect('coordinador:listar_estudiantes')
+    return redirect('listar_estudiantes')

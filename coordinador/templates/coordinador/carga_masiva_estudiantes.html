@@ -179,7 +179,7 @@
     <div class="carga-masiva-container">
         <h1>Carga Masiva</h1>
         <div class="botones-carga">
-            <a href="{% url 'coordinador:descargar_plantilla_estudiantes' %}" class="btn">Descargar Plantilla</a>
+            <a href="{% url 'descargar_plantilla_estudiantes' %}" class="btn">Descargar Plantilla</a>
             <button class="btn" id="btnSubirCarga">Subir Carga Masiva</button>
         </div>
         {% if estudiantes %}
@@ -207,7 +207,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <form method="POST" action="{% url 'coordinador:previsualizar_estudiantes' %}">
+        <form method="POST" action="{% url 'previsualizar_estudiantes' %}">
             {% csrf_token %}
             <button type="submit"  class="btn btn-add-list">Añadir Listado</button>
         </form>

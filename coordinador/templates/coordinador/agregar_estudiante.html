@@ -8,12 +8,12 @@
     <div class="container">
         <div class="form-header">
             <h1>AGREGAR ALUMNO</h1>
-            <button class="btn-carga-masiva" onclick="window.location.href='{% url 'coordinador:carga_masiva_estudiantes' %}'">Carga Masiva</button>
+            <button class="btn-carga-masiva" onclick="window.location.href='{% url 'carga_masiva_estudiantes' %}'">Carga Masiva</button>
         </div>
         <div class="form-header1">
             <h3>Datos del estudiante:</h3>
         </div>
-        <form action="{% url 'coordinador:agregar_estudiante' %}" method="post" onsubmit="return validateForm()">
+        <form action="{% url 'agregar_estudiante' %}" method="post" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="form-group">
                 <div class="form-group1">
