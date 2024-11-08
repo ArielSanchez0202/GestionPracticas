@@ -10,11 +10,14 @@
     <style>
         /* Estilos para el sidebar */
         .sidebar {
-            position: fixed;
-            height: 100vh;
-            background-color: #343A40;
+            position: fixed; /* Fija la sidebar */
+            top: 0;
+            left: 0;
+            width: 280px; /* Ancho de la sidebar */
+            height: 100vh; /* Altura completa de la pantalla */
+            background-color: #343A40; /* Color de fondo de la sidebar */
             overflow-y: auto;
-            text-align: center;
+            padding-top: 20px; /* Espaciado superior */
         }
         .sidebar img {
             width: 100%;
@@ -121,7 +124,7 @@
             </li>
 
             <li class="nav-item">
-                <form action="{% url 'logout' %}" method="post" style="margin-top: 200%;">
+                <form action="{% url 'logout' %}" method="post" style="margin-top: 170%;">
                     {% csrf_token %}
                     <a href="#" onclick="this.closest('form').submit()" class="nav-link btn btn-danger" style="border-radius: 5px;">Cerrar Sesión</a>
                 </form>

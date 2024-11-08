@@ -2,6 +2,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.password_validation import validate_password
+
 
 class SendMailForm(forms.Form):
     email = forms.EmailField(
@@ -40,15 +42,26 @@ class PasswordResetForm(forms.Form):
 
         # Comprobar que la nueva contraseña no sea igual a la contraseña actual
         if self.user.check_password(password1):
-            raise ValidationError("La nueva contraseña no puede ser la misma que la contraseña actual.")
+            self.add_error('new_password2', "La nueva contraseña no puede ser la misma que la contraseña actual.")
+        
+        # Validar la contraseña usando las validaciones predeterminadas de Django
+        try:
+            validate_password(password1, self.user)
+        except ValidationError as e:
+            # Añadir los errores de validación predeterminados debajo de new_password2
+            for error in e.messages:
+                self.add_error('new_password2', error)
 
         return password1
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
         password2 = self.cleaned_data.get('new_password2')
+
+        # Comprobar que las contraseñas coincidan
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError('Las contraseñas no coinciden.')
+        
         return password2
     
     def clean_rut(self):

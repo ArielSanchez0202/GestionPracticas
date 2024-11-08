@@ -5,18 +5,6 @@
     box-sizing: border-box;
 }
 
-/* Fijar la sidebar a la izquierda */
-.sidebar {
-    position: fixed; /* Fija la sidebar */
-    top: 0;
-    left: 0;
-    width: 280px; /* Ancho de la sidebar */
-    height: 100vh; /* Altura completa de la pantalla */
-    background-color: #343A40; /* Color de fondo de la sidebar */
-    overflow-y: auto;
-    padding-top: 20px; /* Espaciado superior */
-}
-
 /* Estilo para el cuerpo y contenido */
 body {
     font-family: 'Arial', sans-serif;
@@ -48,4 +36,5 @@ form {
     display: flex;
     justify-content: flex-end; /* Ajusta la posición del botón */
     margin-bottom: 20px;
-    width: 100%; /* Ajusta
+    width: 100%; 
+}
