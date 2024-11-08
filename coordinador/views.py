@@ -7,12 +7,11 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from autenticacion.decorators import coordinador_required
 from .models import Estudiante
-from django.http import BadHeaderError, HttpResponse, JsonResponse
+from django.http import BadHeaderError, HttpResponse, HttpResponseNotFound, JsonResponse
 import openpyxl
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import Coordinador
-import uuid
 import re
 from smtplib import SMTPException
 from django.contrib.messages.storage.fallback import FallbackStorage
@@ -258,12 +257,15 @@ def registrar_coordinador(request):
         carrera = request.POST.get("txtcarrera")
         correo = request.POST.get("txtcorreo")
         
-        # Obtén la instancia completa del usuario usando su ID
-        
-        
-        # Guarda el nuevo coordinador, asociándolo con el usuario
+        # Verifica si ya existe un Coordinador con el mismo rut
+        if Coordinador.objects.filter(rut=rut).exists():
+            return render(request, 'coordinador/crear_coordinador.html', {
+                'error_message': "El rut ya está registrado. No se puede crear otro coordinador con el mismo rut."
+            })
+
+        # Crea el nuevo coordinador si el rut no existe
         coordinador = Coordinador.objects.create(
-            nombre=nombre, 
+            nombre=nombre,
             numero=numero,
             rut=rut,
             domicilio=domicilio,
@@ -272,6 +274,8 @@ def registrar_coordinador(request):
         )
         
         return redirect('coordinador:listar_coordinador')
+
+    return render(request, 'nombre_de_tu_template.html')  # Renderiza el formulario en caso de que no sea POST
 
 def editar_coordinador(request,rut):
     usuario = Coordinador.objects.get(rut=rut)
@@ -282,22 +286,22 @@ def ver_coordinador(request,rut):
     return render(request,"coordinador/ver_coordinador.html",{'usuario':usuario})
 
 def editarcoordinador(request):
-        nombre = request.POST.get("txtnombre")
-        numero = request.POST.get("txtnumero")
-        rut = request.POST.get("txtrut")
-        domicilio = request.POST.get("txtdomicilio")
-        carrera = request.POST.get("txtcarrera")
-        correo = request.POST.get("txtcorreo")
+    nombre = request.POST.get("txtnombre")
+    numero = request.POST.get("txtnumero")
+    rut = request.POST.get("txtrut")
+    domicilio = request.POST.get("txtdomicilio")
+    carrera = request.POST.get("txtcarrera")
+    correo = request.POST.get("txtcorreo")
 
-        usuario = Coordinador.objects.get(rut=rut)
-        usuario.nombre = nombre
-        usuario.numero = numero
-        usuario.domicilio = domicilio
-        usuario.carrera = carrera
-        usuario.correo = correo
-        usuario.save()
+    usuario = Coordinador.objects.get(rut=rut)
+    usuario.nombre = nombre
+    usuario.numero = numero
+    usuario.domicilio = domicilio
+    usuario.carrera = carrera
+    usuario.correo = correo
+    usuario.save()
 
-        return redirect('coordinador:listar_coordinador')
+    return redirect('coordinador:listar_coordinador')
 @coordinador_required
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
