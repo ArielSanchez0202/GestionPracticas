@@ -243,18 +243,18 @@ def listar_estudiantes(request):
         'estudiantes': estudiantes,
     }
     return render(request, 'coordinador/listar_estudiantes.html', context)
-
+@coordinador_required
 def coordinadores(request):
     return render(request,'coordinador/coordinadores.html')
-
+@coordinador_required
 def listar_coordinador(request):
     coordinadores = Coordinador.objects.all()
     return render(request,'coordinador/listar_coordinador.html',{'coordinadores':coordinadores})
-
+@coordinador_required
 def crear_coordinador(request):
     usuarios = Coordinador.objects.all()
     return render(request,'coordinador/crear_coordinador.html',{'usuarios':usuarios})
-
+@coordinador_required
 def registrar_coordinador(request):
     # Limpiar mensajes de la sesión para evitar acumulaciones
     storage = get_messages(request)
@@ -454,7 +454,7 @@ def editar_estudiante(request, estudiante_id):
     return render(request, 'coordinador/editar_estudiante.html', {
         'estudiante': estudiante,
     })
-
+@coordinador_required
 def editar_coordinador(request, coordinador_id):
     # Obtener el objeto Coordinador o retornar 404 si no existe
     coordinador = get_object_or_404(Coordinador, usuario_id=coordinador_id)
@@ -536,7 +536,7 @@ def editar_coordinador(request, coordinador_id):
     return render(request, 'coordinador/editar_coordinador.html', {
         'coordinador': coordinador,
     })
-
+@coordinador_required
 def ver_coordinador(request, coordinador_id):
     coordinadores = get_object_or_404(Coordinador, usuario_id=coordinador_id)
 

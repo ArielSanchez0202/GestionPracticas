@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from autenticacion.decorators import estudiante_required
-from coordinador.models import Estudiante, Practica
+from autenticacion.decorators import estudiante_required,coordinador_required
+from coordinador.models import Estudiante, Practica , Coordinador
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from .models import InscripcionPractica
@@ -96,3 +96,17 @@ def inscripcion_practica_view(request):
 def verificar_practica1(request):
     existe_practica1 = InscripcionPractica.objects.filter(practica1=True).exists()
     return JsonResponse({'existe_practica1': existe_practica1})
+
+@coordinador_required
+def listar_practicas(request):
+    # Obtener todas las inscripciones de prácticas
+    inscripciones = InscripcionPractica.objects.all()
+    return render(request, 'listar_practicas.html', {'inscripciones': inscripciones})
+
+@coordinador_required
+def ver_formulario(request, solicitud_id):
+    # Obtener la solicitud de práctica específica por su ID
+    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
+    
+    # Renderizar el template y pasar la solicitud al contexto
+    return render(request, 'ver_formulario.html', {'solicitud': solicitud})

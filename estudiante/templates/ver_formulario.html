@@ -1,0 +1,50 @@
+{% extends 'base_coordinador.html' %}
+
+{% block title %}Ver Solicitud de Práctica{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-header">
+        <h1>Detalles de la Solicitud de Práctica</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Número de Práctica: {{ solicitud.id }}</h3>
+            <p><strong>Nombre Completo:</strong> {{ solicitud.nombre_completo }}</p>
+            <p><strong>RUT:</strong> {{ solicitud.rut }}</p>
+            <p><strong>Domicilio:</strong> {{ solicitud.domicilio }}</p>
+            <p><strong>Teléfono:</strong> {{ solicitud.telefono }}</p>
+            <p><strong>Correo Electrónico:</strong> {{ solicitud.correo }}</p>
+            <p><strong>Carrera:</strong> {{ solicitud.carrera }}</p>
+            <p><strong>Razón Social de la Empresa:</strong> {{ solicitud.razon_social }}</p>
+            <p><strong>Dirección de la Empresa:</strong> {{ solicitud.direccion_empresa }}</p>
+            <p><strong>Jefe Directo:</strong> {{ solicitud.jefe_directo }}</p>
+            <p><strong>Cargo del Jefe Directo:</strong> {{ solicitud.cargo }}</p>
+            <p><strong>Teléfono del Jefe Directo:</strong> {{ solicitud.telefono_jefe }}</p>
+            <p><strong>Correo del Jefe Directo:</strong> {{ solicitud.correo_jefe }}</p>
+            <p><strong>Fecha de Inicio:</strong> {{ solicitud.fecha_inicio }}</p>
+            <p><strong>Fecha de Término:</strong> {{ solicitud.fecha_termino }}</p>
+            <p><strong>Horario de Trabajo:</strong> {{ solicitud.horario_trabajo }}</p>
+            <p><strong>Horario de Colación:</strong> {{ solicitud.horario_colacion }}</p>
+            <p><strong>Cargo a Desarrollar:</strong> {{ solicitud.cargo_desarrollar }}</p>
+            <p><strong>Departamento en el que Trabajará:</strong> {{ solicitud.depto_trabajar }}</p>
+            <p><strong>Actividades a Realizar:</strong> {{ solicitud.actividades_realizar }}</p>
+
+            <p><strong>Estado de la Solicitud:</strong> 
+                {% if solicitud.estado == 'Aprobada' %}
+                    <span class="badge bg-success">{{ solicitud.estado }}</span>
+                {% elif solicitud.estado == 'Rechazada' %}
+                    <span class="badge bg-danger">{{ solicitud.estado }}</span>
+                {% else %}
+                    <span class="badge bg-warning">{{ solicitud.estado }}</span>
+                {% endif %}
+            </p>
+
+            <div class="card-buttons">
+                <a href="{% url 'listar_practicas' %}" class="btn btn-secondary">Regresar al listado</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

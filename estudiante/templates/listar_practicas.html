@@ -1,0 +1,63 @@
+{% extends 'base_coordinador.html' %}
+
+{% block title %} Lista de Prácticas {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive py-5">
+            <h1>Lista de Solicitudes de Prácticas</h1>
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>RUT</th>
+                        <th>Carrera</th>
+                        <th>Práctica</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inscripcion in inscripciones %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ inscripcion.nombre_completo }}</td>
+                            <td>{{ inscripcion.rut }}</td>
+                            <td>{{ inscripcion.carrera }}</td>
+                            <td>
+                                {% if inscripcion.practica1 %}
+                                    Práctica 1
+                                {% elif inscripcion.practica2 %}
+                                    Práctica 2
+                                {% else %}
+                                    No seleccionada
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inscripcion.estado == "aprobada" %}
+                                    <span class="badge bg-success">Aprobada</span>
+                                {% elif inscripcion.estado == "rechazada" %}
+                                    <span class="badge bg-danger">Rechazada</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info">Ver Formulario</a>
+                                <a href="{% url 'listar_practicas' %}" class="btn btn-warning">Ver Carta</a>
+                                <!-- Otras acciones según sea necesario -->
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">No hay solicitudes de prácticas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
