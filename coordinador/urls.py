@@ -14,6 +14,11 @@ urlpatterns = [
     path('editar_estudiante/<int:estudiante_id>/', views.editar_estudiante, name='editar_estudiante'),
     path('detalle_estudiante/<int:estudiante_id>/', views.detalle_estudiante, name='detalle_estudiante'),
     path('coordinadores/',views.coordinadores, name='coordinadores'),
+    path('solicitudes_practica/', views.solicitudes_practica, name='solicitudes_practica'),
+    path('informes_avances/', views.informes_avances, name='informes_avances'),
+    path('autoevaluaciones/', views.autoevaluaciones, name='autoevaluaciones'),
+    path('informes_finales/', views.informes_finales, name='informes_finales'),
+    path('documentos/', views.documentos, name='documentos'),
     #Lista Coordinadores
     path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador'),
     path('crear_coordinador/',views.crear_coordinador,name='crear_coordinador'),

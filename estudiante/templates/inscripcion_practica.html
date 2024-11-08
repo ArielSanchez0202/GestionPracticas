@@ -1,0 +1,146 @@
+{% extends 'base_estudiante.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inscripción de Práctica Profesional</title>
+        <link rel="stylesheet" href="{% static 'css/inscripcion_practica.css' %}">
+    </head>
+
+    <div class="container">
+
+        <div class="back-button">
+            <a href="{% url 'estudiantes_main' %}">
+                <button type="button" class="image-button">
+                    <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+                </button>
+            </a>
+        </div>
+
+        <h1>Inscripción de Práctica Profesional</h1>
+        
+        <form method="post" onsubmit="return validateCheckboxes()">
+            {% csrf_token %}
+            
+            <legend>Datos del estudiante:</legend>
+            
+            <div class="form-group">
+                <label for="nombre_completo">Nombre Completo</label>
+                <input type="text" id="nombre_completo" name="nombre_completo" value="Nicolás Moisés Paez Pimentel">
+            </div>
+        
+            <div class="form-group">
+                <label for="rut">Rut</label>
+                <input type="text" id="rut" name="rut" value="11.111.111-1">
+            </div>
+        
+            <div class="form-group">
+                <label for="domicilio">Domicilio</label>
+                <input type="text" id="domicilio" name="domicilio" value="Av. Pedro de Valdivia 425">
+            </div>
+        
+            <div class="form-group">
+                <label for="telefono">Número de Teléfono</label>
+                <input type="text" id="telefono" name="telefono" value="+56 9 12345678">
+            </div>
+        
+            <div class="form-group">
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" value="nicolas.paez@cloud.uautonoma.cl">
+            </div>
+        
+            <div class="form-group">
+                <label for="carrera">Carrera</label>
+                <input type="text" id="carrera" name="carrera" value="Ingeniería Civil en Informática">
+            </div>
+        
+            <div class="checkbox-group">
+                <input type="checkbox" id="practica1" name="practica1" class="custom-checkbox" onclick="toggleCheckbox(this)">
+                <label for="practica1">Práctica I</label>
+            
+                <input type="checkbox" id="practica2" name="practica2" class="custom-checkbox" onclick="toggleCheckbox(this)">
+                <label for="practica2">Práctica II</label>
+            </div>
+        
+            <legend>Datos de la Empresa/Institución:</legend>
+            
+            <div class="form-group">
+                <label for="razon_social">Razón Social</label>
+                <input type="text" id="razon_social" name="razon_social" placeholder="Ingrese Razón Social" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="direccion_empresa">Dirección</label>
+                <input type="text" id="direccion_empresa" name="direccion_empresa" placeholder="Ingrese la Dirección" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="jefe_directo">Jefe Directo</label>
+                <input type="text" id="jefe_directo" name="jefe_directo" placeholder="Ingrese el Jefe Directo" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" name="cargo" placeholder="Ingrese el Cargo" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="telefono_jefe">Teléfono</label>
+                <input type="number" id="telefono_jefe" name="telefono_jefe" placeholder="Ej: 912345678" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="correo_jefe">Correo Electrónico</label>
+                <input type="email" id="correo_jefe" name="correo_jefe" placeholder="Ej: correo@example.com" required>
+            </div>
+        
+            <legend>Datos de la Práctica:</legend>
+            
+            <div class="form-group">
+                <label for="fecha_inicio">Fecha de Inicio</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+            </div>
+        
+            <div class="form-group">
+                <label for="fecha_termino">Fecha de Término</label>
+                <input type="date" id="fecha_termino" name="fecha_termino" required>
+            </div>
+        
+            <table>
+                <tr>
+                    <th rowspan="2">Horario</th>
+                    <th>Trabajo</th>
+                    <td><input type="text" id="horario_trabajo" name="horario_trabajo" required></td>
+                </tr>
+                <tr>
+                    <th>Colación</th>
+                    <td><input type="text" id="horario_colacion" name="horario_colacion" required></td>
+                </tr>
+                <tr>
+                    <th>Cargo por desarrollar</th>
+                    <td colspan="2"><input type="text" id="cargo_desarrollar" name="cargo_desarrollar" required></td>
+                </tr>
+                <tr>
+                    <th>Departamento en que trabajará</th>
+                    <td colspan="2"><input type="text" id="depto_trabajar" name="depto_trabajar" required></td>
+                </tr>
+                <tr>
+                    <th>Actividades por realizar</th>
+                    <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required></td>
+                </tr>
+            </table>   
+        
+            <div class="button-container">
+                <button type="submit" class="send-button">Enviar</button>
+            </div>
+        </form>
+                
+    </div>
+
+    <script src="{% static 'js/checkbox_validation.js' %}"></script>
+
+{% endblock %}

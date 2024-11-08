@@ -228,14 +228,21 @@ def descargar_plantilla_estudiantes(request):
 
 @coordinador_required
 def listar_estudiantes(request):
-    estudiantes = Estudiante.objects.all()
+    # Obtener el estado de la URL o establecerlo en "activo" por defecto
+    estado = request.GET.get('estado', 'activo')
 
-    # Recuperar el mensaje de éxito y eliminarlo de la sesión
-    message_success = request.session.pop('message_success', None)
-    if message_success:
-        messages.success(request, message_success)
+    # Filtrar estudiantes según el atributo is_active de su usuario
+    if estado == 'activo':
+        estudiantes = Estudiante.objects.filter(usuario__is_active=True)
+    elif estado == 'inactivo':
+        estudiantes = Estudiante.objects.filter(usuario__is_active=False)
+    else:
+        estudiantes = Estudiante.objects.all()  # Para mostrar todos si 'estado' es 'Todos'
 
-    return render(request, 'coordinador/listar_estudiantes.html', {'estudiantes': estudiantes})
+    context = {
+        'estudiantes': estudiantes,
+    }
+    return render(request, 'coordinador/listar_estudiantes.html', context)
 
 def coordinadores(request):
     return render(request,'coordinador/coordinadores.html')
@@ -406,3 +413,24 @@ def verificar_rut(request):
     rut = request.GET.get('rut')
     existe = User.objects.filter(username=rut).exists()
     return JsonResponse({'existe': existe})
+
+
+@coordinador_required
+def solicitudes_practica(request):
+    return render(request, 'coordinador/solicitudes_practicas.html')
+
+@coordinador_required
+def informes_avances(request):
+    return render(request, 'coordinador/informes_avances.html')
+
+@coordinador_required
+def autoevaluaciones(request):
+    return render(request, 'coordinador/autoevaluaciones.html')
+
+@coordinador_required
+def informes_finales(request):
+    return render(request, 'coordinador/informes_finales.html')
+
+@coordinador_required
+def documentos(request):
+    return render(request, 'coordinador/documentos.html')

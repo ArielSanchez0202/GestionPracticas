@@ -14,6 +14,7 @@
             height: 100vh; /* Altura completa */
             background-color: #343A40; /* Color de fondo */
             overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
+            text-align: center;
         }
         .sidebar img {
             width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del sidebar */
@@ -22,6 +23,32 @@
             margin-bottom: 20px; /* Espacio debajo de la imagen */
         }
 
+        /* Estilos para la sección de Coordinador */
+        .sidebar .coordinador-section {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px 0 1px; /* Ajusta el padding inferior para acercar la línea */
+            border-top: 2px solid black;
+            border-bottom: 2px solid black;
+            color: white; /* Texto blanco */
+            text-align: center;
+        }
+
+        .sidebar .coordinador-section img {
+            width: 30px; /* Tamaño reducido del icono */
+            height: 30px;
+            margin-left: 10px;
+            margin-right: -25px;
+            margin-bottom: 5px;
+            vertical-align: middle;
+        }
+
+        .sidebar .coordinador-section span {
+            display: inline-block;
+            text-align: center;
+            flex: 5; /* Ocupa todo el espacio restante */
+        }
 
         @media (max-width: 768px) {
             .sidebar-toggle {
@@ -34,7 +61,7 @@
         }
 
         .sidebar li a:hover{
-            background-color: red;
+            background-color: #DD211C;;
             color: white;
         }
         .sidebar li a{
@@ -77,31 +104,32 @@
 
     <div class="d-flex">
         <nav class="sidebar flex-shrink-0 p-3">
-            <img src="{% static 'Logo.png' %}" alt="Logo" class="img-fluid">
+            <img src="{% static 'img/logoUA.png' %}" alt="Logo" class="img-fluid">
+            <div class="coordinador-section">
+                <img src="{% static 'img/Group 2.svg' %}" alt="Coordinador Icono">
+                <span>Coordinador</span>
+            </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Coordinador</a>
+                    <a class="nav-link {% if active_page == 'listar_estudiantes' %}active{% endif %}" aria-current="page" href="{% url 'coordinador:listar_estudiantes' %}">Listado de Estudiantes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Listado de prácticas</a>
+                    <a class="nav-link" href="{% url 'coordinador:solicitudes_practica' %}">Solicitudes de Práctica</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Solicitudes de prácticas</a>
+                    <a class="nav-link" href="{% url 'coordinador:informes_avances' %}">Informes de Avances</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Informes de avances</a>
+                    <a class="nav-link" href="{% url 'coordinador:autoevaluaciones' %}">Autoevaluaciones</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Autoevaluaciones</a>
+                    <a class="nav-link" href="{% url 'coordinador:informes_finales' %}">Informes Finales</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documentos</a>
+                    <a class="nav-link {% if active_page == 'listar_coordinador' %}active{% endif %}" href="{% url 'coordinador:listar_coordinador' %}">Listado de Coordinadores</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Informes Finales</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'coordinador:listar_estudiantes' %}">Listado Estudiantes</a>
+                    <a class="nav-link" href="{% url 'coordinador:documentos' %}">Documentos</a>
                 </li>
                 <li class="nav-item">
                     <form action="{% url 'logout' %}" method="post" style="margin-top: 15%;">
@@ -111,6 +139,7 @@
                 </li>
             </ul>
         </nav>
+        
 
         <div class="container-fluid">
             <div class="row">
