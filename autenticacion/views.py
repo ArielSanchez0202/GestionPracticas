@@ -33,7 +33,7 @@ def user_login(request):
                 messages.success(request, "Has iniciado sesión con éxito.")
 
                 if user.groups.filter(name='Coordinador').exists():
-                    return redirect('coordinador:listar_estudiantes')
+                    return redirect('listar_estudiantes')
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiantes_main')
             else:

@@ -16,7 +16,7 @@
             <h1>LISTADO DE ESTUDIANTES</h1>
             <!-- Botón para añadir estudiantes -->
             <div class="button-container">
-                <button onclick="window.location.href='{% url 'coordinador:agregar_estudiante' %}'">Agregar Alumno</button>
+                <button onclick="window.location.href='{% url 'agregar_estudiante' %}'">Agregar Alumno</button>
             </div>
         </div>
 
@@ -28,7 +28,7 @@
 
         <!-- Filtros por estado -->
         <div class="filter-container">
-            <form method="GET" action="{% url 'coordinador:listar_estudiantes' %}">
+            <form method="GET" action="{% url 'listar_estudiantes' %}">
                 <label for="estado">Filtrar por estado:</label>
                 <select name="estado" id="estado" onchange="this.form.submit()">
                     <option value="Todos" {% if request.GET.estado == 'Todos' %}selected{% endif %}>Todos</option>
@@ -58,22 +58,22 @@
                     <p>Carrera: {{ estudiante.carrera }}</p>
                 </div>
                 <div class="card-actions">
-                    <button onclick="window.location.href='{% url 'coordinador:editar_estudiante' estudiante.pk %}'">
+                    <button onclick="window.location.href='{% url 'editar_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Edit.svg' %}" alt="Editar">
                     </button>
-                    <button onclick="window.location.href='{% url 'coordinador:detalle_estudiante' estudiante.pk %}'">
+                    <button onclick="window.location.href='{% url 'detalle_estudiante' estudiante.pk %}'">
                         <img src="{% static 'icons/Detalle.svg' %}" alt="Ver Detalle">
                     </button>
                     <button 
                     class="btn-unlock" 
-                    onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'autenticacion:desbloquear_usuario' estudiante.pk %}'; }"
+                    onclick="if(confirm('¿Estás seguro de que deseas desbloquear a este usuario?')) { window.location.href='{% url 'desbloquear_usuario' estudiante.pk %}'; }"
                     onmouseover="this.querySelector('img').src='{% static 'icons/Desbloquear.svg' %}'"
                     onmouseout="this.querySelector('img').src='{% static 'icons/Bloquear.svg' %}'">
                     <img src="{% static 'icons/Bloquear.svg' %}" alt="Desbloquear">
                     </button>
                     <button 
                     class="btn-lock" 
-                    onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'autenticacion:bloquear_usuario' estudiante.pk %}'; }"
+                    onclick="if(confirm('¿Estás seguro de que deseas bloquear a este usuario?')) { window.location.href='{% url 'bloquear_usuario' estudiante.pk %}'; }"
                     onmouseover="this.querySelector('img').src='{% static 'icons/Bloquear.svg' %}'"
                     onmouseout="this.querySelector('img').src='{% static 'icons/Desbloquear.svg' %}'">
                     <img src="{% static 'icons/Desbloquear.svg' %}" alt="Bloquear">
