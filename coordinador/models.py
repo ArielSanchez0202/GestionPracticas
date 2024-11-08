@@ -4,17 +4,15 @@ import uuid
 
 # Modelo Coordinador
 class Coordinador(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nombre = models.CharField(max_length=100, blank=True)
-    correo = models.CharField(max_length=100 ,blank=True)
-    rut = models.CharField(max_length=20, blank=True, unique=True)
-    domicilio = models.CharField(max_length=255, blank=True)
-    carrera = models.CharField(max_length=100, blank=True)
-    numero = models.CharField(max_length=20, blank=True)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    rut = models.CharField(max_length=20, unique=True)
+    domicilio = models.CharField(max_length=255)
+    carrera = models.CharField(max_length=100)
+    numero_telefono = models.CharField(max_length=20)
 
     def __str__(self):
-        texto = "{0} ({1})"
-        return texto.format(self.nombre, self.apellido)
+        return f'Coordinador: {self.usuario.first_name} {self.usuario.last_name}'
+
 # Modelo Estudiante
 class Estudiante(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

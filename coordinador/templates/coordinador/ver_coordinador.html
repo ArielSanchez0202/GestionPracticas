@@ -1,59 +1,26 @@
 {% extends 'base_coordinador.html' %}
-
+{% load static %}
 {% block content %}
-<style>
-    .input1{
-        position: relative;
-        top: 40px;
-        left: 70px;
-    }
-    .input1 h1,input{
-        margin-top: 30px;
-    }
-    .input2{
-        position: relative;
-        top: -325px;
-        left: 600px;
-    }
-    .input2 h1,input{
-        margin-top: 30px;
-    }
-</style>
-<div class="row">
-    <div class="col-md-7 col-lg- col-sm-8 col-xl-5">
-        <h1>{{usuario.nombre}}</h1>
-        <form action="#" method="post" class="col-xl-9 col-lg-6 col-md-8 py-4">
-            <h2 style="position: relative; left: 70px;">Datos del Coordinador:</h2>
-            {% csrf_token %}
-            <div class="input1">
-                <div class="form-group">
-                    <h1 class="fs-5">Nombre Completo</h1>
-                    <input type="text" id="txtrut" name="txtrut" value="{{usuario.nombre}}" disabled class="form-control" placeholder="Nombre" minlength="3" maxlength="9" required>
-                </div >
-                <div class="form-group">
-                    <h1 class="fs-5">Domicilio</h1>
-                    <input type="text" id="txtnombre" name="txtnombre" value="{{usuario.domicilio}}" disabled class="form-control" placeholder="Domicilio" minlength="3" maxlength="20" required>
-                </div>
-                <div class="form-group">
-                    <h1 class="fs-5">Correo Electrónico</h1>
-                    <input type="text" id="txtcorreo" name="txtcorreo" value="{{usuario.correo}}" disabled class="form-control" placeholder="Correo@Hotmail.com" minlength="3" maxlength="20" required>
-                </div>
-            </div>
-            <div class="input2">
-                <div class="form-group">
-                    <h1 class="fs-5">RUT</h1>
-                    <input type="email" id="txtrut" name="txtrut" class="form-control" disabled value="{{usuario.rut}}" placeholder="RUT" minlength="3" maxlength="30" required>
-                </div>
-                <div class="form-group">
-                    <h1 class="fs-5">Numero Telefonico</h1>
-                    <input type="text" id="txtnumero" name="txtnumero" value="{{usuario.numero}}" disabled class="form-control" placeholder="Numero" minlength="3" maxlength="20" required>
-                </div>
-                <div class="form-group">
-                    <h1 class="fs-5">Carrera</h1>
-                    <input type="text" id="txtcarrera" name="txtcarrera" value="{{usuario.carrera}}" disabled class="form-control" placeholder="Carrera" minlength="3" maxlength="20" required>
-                </div>
-            </div>
-        </form>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/listado_estudiantes.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="form-header">
+        <h1>Detalle del Estudiante</h1>
     </div>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{ coordinadores.usuario.first_name }} {{ coordinadores.usuario.last_name }}</h3>
+            <p class="card-text"><strong>Correo Electrónico:</strong> {{ coordinadores.usuario.email }}</p>
+            <p class="card-text"><strong>RUT:</strong> {{ coordinadores.rut }}</p>
+            <p class="card-text"><strong>Domicilio:</strong> {{ coordinadores.domicilio }}</p>
+            <p class="card-text"><strong>Número de Teléfono:</strong> {{ coordinadores.numero_telefono }}</p>
+            <p class="card-text"><strong>Carrera:</strong> {{ coordinadores.carrera }}</p>
+        </div>
+    </div>
+    <a href="{% url 'listar_coordinador' %}" class="btn btn-secondary mt-3">Regresar</a>
 </div>
 {% endblock %}

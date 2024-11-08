@@ -256,59 +256,117 @@ def crear_coordinador(request):
     return render(request,'coordinador/crear_coordinador.html',{'usuarios':usuarios})
 
 def registrar_coordinador(request):
+    # Limpiar mensajes de la sesión para evitar acumulaciones
+    storage = get_messages(request)
+    for _ in storage:
+            pass
+
     if request.method == 'POST':
-        nombre = request.POST.get("txtnombre")
-        numero = request.POST.get("txtnumero")
-        rut = request.POST.get("txtrut")
-        domicilio = request.POST.get("txtdomicilio")
-        carrera = request.POST.get("txtcarrera")
-        correo = request.POST.get("txtcorreo")
-        
-        # Verifica si ya existe un Coordinador con el mismo rut
-        if Coordinador.objects.filter(rut=rut).exists():
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        email = request.POST.get('email')
+        rut = request.POST.get('rut')
+        domicilio = request.POST.get('domicilio')
+        telefono = request.POST.get('telefono')
+        carrera = request.POST.get('carrera')
+
+        # Validación del formato de RUT
+        rut_pattern = re.compile(r'^\d{7,8}-[0-9kK]$')
+        if not rut_pattern.match(rut):
+            messages.error(request, "El RUT ingresado no es válido.")
             return render(request, 'coordinador/crear_coordinador.html', {
-                'error_message': "El rut ya está registrado. No se puede crear otro coordinador con el mismo rut."
+                'nombre': nombre,
+                'apellido': apellido,
+                'email': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'telefono': telefono,
+                'carrera':carrera,
             })
 
-        # Crea el nuevo coordinador si el rut no existe
-        coordinador = Coordinador.objects.create(
-            nombre=nombre,
-            numero=numero,
-            rut=rut,
-            domicilio=domicilio,
-            carrera=carrera,
-            correo=correo,
-        )
-        
-        return redirect('coordinador:listar_coordinador')
+        # Comprobar si el RUT ya está registrado
+        if User.objects.filter(username=rut).exists():
+            messages.error(request, "El RUT ya está registrado.")
+            return render(request, 'coordinador/crear_coordinador.html', {
+                'nombre': nombre,
+                'apellido': apellido,
+                'email': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'telefono': telefono,
+                'carrera':carrera,
+            })
 
-    return render(request, 'nombre_de_tu_template.html')  # Renderiza el formulario en caso de que no sea POST
+        # Verificar si el correo ya está registrado
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "El correo ya está registrado.")
+            return render(request, 'coordinador/crear_coordinador.html', {
+                'nombre': nombre,
+                'apellido': apellido,
+                'email': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'telefono': telefono,
+                'carrera':carrera,
+            })
 
-def editar_coordinador(request,rut):
-    usuario = Coordinador.objects.get(rut=rut)
-    return render(request,"coordinador/editar_coordinador.html",{'usuario':usuario})
+        try:
+            contrasena = generar_contrasena()
 
-def ver_coordinador(request,rut):
-    usuario = Coordinador.objects.get(rut=rut)
-    return render(request,"coordinador/ver_coordinador.html",{'usuario':usuario})
+            # Crear usuario
+            usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
+            usuario.set_password(contrasena)
+            usuario.save()
 
-def editarcoordinador(request):
-    nombre = request.POST.get("txtnombre")
-    numero = request.POST.get("txtnumero")
-    rut = request.POST.get("txtrut")
-    domicilio = request.POST.get("txtdomicilio")
-    carrera = request.POST.get("txtcarrera")
-    correo = request.POST.get("txtcorreo")
+            # Asignar al grupo "Coordinador"
+            grupo, _ = Group.objects.get_or_create(name='Coordinador')
+            usuario.groups.add(grupo)
 
-    usuario = Coordinador.objects.get(rut=rut)
-    usuario.nombre = nombre
-    usuario.numero = numero
-    usuario.domicilio = domicilio
-    usuario.carrera = carrera
-    usuario.correo = correo
-    usuario.save()
+            # Crear Coordinador
+            coordinador = Coordinador(
+                usuario=usuario,
+                rut=rut,
+                domicilio=domicilio,
+                numero_telefono=telefono,
+                carrera=carrera,
+            )
+            coordinador.save()
 
-    return redirect('coordinador:listar_coordinador')
+            # Enviar credenciales por correo
+            send_mail(
+                'Credenciales de acceso',
+                f'Hola {nombre},\n\nTu cuenta de coordinador ha sido creada exitosamente.\n'
+                f'Tu RUT: {rut}\nTu contraseña: {contrasena}\n\n'
+                'Por favor, cambia tu contraseña después de iniciar sesión.',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            # Guardar mensaje de éxito en la sesión y redirigir
+            request.session['message_success'] = f"Coordinador '{nombre} {apellido}' agregado exitosamente. Las credenciales han sido enviadas al correo."
+            return redirect('listar_coordinadores')
+
+        except BadHeaderError:
+            messages.error(request, "Cabecera del correo inválida.")
+        except SMTPException as smtp_error:
+            messages.error(request, f"Error al enviar el correo: {smtp_error}")
+        except Exception as e:
+            messages.error(request, f"Error al agregar coordinador: {e}")
+
+        # Renderizar la página en caso de error
+        return render(request, 'coordinador/crear_coordinador.html', {
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'rut': rut,
+            'domicilio': domicilio,
+            'telefono': telefono,
+            'carrera':carrera,
+        })
+
+    # Renderizar la página si el método es GET
+    return render(request, 'coordinador/crear_coordinador.html')
 @coordinador_required
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
@@ -397,6 +455,92 @@ def editar_estudiante(request, estudiante_id):
         'estudiante': estudiante,
     })
 
+def editar_coordinador(request, coordinador_id):
+    # Obtener el objeto Coordinador o retornar 404 si no existe
+    coordinador = get_object_or_404(Coordinador, usuario_id=coordinador_id)
+    usuario = coordinador.usuario  # Debe ser una instancia de User
+
+    # Limpiar mensajes de la sesión
+    storage = get_messages(request)
+    for _ in storage:
+        pass
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        email = request.POST.get('correo')
+        rut = request.POST.get('rut')
+        domicilio = request.POST.get('domicilio')
+        telefono = request.POST.get('numero_telefono')
+
+        # Validación del formato de RUT
+        rut_pattern = re.compile(r'^\d{7,8}-[0-9kK]$')
+        if not rut_pattern.match(rut):
+            messages.error(request, "El formato del RUT es inválido.")
+            return render(request, 'coordinador/editar_coordinador.html', {
+                'coordinador': coordinador,
+                'nombre': nombre,
+                'apellido': apellido,
+                'correo': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'numero_telefono': telefono,
+            })
+
+        # Comprobar si el RUT ya está registrado por otro coordinador
+        if User.objects.filter(username=rut).exclude(pk=usuario.pk).exists():
+            messages.error(request, "El RUT ya está registrado.")
+            return render(request, 'coordinador/editar_coordinador.html', {
+                'coordinador': coordinador,
+                'nombre': nombre,
+                'apellido': apellido,
+                'correo': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'numero_telefono': telefono,
+            })
+
+        # Verificar si el correo ya está registrado por otro coordinador
+        if User.objects.filter(email=email).exclude(pk=usuario.pk).exists():
+            messages.error(request, "El correo ya está registrado.")
+            return render(request, 'coordinador/editar_coordinador.html', {
+                'coordinador': coordinador,
+                'nombre': nombre,
+                'apellido': apellido,
+                'correo': email,
+                'rut': rut,
+                'domicilio': domicilio,
+                'numero_telefono': telefono,
+            })
+
+        try:
+            # Actualizar datos del usuario
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+            usuario.email = email
+            usuario.username = rut
+            usuario.save()
+
+            # Actualizar datos del coordinador
+            coordinador.rut = rut
+            coordinador.domicilio = domicilio
+            coordinador.numero_telefono = telefono
+            coordinador.save()
+
+            messages.success(request, f"Coordinador '{nombre} {apellido}' actualizado exitosamente.")
+
+        except Exception as e:
+            messages.error(request, f"Error al actualizar coordinador: {e}")
+
+    # Si es GET, renderizar la página sin procesamiento de formulario
+    return render(request, 'coordinador/editar_coordinador.html', {
+        'coordinador': coordinador,
+    })
+
+def ver_coordinador(request, coordinador_id):
+    coordinadores = get_object_or_404(Coordinador, usuario_id=coordinador_id)
+
+    return render(request, 'coordinador/ver_coordinador.html', {'coordinadores': coordinadores})
 @coordinador_required
 def detalle_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)

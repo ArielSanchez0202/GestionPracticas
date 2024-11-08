@@ -1,72 +1,85 @@
 {% extends 'base_coordinador.html' %}
+{% load static %}
 {% block content %}
-<style>
-    .input1{
-        position: relative;
-        top: 40px;
-        left: 70px;
-    }
-    .input1 h1,input{
-        margin-top: 30px;
-    }
-    .input2{
-        position: relative;
-        top: -325px;
-        left: 600px;
-    }
-    .input2 h1,input{
-        margin-top: 30px;
-    }
-    .button{
-        position: relative;
-        top: -220px;
-        left: 500px;
-        width: 150px;
-        background-color: #767676;
-        border-radius: 6px;
-    }
-</style>
-<div class="col-md-7 col-lg-6 col-sm-8 col-xl-5">
-    <h1>Nuevo Coordinador</h1>
-    <form action="{% url 'coordinador:registrar_coordinador' %}" method="post" class="col-xl-9 col-lg-6 col-md-8 py-4">
-        <h2 style="position: relative; left: 70px;">Datos del Coordinador:</h2>
-        {% csrf_token %}
-        <div class="input1">
-            <div class="form-group">
-                <h1 class="fs-5">Nombre Completo</h1>
-                <input type="text" id="txtnombre" name="txtnombre" class="form-control" placeholder="Nombre" minlength="3" required>
-            </div>
-            <div class="form-group">
-                <h1 class="fs-5">Domicilio</h1>
-                <input type="text" id="txtdomicilio" name="txtdomicilio" class="form-control" placeholder="Domicilio" minlength="3" required>
-            </div>
-            <div class="form-group">
-                <h1 class="fs-5">Correo Electrónico</h1>
-                <input type="email" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo@Hotmail.com" minlength="3" required>
-            </div>
+    <link rel="stylesheet" href="{% static 'css/agregar_coordinador.css' %}">
+    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
+    <script src="{% static 'js/validaciones.js' %}"></script>
+
+    <div class="container">
+        <div class="form-header">
+            <h1>AGREGAR COORDINADOR</h1>
+        <div class="form-header1">
+            <h3>Datos del coordinador:</h3>
         </div>
-        <div class="input2">
+        <form action="{% url 'registrar_coordinador' %}" method="post" onsubmit="return validateForm()">
+            {% csrf_token %}
             <div class="form-group">
-                <h1 class="fs-5">RUT</h1>
-                <input type="text" id="txtrut" name="txtrut" class="form-control" placeholder="RUT" minlength="3" required>
-            </div >
-            <div class="form-group">
-                <h1 class="fs-5">Numero Telefonico</h1>
-                <input type="number" id="txtnumero" name="txtnumero" class="form-control" placeholder="Numero" minlength="3" required>
+                <div class="form-group1">
+                    <div class="input-column">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s-]+$"
+                        title="El nombre solo debe contener letras y espacios." placeholder="Ingrese sus nombres" value="{{ nombre|default_if_none:'' }}" required>
+                    </div>
+                    <div class="input-column">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" name="apellido" id="apellido" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s-]+$"
+                        title="El apellido solo debe contener letras y espacios." placeholder="Ingrese sus apellidos" value="{{ apellido|default_if_none:'' }}" required>
+                    </div>
+                </div>
+                <div class="input-column">
+                    <label for="rut">RUT</label>
+                    <input type="number" name="rut" id="rut" placeholder="Sin puntos y con guión. Ej: 12345678-9" value="{{ rut|default_if_none:'' }}" required>
+                </div>
             </div>
             <div class="form-group">
-                <h1 class="fs-5">Carrera</h1>
-                <input type="text" id="txtcarrera" name="txtcarrera" class="form-control" placeholder="Carrera" minlength="3" required>
+                <div class="input-column">
+                    <label for="domicilio">Domicilio</label>
+                    <input type="text" name="domicilio" id="domicilio" placeholder="Ingrese su dirección" value="{{ domicilio|default_if_none:'' }}" required>
+                </div>
+                <div class="input-column">
+                    <label for="telefono">Número de Teléfono</label>
+                    <input type="number" name="telefono" id="telefono" placeholder="Ej: 912345678" value="{{ telefono|default_if_none:'' }}" required pattern="9[0-9]{8}" title="El número de teléfono debe comenzar con 9 y tener 9 dígitos.">
+                </div>
             </div>
+            <div class="form-group">
+                <div class="input-column">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" name="email" id="email" placeholder="Ej: correo@example.cl" value="{{ email|default_if_none:'' }}" required>
+                </div>
+                <div class="input-column">
+                    <label for="departamento">Carrera</label>
+                    <input type="text" name="carrera" id="carrera" placeholder="Ej: Ciencias de la Computación" value="{{ departamento|default_if_none:'' }}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn  btn-primary">Agregar Coordinador</button>
+            <a href="{% url 'listar_coordinador' %}" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+
+    {% if messages %}
+    <div id="myModal" class="modalms">
+        <div class="modal-contentms">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            <button class="close-button" onclick="closeModal()">Cerrar</button>
         </div>
-        <div class="form-group button">
-            <button type="submit" class="btn btn-block text-white">Crear Coordinador</button>
-        </div>
-    </form>
-    {% if error_message %}
+    </div>
+    
     <script>
-        alert("{{ error_message }}");
+        // Mostrar el modal si hay mensajes
+        window.onload = function() {
+            var modal = document.getElementById("myModal");
+            if (modal) {
+                modal.style.display = "block"; // Mostrar el modal
+            }
+        }
+
+        // Cerrar el modal
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
     </script>
     {% endif %}
-</div>
 {% endblock %}
