@@ -34,34 +34,39 @@
         <div class="input1">
             <div class="form-group">
                 <h1 class="fs-5">Nombre Completo</h1>
-                <input type="text" id="txtnombre" name="txtnombre" class="form-control" placeholder="Nombre" minlength="3" maxlength="20" required>
+                <input type="text" id="txtnombre" name="txtnombre" class="form-control" placeholder="Nombre" minlength="3" required>
             </div>
             <div class="form-group">
                 <h1 class="fs-5">Domicilio</h1>
-                <input type="text" id="txtdomicilio" name="txtdomicilio" class="form-control" placeholder="Domicilio" minlength="3" maxlength="20" required>
+                <input type="text" id="txtdomicilio" name="txtdomicilio" class="form-control" placeholder="Domicilio" minlength="3" required>
             </div>
             <div class="form-group">
                 <h1 class="fs-5">Correo Electrónico</h1>
-                <input type="email" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo@Hotmail.com" minlength="3" maxlength="30" required>
+                <input type="email" id="txtcorreo" name="txtcorreo" class="form-control" placeholder="Correo@Hotmail.com" minlength="3" required>
             </div>
         </div>
         <div class="input2">
             <div class="form-group">
                 <h1 class="fs-5">RUT</h1>
-                <input type="text" id="txtrut" name="txtrut" class="form-control" placeholder="RUT" minlength="3" maxlength="9" required>
+                <input type="text" id="txtrut" name="txtrut" class="form-control" placeholder="RUT" minlength="3" required>
             </div >
             <div class="form-group">
                 <h1 class="fs-5">Numero Telefonico</h1>
-                <input type="text" id="txtnumero" name="txtnumero" class="form-control" placeholder="Numero" minlength="3" maxlength="20" required>
+                <input type="number" id="txtnumero" name="txtnumero" class="form-control" placeholder="Numero" minlength="3" required>
             </div>
             <div class="form-group">
                 <h1 class="fs-5">Carrera</h1>
-                <input type="text" id="txtcarrera" name="txtcarrera" class="form-control" placeholder="Carrera" minlength="3" maxlength="20" required>
+                <input type="text" id="txtcarrera" name="txtcarrera" class="form-control" placeholder="Carrera" minlength="3" required>
             </div>
         </div>
         <div class="form-group button">
             <button type="submit" class="btn btn-block text-white">Crear Coordinador</button>
         </div>
     </form>
+    {% if error_message %}
+    <script>
+        alert("{{ error_message }}");
+    </script>
+    {% endif %}
 </div>
 {% endblock %}
