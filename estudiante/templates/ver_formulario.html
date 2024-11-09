@@ -23,9 +23,9 @@
 
         <h1>Inscripción de Práctica Profesional</h1>
         
-        <form method="post" action="{% url 'actualizar_estado' solicitud.id %}" onsubmit="return validateCheckboxes()">
+        <form method="post" action="{% url 'actualizar_estado' solicitud.id %}">
             {% csrf_token %}
-            
+            <input type="hidden" id="estado_solicitud" name="estado_solicitud" value="">
             <legend>Datos del estudiante:</legend>
             
             <div class="form-group">
@@ -139,16 +139,18 @@
             <div class="button-container">
                 <button type="submit" class="send-button" onclick="rechazar()">Rechazar</button>
             </div>
-            
-            <script>
-                function aprobar() {
-                    document.getElementById('estado_solicitud').value = 'Aprobado';
-                }
-                function rechazar() {
-                    document.getElementById('estado_solicitud').value = 'Rechazado';
-                }
-            </script>
+                      
         </form>
+        <script>
+            function aprobar() {
+                document.getElementById('estado_solicitud').value = 'Aprobada';
+                alert("Botón Aprobar presionado");  // Deberías ver este mensaje si el evento funciona
+            }
+            function rechazar() {
+                document.getElementById('estado_solicitud').value = 'Rechazada';
+                alert("Botón Rechazar presionado");  // Deberías ver este mensaje si el evento funciona
+            }
+        </script>
                 
     </div>
 

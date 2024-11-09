@@ -112,13 +112,15 @@ def ver_formulario(request, solicitud_id):
 
 def actualizar_estado(request, solicitud_id):
     if request.method == 'POST':
-        solicitud = InscripcionPractica.objects.get(id=solicitud_id)
+        # Obtén la solicitud específica
+        solicitud = get_object_or_404(InscripcionPractica, id=solicitud_id)
+        
+        # Verifica el valor de estado_solicitud y actualiza el estado en el modelo
         estado = request.POST.get('estado_solicitud')
         
-        if estado == 'Aprobado':
-            solicitud.estado = 'Aprobado'
-        elif estado == 'Rechazado':
-            solicitud.estado = 'Rechazado'
+        if estado in ['Aprobada', 'Rechazada']:
+            solicitud.estado = estado
+            solicitud.save()
         
-        solicitud.save()
-        return redirect('listar_practicas')
+        # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
+        return redirect('listar_practicas')  # Cambia a la vista adecuada
