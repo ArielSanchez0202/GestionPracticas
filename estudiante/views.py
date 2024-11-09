@@ -96,7 +96,6 @@ def inscripcion_practica_view(request):
 def verificar_practica1(request):
     existe_practica1 = InscripcionPractica.objects.filter(practica1=True).exists()
     return JsonResponse({'existe_practica1': existe_practica1})
-
 @coordinador_required
 def listar_practicas(request):
     # Obtener todas las inscripciones de prácticas

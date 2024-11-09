@@ -3,89 +3,43 @@
 {% block title %} Lista de Coordinadores {% endblock %}
 
 {% block content %}
-<div class="row">
-    <style>
-        .ms-lg{
-            margin-left: 28rem;
-            text-decoration: none;
-            background-color: #1E1E1E;
-            color: white;
-            
-        }
-
-        .ms-lg:hover{
-            background-color: #565656;
-        }
-        
-        
-        .card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            width: 800px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            display: flex;  
-            align-items: center;
-        }
-
-        .icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .card h2 {
-            font-size: 18px;
-            margin: 0;
-        }
-
-        .card p {
-            color: #666;
-            margin: 5px 0;
-        }
-
-        .card-buttons {
-            margin-top: 10px;  
-        }
-
-        .card-buttons button {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .card-buttons button:hover {
-            background-color: #ddd;
-        }
-    </style>
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-        <div class="table-responsive py-5 ms-3">
-            <h1>Lista de Coordinadores <a href="{% url 'crear_coordinador' %}" class="btn btn-primary btn-lg ms-lg">Nuevo Coordinador</a></h1>
-            <table class="table table-striped mt-5">
+<div class="container mt-5">
+    <h1>Lista de Coordinadores 
+        <a href="{% url 'crear_coordinador' %}" class="btn btn-primary btn-lg ms-3" style="position: relative; left: 640px;">Nuevo Coordinador</a>
+    </h1>
+    
+    <div class="table-responsive py-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Rut</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Número</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for c in coordinadores %}
-                <div class="card">
-                    <div class="card-header">
-                        <span class="icon">✔️</span>
-                        <h2>{{c.usuario.first_name}}  {{c.usuario.last_name}}</h2>
-                    </div>
-                    <p>Rut: {{c.rut}}</p>   
-                    <p>Carrera: {{c.carrera}}</p>
-                    <p>número: {{c.numero}}</p>
-                    <div class="card-buttons">
-                        <button onclick="window.location.href= '{% url 'ver_coordinador' c.pk %}'">Ver Información</button>
-                        <button onclick="window.location.href= '{% url 'editar_coordinador' c.pk %}'" 
-                        style="margin-left: 10px;">Editar</button>
-                    </div>
-                </div>
+                <tr>
+                    <td>{{ c.usuario.first_name }}</td>
+                    <td>{{ c.usuario.last_name }}</td>
+                    <td>{{ c.rut }}</td>
+                    <td>{{ c.carrera }}</td>
+                    <td>{{ c.numero_telefono }}</td>
+                    <td>
+                        <a href="{% url 'ver_coordinador' c.pk %}" class="btn btn-info btn-sm">Ver Información</a>
+                        <a href="{% url 'editar_coordinador' c.pk %}" class="btn btn-warning btn-sm ms-1">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay coordinadores registrados.</td>
+                </tr>
                 {% endfor %}
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

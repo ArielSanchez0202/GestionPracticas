@@ -16,6 +16,10 @@ import re
 from smtplib import SMTPException
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.messages import get_messages
+from estudiante.models import InscripcionPractica
+from django.db.models import Count
+from django.utils import timezone
+from datetime import datetime
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -345,7 +349,7 @@ def registrar_coordinador(request):
 
             # Guardar mensaje de éxito en la sesión y redirigir
             request.session['message_success'] = f"Coordinador '{nombre} {apellido}' agregado exitosamente. Las credenciales han sido enviadas al correo."
-            return redirect('listar_coordinadores')
+            return redirect('listar_coordinador')
 
         except BadHeaderError:
             messages.error(request, "Cabecera del correo inválida.")
@@ -578,3 +582,17 @@ def informes_finales(request):
 @coordinador_required
 def documentos(request):
     return render(request, 'coordinador/documentos.html')
+
+def dashboard(request):
+    total_solicitudes = InscripcionPractica.objects.count()
+    solicitudes_pendientes = InscripcionPractica.objects.filter(estado='Pendiente').count()
+    solicitudes_aprobadas = InscripcionPractica.objects.filter(estado='Aprobada').count()
+    solicitudes_recientes = InscripcionPractica.objects.order_by('-id')[:5]  # Últimas 5 solicitudes
+
+    context = {
+        'total_solicitudes': total_solicitudes,
+        'solicitudes_pendientes': solicitudes_pendientes,
+        'solicitudes_aprobadas': solicitudes_aprobadas,
+        'solicitudes_recientes': solicitudes_recientes,
+    }
+    return render(request, 'coordinador/dashboard.html', context)

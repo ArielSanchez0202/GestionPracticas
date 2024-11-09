@@ -25,4 +25,5 @@ urlpatterns = [
     path('editar_coordinador/<int:coordinador_id>',views.editar_coordinador,name='editar_coordinador'),
     #path('editarcoordinador/',views.editarcoordinador,name='editarcoordinador'),
     path('ver_coordinador/<int:coordinador_id>',views.ver_coordinador,name='ver_coordinador'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

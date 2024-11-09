@@ -1,56 +1,156 @@
 {% extends 'base_coordinador.html' %}
 {% load static %}
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/editar_coordinador.css' %}">
-    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
-</head>
-<body>
-<div class="container">
-    <div class="form-header">
-        <h1>Editar Coordinador</h1>
+    <link rel="stylesheet" href="{% static 'css/agregar_coordinador.css' %}">
+    <style>
+        /* Estilos generales */
+        body {
+            background-color: #b3b3b3; /* Fondo gris */
+        }
+
+        .container {
+            max-width: 800px;
+            background-color: #d1d1d1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: #565656;
+        }
+
+        /* Modal para mensajes */
+        .modalms {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-contentms {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: #333;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="container">
+        <div class="form-header">
+            <h1>Editar Coordinador</h1>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                title="El nombre solo debe contener letras y espacios." class="form-control" value="{{ coordinador.usuario.first_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" name="apellido" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                title="El apellido solo debe contener letras y espacios." class="form-control" value="{{ coordinador.usuario.last_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" class="form-control" value="{{ coordinador.usuario.email }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rut">RUT</label>
+                <input type="text" id="rut" name="rut" class="form-control" value="{{ coordinador.rut }}" readonly required>
+            </div>
+
+            <div class="form-group">
+                <label for="domicilio">Domicilio</label>
+                <input type="text" id="domicilio" name="domicilio" class="form-control" value="{{ coordinador.domicilio }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numero_telefono">Número de Teléfono</label>
+                <input type="text" id="numero_telefono" name="numero_telefono" class="form-control" value="{{ coordinador.numero_telefono }}" required pattern="9[0-9]{8}" title="El número de teléfono debe comenzar con 9 y tener 9 dígitos.">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="{% url 'listar_coordinador' %}" class="btn btn-secondary" style="position: relative; top: 10px;">Volver</a>
+        </form>
     </div>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-            title="El nombre solo debe contener letras y espacios." class="form-control" value="{{ coordinador.usuario.first_name }}" required>
-        </div>
 
-        <div class="form-group">
-            <label for="apellido">Apellido</label>
-            <input type="text" id="apellido" name="apellido" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-            title="El apellido solo debe contener letras y espacios." class="form-control" value="{{ coordinador.usuario.last_name }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="correo">Correo Electrónico</label>
-            <input type="email" id="correo" name="correo" class="form-control" value="{{ coordinador.usuario.email }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="rut">RUT</label>
-            <input type="text" id="rut" name="rut" class="form-control" value="{{ coordinador.rut }}" readonly required>
-        </div>
-
-        <div class="form-group">
-            <label for="domicilio">Domicilio</label>
-            <input type="text" id="domicilio" name="domicilio" class="form-control" value="{{ coordinador.domicilio }}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="numero_telefono">Número de Teléfono</label>
-            <input type="text" id="numero_telefono" name="numero_telefono" class="form-control" value="{{ coordinador.numero_telefono }}" required pattern="9[0-9]{8}" title="El número de teléfono debe comenzar con 9 y tener 9 dígitos.">
-        </div>
-        <button type="submit" style="margin-top: 30px;" class="btn btn-primary">Guardar Cambios</button>
-        <a href="{% url 'listar_coordinador' %}" style="margin-top: 30px;" class="btn btn-secondary">Volver</a>
-    </form>
-</div>
-
-{% if messages %}
+    {% if messages %}
     <div id="myModal" class="modalms">
         <div class="modal-contentms">
             {% for message in messages %}
@@ -75,6 +175,5 @@
             modal.style.display = "none";
         }
     </script>
-{% endif %}
-</body>
+    {% endif %}
 {% endblock %}

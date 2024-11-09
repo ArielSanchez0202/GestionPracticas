@@ -2,12 +2,124 @@
 {% load static %}
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/agregar_coordinador.css' %}">
-    <link rel="stylesheet" href="{% static 'css/messages.css' %}">
-    <script src="{% static 'js/validaciones.js' %}"></script>
+    <style>
+        /* Estilos generales */
+        body {
+            background-color: #b3b3b3; /* Fondo gris */
+        }
 
+        .container {
+            max-width: 800px;
+            background-color: #d1d1d1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-header1 h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Estilos para las etiquetas y los inputs */
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .input-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: #565656;
+        }
+
+        /* Modal para mensajes */
+        .modalms {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-contentms {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .close-button {
+            background-color: #333;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
     <div class="container">
         <div class="form-header">
             <h1>AGREGAR COORDINADOR</h1>
+        </div>
         <div class="form-header1">
             <h3>Datos del coordinador:</h3>
         </div>
@@ -18,12 +130,12 @@
                     <div class="input-column">
                         <label for="nombre">Nombre</label>
                         <input type="text" name="nombre" id="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s-]+$"
-                        title="El nombre solo debe contener letras y espacios." placeholder="Ingrese sus nombres" value="{{ nombre|default_if_none:'' }}" required>
+                               title="El nombre solo debe contener letras y espacios." placeholder="Ingrese sus nombres" value="{{ nombre|default_if_none:'' }}" required>
                     </div>
                     <div class="input-column">
                         <label for="apellido">Apellido</label>
                         <input type="text" name="apellido" id="apellido" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s-]+$"
-                        title="El apellido solo debe contener letras y espacios." placeholder="Ingrese sus apellidos" value="{{ apellido|default_if_none:'' }}" required>
+                               title="El apellido solo debe contener letras y espacios." placeholder="Ingrese sus apellidos" value="{{ apellido|default_if_none:'' }}" required>
                     </div>
                 </div>
                 <div class="input-column">

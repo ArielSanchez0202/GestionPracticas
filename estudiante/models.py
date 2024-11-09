@@ -2,6 +2,13 @@ from django.db import models
 
 # Create your models here.
 class InscripcionPractica(models.Model):
+    ESTADOS = [
+            ('Pendiente', 'Pendiente'),
+            ('Aprobada', 'Aprobada'),
+            ('Rechazada', 'Rechazada'),
+            ]
+    
+    estado = models.CharField(max_length=10, choices=ESTADOS, default='Pendiente')
     nombre_completo = models.CharField(max_length=255)
     rut = models.CharField(max_length=12)  # Puedes ajustar el tamaño según sea necesario
     domicilio = models.CharField(max_length=255)
