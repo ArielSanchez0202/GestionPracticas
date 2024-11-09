@@ -607,19 +607,6 @@ def listar_practicas(request):
 def ver_formulario(request, solicitud_id,):
     # Obtener la solicitud de práctica específica por su ID
     solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
-    
-    practica1 = InscripcionPractica.objects.get(pk=solicitud_id)
-    practica2 = InscripcionPractica.objects.get(pk=solicitud_id)
-
-    if practica1 is None:
-        solicitud.practica1 = False
-    else:
-        solicitud.practica1 = True
-
-    if practica2 is None:
-        solicitud.practica2 = False
-    else:
-        solicitud.practica2 = True
             
     # Renderizar el template y pasar la solicitud al contexto
     return render(request, 'coordinador/ver_formulario.html', {'solicitud': solicitud})
