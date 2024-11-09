@@ -3,135 +3,155 @@
 {% load static %}
 
 {% block content %}
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ver Solicitud de Práctica</title>
+        <title>Inscripción de Práctica Profesional</title>
         <link rel="stylesheet" href="{% static 'css/inscripcion_practica.css' %}">
     </head>
 
     <div class="container">
-        <h1>Detalles de la Solicitud de Práctica</h1>
+
+        <div class="back-button">
+            <a href="{% url 'estudiantes_main' %}">
+                <button type="button" class="image-button">
+                    <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+                </button>
+            </a>
+        </div>
+
+        <h1>Inscripción de Práctica Profesional</h1>
         
-        <div class="form-container">
+        <form method="post" action="{% url 'actualizar_estado' solicitud.id %}" onsubmit="return validateCheckboxes()">
+            {% csrf_token %}
+            
             <legend>Datos del estudiante:</legend>
             
             <div class="form-group">
-                <label>Nombre Completo:</label>
-                <p>{{ solicitud.nombre_completo }}</p>
+                <label for="nombre_completo">Nombre Completo</label>
+                <input type="text" id="nombre_completo" name="nombre_completo" value="{{solicitud.nombre_completo}}" readonly>
             </div>
         
             <div class="form-group">
-                <label>Rut:</label>
-                <p>{{ solicitud.rut }}</p>
+                <label for="rut">Rut</label>
+                <input type="text" id="rut" name="rut" value="{{solicitud.rut}}" readonly>
             </div>
         
             <div class="form-group">
-                <label>Domicilio:</label>
-                <p>{{ solicitud.domicilio }}</p>
+                <label for="domicilio">Domicilio</label>
+                <input type="text" id="domicilio" name="domicilio" value="{{solicitud.domicilio}}" readonly>
             </div>
         
             <div class="form-group">
-                <label>Número de Teléfono:</label>
-                <p>{{ solicitud.telefono }}</p>
+                <label for="telefono">Número de Teléfono</label>
+                <input type="text" id="telefono" name="telefono" value="{{solicitud.telefono}}" readonly>
             </div>
         
             <div class="form-group">
-                <label>Correo Electrónico:</label>
-                <p>{{ solicitud.correo }}</p>
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" value="{{solicitud.correo}}" readonly>
             </div>
         
             <div class="form-group">
-                <label>Carrera:</label>
-                <p>{{ solicitud.carrera }}</p>
+                <label for="carrera">Carrera</label>
+                <input type="text" id="carrera" name="carrera" value="{{solicitud.carrera}}" readonly>
+            </div>
+        
+            <div class="checkbox-group" >
+                <input type="checkbox" id="practica1" name="practica1" class="custom-checkbox" onclick="toggleCheckbox(this)" value="{{solicitud.practica1}}">
+                <label for="practica1">Práctica I</label>
+            
+                <input type="checkbox" id="practica2" name="practica2" class="custom-checkbox" onclick="toggleCheckbox(this)" value="{{solicitud.practica2}}">
+                <label for="practica2">Práctica II</label>
             </div>
         
             <legend>Datos de la Empresa/Institución:</legend>
             
             <div class="form-group">
-                <label>Razón Social:</label>
-                <p>{{ solicitud.razon_social }}</p>
+                <label for="razon_social">Razón Social</label>
+                <input type="text" id="razon_social" name="razon_social" value="{{solicitud.razon_social}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Dirección:</label>
-                <p>{{ solicitud.direccion_empresa }}</p>
+                <label for="direccion_empresa">Dirección</label>
+                <input type="text" id="direccion_empresa" name="direccion_empresa" value="{{solicitud.direccion_empresa}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Jefe Directo:</label>
-                <p>{{ solicitud.jefe_directo }}</p>
+                <label for="jefe_directo">Jefe Directo</label>
+                <input type="text" id="jefe_directo" name="jefe_directo" value="{{solicitud.jefe_directo}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Cargo del Jefe Directo:</label>
-                <p>{{ solicitud.cargo }}</p>
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" name="cargo" value="{{solicitud.cargo}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Teléfono del Jefe Directo:</label>
-                <p>{{ solicitud.telefono_jefe }}</p>
+                <label for="telefono_jefe">Teléfono</label>
+                <input type="number" id="telefono_jefe" name="telefono_jefe" value="{{solicitud.telefono_jefe}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Correo del Jefe Directo:</label>
-                <p>{{ solicitud.correo_jefe }}</p>
+                <label for="correo_jefe">Correo Electrónico</label>
+                <input type="email" id="correo_jefe" name="correo_jefe" value="{{solicitud.correo_jefe}}" required readonly>
             </div>
         
             <legend>Datos de la Práctica:</legend>
             
             <div class="form-group">
-                <label>Fecha de Inicio:</label>
-                <p>{{ solicitud.fecha_inicio }}</p>
+                <label for="fecha_inicio">Fecha de Inicio</label>
+                <input type="text" id="fecha_inicio" name="fecha_inicio" value="{{solicitud.fecha_inicio}}" required readonly>
             </div>
         
             <div class="form-group">
-                <label>Fecha de Término:</label>
-                <p>{{ solicitud.fecha_termino }}</p>
+                <label for="fecha_termino">Fecha de Término</label>
+                <input type="text" id="fecha_termino" name="fecha_termino" value="{{solicitud.fecha_termino}}" required readonly>
             </div>
-
-            <div class="form-group">
-                <label>Horario de Trabajo:</label>
-                <p>{{ solicitud.horario_trabajo }}</p>
+        
+            <table>
+                <tr>
+                    <th rowspan="2">Horario</th>
+                    <th>Trabajo</th>
+                    <td><input type="text" id="horario_trabajo" name="horario_trabajo" value="{{solicitud.horario_trabajo}}" required readonly></td>
+                </tr>
+                <tr>
+                    <th>Colación</th>
+                    <td><input type="text" id="horario_colacion" name="horario_colacion" required value="{{solicitud.horario_colacion}}" readonly></td>
+                </tr>
+                <tr>
+                    <th>Cargo por desarrollar</th>
+                    <td colspan="2"><input type="text" id="cargo_desarrollar" name="cargo_desarrollar" required value="{{solicitud.cargo_desarrollar}}" readonly></td>
+                </tr>
+                <tr>
+                    <th>Departamento en que trabajará</th>
+                    <td colspan="2"><input type="text" id="depto_trabajar" name="depto_trabajar" required value="{{solicitud.depto_trabajar}}" readonly></td>
+                </tr>
+                <tr>
+                    <th>Actividades por realizar</th>
+                    <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required value="{{solicitud.actividades_realizar}}" readonly></td>
+                </tr>
+            </table>   
+            <div class="button-container">
+                <button type="submit" class="btn btn-success" onclick="aprobar()">Aprobar</button>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="send-button" onclick="rechazar()">Rechazar</button>
             </div>
             
-            <div class="form-group">
-                <label>Horario de Colación:</label>
-                <p>{{ solicitud.horario_colacion }}</p>
-            </div>
-
-            <div class="form-group">
-                <label>Cargo a Desarrollar:</label>
-                <p>{{ solicitud.cargo_desarrollar }}</p>
-            </div>
-
-            <div class="form-group">
-                <label>Departamento en el que Trabajará:</label>
-                <p>{{ solicitud.depto_trabajar }}</p>
-            </div>
-
-            <div class="form-group">
-                <label>Actividades a Realizar:</label>
-                <p>{{ solicitud.actividades_realizar }}</p>
-            </div>
-
-            <div class="form-group">
-                <label>Estado de la Solicitud:</label>
-                <p>
-                    {% if solicitud.estado == 'Aprobada' %}
-                        <span class="badge bg-success">{{ solicitud.estado }}</span>
-                    {% elif solicitud.estado == 'Rechazada' %}
-                        <span class="badge bg-danger">{{ solicitud.estado }}</span>
-                    {% else %}
-                        <span class="badge bg-warning">{{ solicitud.estado }}</span>
-                    {% endif %}
-                </p>
-            </div>
-            <button>
-                <a href="{% url 'listar_practicas' %}" class="btn btn-succes">Volver</a>
-            </button>
-
-        </div>
+            <script>
+                function aprobar() {
+                    document.getElementById('estado_solicitud').value = 'Aprobado';
+                }
+                function rechazar() {
+                    document.getElementById('estado_solicitud').value = 'Rechazado';
+                }
+            </script>
+        </form>
+                
     </div>
+
+    <script src="{% static 'js/checkbox_validation.js' %}"></script>
 
 {% endblock %}

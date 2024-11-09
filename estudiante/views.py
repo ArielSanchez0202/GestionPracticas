@@ -109,3 +109,16 @@ def ver_formulario(request, solicitud_id):
     
     # Renderizar el template y pasar la solicitud al contexto
     return render(request, 'ver_formulario.html', {'solicitud': solicitud})
+
+def actualizar_estado(request, solicitud_id):
+    if request.method == 'POST':
+        solicitud = InscripcionPractica.objects.get(id=solicitud_id)
+        estado = request.POST.get('estado_solicitud')
+        
+        if estado == 'Aprobado':
+            solicitud.estado = 'Aprobado'
+        elif estado == 'Rechazado':
+            solicitud.estado = 'Rechazado'
+        
+        solicitud.save()
+        return redirect('listar_practicas')
