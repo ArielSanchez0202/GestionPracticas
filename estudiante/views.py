@@ -25,8 +25,8 @@ def inscripcion_practica_view(request):
         telefono = request.POST.get('telefono')
         correo = request.POST.get('correo')
         carrera = request.POST.get('carrera')
-        practica1 = request.POST.get('practica1') == 'on'  # checkbox
-        practica2 = request.POST.get('practica2') == 'on'  # checkbox
+        practica1 = request.POST.get('practica1')  # checkbox
+        practica2 = request.POST.get('practica2')   # checkbox
         razon_social = request.POST.get('razon_social')
         direccion_empresa = request.POST.get('direccion_empresa')
         jefe_directo = request.POST.get('jefe_directo')
@@ -96,31 +96,3 @@ def inscripcion_practica_view(request):
 def verificar_practica1(request):
     existe_practica1 = InscripcionPractica.objects.filter(practica1=True).exists()
     return JsonResponse({'existe_practica1': existe_practica1})
-@coordinador_required
-def listar_practicas(request):
-    # Obtener todas las inscripciones de prácticas
-    inscripciones = InscripcionPractica.objects.all()
-    return render(request, 'listar_practicas.html', {'inscripciones': inscripciones})
-
-@coordinador_required
-def ver_formulario(request, solicitud_id):
-    # Obtener la solicitud de práctica específica por su ID
-    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
-    
-    # Renderizar el template y pasar la solicitud al contexto
-    return render(request, 'ver_formulario.html', {'solicitud': solicitud})
-
-def actualizar_estado(request, solicitud_id):
-    if request.method == 'POST':
-        # Obtén la solicitud específica
-        solicitud = get_object_or_404(InscripcionPractica, id=solicitud_id)
-        
-        # Verifica el valor de estado_solicitud y actualiza el estado en el modelo
-        estado = request.POST.get('estado_solicitud')
-        
-        if estado in ['Aprobada', 'Rechazada']:
-            solicitud.estado = estado
-            solicitud.save()
-        
-        # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
-        return redirect('listar_practicas')  # Cambia a la vista adecuada

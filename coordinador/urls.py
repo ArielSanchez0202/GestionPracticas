@@ -26,4 +26,8 @@ urlpatterns = [
     #path('editarcoordinador/',views.editarcoordinador,name='editarcoordinador'),
     path('ver_coordinador/<int:coordinador_id>',views.ver_coordinador,name='ver_coordinador'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    #asd
+    path('listar_practicas/', views.listar_practicas, name='listar_practicas'),
+    path('ver_formulario/<int:solicitud_id>/', views.ver_formulario, name='ver_formulario'),
+    path('actualizar_estado/<int:solicitud_id>/', views.actualizar_estado, name='actualizar_estado'),
 ]

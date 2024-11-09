@@ -20,6 +20,7 @@ from estudiante.models import InscripcionPractica
 from django.db.models import Count
 from django.utils import timezone
 from datetime import datetime
+from estudiante.models import InscripcionPractica
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -596,3 +597,47 @@ def dashboard(request):
         'solicitudes_recientes': solicitudes_recientes,
     }
     return render(request, 'coordinador/dashboard.html', context)
+@coordinador_required
+def listar_practicas(request):
+    # Obtener todas las inscripciones de prácticas
+    inscripciones = InscripcionPractica.objects.all()
+    return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
+
+@coordinador_required
+def ver_formulario(request, solicitud_id,):
+    # Obtener la solicitud de práctica específica por su ID
+    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
+    
+    practica1 = InscripcionPractica.objects.get(pk=solicitud_id)
+    practica2 = InscripcionPractica.objects.get(pk=solicitud_id)
+
+    if practica1 is None:
+        solicitud.practica1 = False
+    else:
+        solicitud.practica1 = True
+
+    if practica2 is None:
+        solicitud.practica2 = False
+    else:
+        solicitud.practica2 = True
+            
+    # Renderizar el template y pasar la solicitud al contexto
+    return render(request, 'coordinador/ver_formulario.html', {'solicitud': solicitud})
+
+
+def actualizar_estado(request, solicitud_id):
+    if request.method == 'POST':
+        # Obtén la solicitud específica
+        solicitud = get_object_or_404(InscripcionPractica, id=solicitud_id)
+        
+        
+        # Verifica el valor de estado_solicitud y actualiza el estado en el modelo
+        estado = request.POST.get('estado_solicitud')
+        
+        
+        if estado in ['Aprobada', 'Rechazada']:
+            solicitud.estado = estado
+            solicitud.save()
+        
+        # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
+        return redirect('listar_practicas')  # Cambia a la vista adecuada
