@@ -1,20 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from autenticacion.decorators import coordinador_required
-from .forms import SendMailForm, SetPasswordForm, PasswordResetForm
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.urls import reverse_lazy, reverse
+from .forms import PasswordResetForm
+from django.urls import reverse
 from django.core.mail import send_mail
-from django.views import View
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
+from django.utils.encoding import force_bytes
 from django.contrib import messages
 from .models import User
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.contrib.auth.models import User
+
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.contrib.auth.models import User
 
 def user_login(request):
     if request.method == 'POST':
@@ -31,7 +41,14 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Has iniciado sesión con éxito.")
+                
+                # Verifica si es el primer inicio de sesión
+                if hasattr(user, 'coordinador') and user.coordinador.first_login:
+                    return redirect('change_password')
+                elif hasattr(user, 'estudiante') and user.estudiante.first_login:
+                    return redirect('change_password')
 
+                # Redirección según el rol después del cambio de contraseña
                 if user.groups.filter(name='Coordinador').exists():
                     return redirect('listar_estudiantes')
                 elif user.groups.filter(name='Estudiante').exists():
@@ -43,6 +60,31 @@ def user_login(request):
             messages.error(request, "No existe un usuario activo con ese correo electrónico.")
 
     return render(request, 'login.html')
+
+
+#vista para cambiar contraseña cuando se inicia sesion por primera vez
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+
+            # Desactiva `first_login` si es el primer inicio de sesión
+            if hasattr(user, 'coordinador'):
+                user.coordinador.first_login = False
+                user.coordinador.save()
+            elif hasattr(user, 'estudiante'):
+                user.estudiante.first_login = False
+                user.estudiante.save()
+
+            update_session_auth_hash(request, user)  # Mantiene la sesión activa
+            messages.success(request, 'Contraseña cambiada exitosamente.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Por favor corrige los errores a continuación.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'password_change_form.html', {'form': form})
 
 # Vista para solicitar el restablecimiento de contraseña
 def custom_password_reset_request(request):
