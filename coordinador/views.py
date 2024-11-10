@@ -188,6 +188,7 @@ def carga_masiva_estudiantes(request):
 @coordinador_required
 def previsualizar_estudiantes(request):
     alumnos = request.session.get('alumnos_preview', [])
+    mensajes_error = []
     if request.method == 'POST':
         for alumno in alumnos:
             rut = alumno['RUT']
@@ -197,8 +198,19 @@ def previsualizar_estudiantes(request):
             domicilio = alumno['Domicilio']
             numero_telefono = alumno['numero_telefono']
             carrera = alumno['Carrera']
+            # Validar si el RUT ya está registrado
+            if User.objects.filter(username=rut).exists():
+                mensajes_error.append(f"El RUT {rut} ya está registrado.")
+                continue  # Omitir este estudiante y pasar al siguiente
+
+            # Validar si el correo ya está registrado
+            if User.objects.filter(email=email).exists():
+                mensajes_error.append(f"El correo {email} ya está registrado.")
+                continue  # Omitir este estudiante y pasar al siguiente
 
             if not User.objects.filter(username=rut).exists():
+                # Generar contraseña aleatoria
+                contrasena = generar_contrasena()
                 usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
                 usuario.set_password('password123')
                 usuario.save()
@@ -215,8 +227,29 @@ def previsualizar_estudiantes(request):
                 )
                 estudiante.save()
 
+                # Enviar el correo con las credenciales
+                try:
+                    send_mail(
+                        'Credenciales de acceso',
+                        f'Hola {nombre},\n\nTu cuenta ha sido creada exitosamente.\n'
+                        f'Tu RUT: {rut}\nTu contraseña: {contrasena}\n\n'
+                        'Por favor, cambia tu contraseña después de iniciar sesión.',
+                        settings.DEFAULT_FROM_EMAIL,
+                        [email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    # Manejo de excepciones al enviar el correo
+                    messages.error(request, f"Error al enviar el correo a {email}: {e}")
+
+        # Si hubo errores, mostramos los mensajes
+        if mensajes_error:
+            for mensaje in mensajes_error:
+                messages.error(request, mensaje)
+        else:
+            messages.success(request, "Estudiantes añadidos exitosamente y se han enviado las credenciales al correo.")
+
         request.session.pop('alumnos_preview', None)
-        messages.success(request, "Estudiantes añadidos exitosamente.")
         return redirect('listar_estudiantes')
     return render(request, 'coordinador/carga_masiva_preview.html', {'alumnos': alumnos})
 
