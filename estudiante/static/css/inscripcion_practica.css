@@ -22,8 +22,10 @@ body {
 }
 
 .container {
-    width: 70%;
+    width: 100%; /* Resta el ancho de la sidebar */
     margin: 20px auto;
+    margin-left: 0%; /* Deja espacio para la sidebar */
+    margin-right: 0%; /* Deja espacio al borde derecho */
     background-color: #d3d3d3;
     padding: 20px;
     border-radius: 10px;
@@ -36,8 +38,8 @@ h1 {
 }
 
 form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 }
 
@@ -54,9 +56,7 @@ legend {
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    flex: 1 1 100%; /* Hace que los elementos ocupen toda la fila */
 }
 
 label {
@@ -149,6 +149,8 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
     background-color: transparent; /* Sin fondo */
     border: none; /* Sin borde */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    margin-left: 690%;
+    margin-top: 35%;
 }
 
 .image-button:hover {
@@ -168,10 +170,10 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
 
 /* Estilos para la tabla de la empresa */
 table {
-    margin: 0 auto; /* Centra horizontalmente la tabla */
-    width: 100%; /* Asegura que la tabla ocupe todo el ancho posible */
-    max-width: 800px; /* O un valor adecuado para el tamaño máximo */
-    border-collapse: collapse; /* Asegura que no haya espacio entre las celdas */
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
 }
 
 th, td {
@@ -201,4 +203,17 @@ table input[type="text"] {
 table input[type="text"]:focus {
     outline: none; /* Elimina el borde azul o resaltado al hacer clic */
     border: none;  /* Elimina el borde que aparece al hacer clic */
+}
+
+@media (min-width: 768px) {
+    .form-group {
+        flex: 1 1 calc(50% - 20px); /* Ajusta a dos columnas en pantallas grandes */
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin-left: 0; /* Centra el contenido en pantallas pequeñas */
+        width: 100%;
+    }
 }
