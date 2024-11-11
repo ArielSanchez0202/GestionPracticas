@@ -45,8 +45,10 @@
                                 {% endif %}
                             </td>
                             <td>
+                                {% if inscripcion.estado == "Aprobada" %}
+                                    <a href="{% url 'listar_practicas' %}" class="btn btn-warning">Ver Carta</a>
+                                {% endif %}
                                 <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info">Ver Formulario</a>
-                                <a href="{% url 'listar_practicas' %}" class="btn btn-warning">Ver Carta</a>
                                 <!-- Otras acciones según sea necesario -->
                             </td>
                         </tr>
