@@ -1,64 +1,49 @@
-function toggleCheckbox(selectedCheckbox) {
-    const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
-
-    checkboxes.forEach(checkbox => {
-        // Si la checkbox seleccionada es diferente de la actual, la desmarcamos
-        if (checkbox !== selectedCheckbox) {
-            checkbox.checked = false;
-        }
-    });
-}
-
-// Función para validar que al menos una checkbox esté seleccionada
-function validateCheckboxes() {
-    const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
-    const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-
-    if (!isChecked) {
-        alert("Debes seleccionar al menos una práctica.");
-        return false; // Evita que el formulario se envíe
-    }
-
-    return true; // Permite que el formulario se envíe
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     const practica1Checkbox = document.getElementById('practica1');
     const practica2Checkbox = document.getElementById('practica2');
 
-    let practica1Existente = false; // Variable para almacenar si existe la Práctica I
-
-    // Desactivar práctica II inicialmente
-    practica2Checkbox.disabled = true;
-
-    // Aquí podrías hacer una solicitud al servidor para verificar si hay registros de "Práctica I"
-    fetch('/estudiante/api/verificar_practica1/') // Suponiendo que tienes un endpoint para esto
+    // Verificar si ya se ha registrado "Práctica I" o "Práctica II" para el estudiante
+    fetch('/estudiante/api/verificar_practica1/')
         .then(response => response.json())
         .then(data => {
-            practica1Existente = data.existe_practica1; // Guardamos el resultado de la API
+            const practica1Existente = data.existe_practica1;
+            const practica2Existente = data.existe_practica2;
 
+            // Si ya tiene "Práctica I", deshabilitar el checkbox de "Práctica I"
             if (practica1Existente) {
-                practica2Checkbox.disabled = false; // Activar práctica II si existe "Práctica I"
-            } else {
-                practica1Checkbox.checked = true; // Activar "Práctica I" si no existe en la BD
+                practica1Checkbox.disabled = true;
+                practica1Checkbox.checked = true; // Preseleccionar si ya existe
+            }
+
+            // Si ya tiene "Práctica II", deshabilitar el checkbox de "Práctica II"
+            if (practica2Existente) {
+                practica2Checkbox.disabled = true;
+                practica2Checkbox.checked = true; // Preseleccionar si ya existe
+            }
+
+            // Si no tiene "Práctica I", deshabilitar "Práctica II"
+            if (!practica1Existente) {
+                practica2Checkbox.disabled = true;
             }
         });
 
-    // Evento para la checkbox de "Práctica I"
+    // Lógica para manejar el cambio de "Práctica I"
     practica1Checkbox.addEventListener('change', function () {
         if (this.checked) {
-            practica2Checkbox.disabled = false; // Activar práctica II si "Práctica I" está seleccionada
+            practica2Checkbox.disabled = false;  // Habilitar "Práctica II"
         } else {
-            practica2Checkbox.checked = false; // Desmarcar práctica II si "Práctica I" no está seleccionada
-            practica2Checkbox.disabled = true; // Desactivar práctica II
+            practica2Checkbox.checked = false;
+            practica2Checkbox.disabled = true;  // Deshabilitar "Práctica II" si "Práctica I" no está seleccionada
         }
     });
 
-    // Evento para la checkbox de "Práctica II"
+    // Lógica para manejar el cambio de "Práctica II"
     practica2Checkbox.addEventListener('change', function () {
-        if (this.checked && !practica1Existente && !practica1Checkbox.checked) {
-            this.checked = false; // Desmarcar práctica II si "Práctica I" no está seleccionada
-            alert("Debes inscribir una 'Práctica I' antes de inscribir una 'Práctica II'.");
+        if (this.checked) {
+            if (!practica1Checkbox.checked) {
+                alert("Debes inscribir una 'Práctica I' antes de inscribir una 'Práctica II'.");
+                this.checked = false;  // Desmarcar "Práctica II" si "Práctica I" no está seleccionada
+            }
         }
-    });
+    });z
 });

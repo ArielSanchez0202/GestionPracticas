@@ -9,7 +9,12 @@ from datetime import datetime
 # Create your views here.
 @estudiante_required
 def estudiante_view(request):
-    practicas = InscripcionPractica.objects.all()  # O filtra por estudiante si es necesario
+    # Obtener el estudiante asociado al usuario en sesión
+    estudiante = Estudiante.objects.get(usuario=request.user)
+
+    # Filtrar las prácticas de este estudiante
+    practicas = InscripcionPractica.objects.filter(rut=estudiante.rut)
+
     context = {
         'practicas': practicas,
     }
@@ -17,16 +22,22 @@ def estudiante_view(request):
 
 @estudiante_required
 def inscripcion_practica_view(request):
+    estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
+
+    # Verificar si el estudiante ya tiene ambas prácticas (I y II)
+    practica1_inscrita = InscripcionPractica.objects.filter(rut=estudiante.rut, practica1=True).exists()
+    practica2_inscrita = InscripcionPractica.objects.filter(rut=estudiante.rut, practica2=True).exists()
+
+    # Si ya tiene ambas prácticas, mostramos un mensaje y no permitimos más inscripciones
+    if practica1_inscrita and practica2_inscrita:
+        return render(request, 'inscripcion_practica.html', {
+            'error': 'Ya tienes ambas prácticas (I y II) inscritas. No puedes agregar más.'
+        })
+
     if request.method == 'POST':
         # Recuperar los datos enviados por el formulario
-        nombre_completo = request.POST.get('nombre_completo')
-        rut = request.POST.get('rut')
-        domicilio = request.POST.get('domicilio')
-        telefono = request.POST.get('telefono')
-        correo = request.POST.get('correo')
-        carrera = request.POST.get('carrera')
-        practica1 = request.POST.get('practica1')  # checkbox
-        practica2 = request.POST.get('practica2')   # checkbox
+        practica1 = True if request.POST.get('practica1') else False  # checkbox
+        practica2 = True if request.POST.get('practica2') else False  # checkbox
         razon_social = request.POST.get('razon_social')
         direccion_empresa = request.POST.get('direccion_empresa')
         jefe_directo = request.POST.get('jefe_directo')
@@ -56,12 +67,12 @@ def inscripcion_practica_view(request):
 
         # Crear una nueva instancia del modelo InscripcionPractica
         inscripcion = InscripcionPractica(
-            nombre_completo=nombre_completo,
-            rut=rut,
-            domicilio=domicilio,
-            telefono=telefono,
-            correo=correo,
-            carrera=carrera,
+            nombre_completo=estudiante.usuario.get_full_name(),
+            rut=estudiante.rut,
+            domicilio=estudiante.domicilio,
+            telefono=estudiante.numero_telefono,
+            correo=estudiante.usuario.email,
+            carrera=estudiante.carrera,
             practica1=practica1,
             practica2=practica2,
             razon_social=razon_social,
@@ -84,15 +95,16 @@ def inscripcion_practica_view(request):
             inscripcion.save()
             return redirect('estudiantes_main')
         except Exception as e:
-            # Manejar el error (puedes agregar un mensaje de error para mostrar en la plantilla)
             print(f'Error al guardar: {e}')
-
-        # Redirigir a estudiante.html después de enviar el formulario exitosamente
-        return redirect('estudiantes_main')
-
-    return render(request, 'inscripcion_practica.html')
+    
+    context = {
+        'estudiante': estudiante,
+    }
+    return render(request, 'inscripcion_practica.html', context)
 
 @estudiante_required
 def verificar_practica1(request):
-    existe_practica1 = InscripcionPractica.objects.filter(practica1=True).exists()
-    return JsonResponse({'existe_practica1': existe_practica1})
+    estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
+    existe_practica1 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica1=True).exists()
+    existe_practica2 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica2=True).exists()
+    return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})

@@ -174,55 +174,144 @@ def carga_masiva_estudiantes(request):
             return redirect('carga_masiva_estudiantes')
 
         try:
+            # Leer archivo Excel
             df = pd.read_excel(archivo, engine='openpyxl')
-            df.columns = ['Nombre','Apellido','RUT','Domicilio','numero_telefono','CorreoElectronico', 'Carrera']
+
+            # Definir los encabezados correctos
+            columnas_esperadas = ['Nombre', 'Apellido', 'Rut', 'Domicilio', 'numero_telefono', 'CorreoElectronico', 'Carrera']
+            
+            # Verificar que el archivo tenga las mismas columnas
+            if list(df.columns) != columnas_esperadas:
+                messages.error(request, "El archivo no tiene las columnas correctas. Por favor, descarga la plantilla y vuelve a intentar.")
+                return redirect('carga_masiva_estudiantes')
+
+            # Validar que no haya casillas vacías
+            for index, row in df.iterrows():
+                if row.isnull().any():  # Verifica si hay algún valor nulo en la fila
+                    messages.error(request, f"Fila {index + 1} tiene campos vacíos. Por favor, completa todos los campos.")
+                    return redirect('carga_masiva_estudiantes')
 
             estudiantes = df.to_dict(orient='records')
             request.session['alumnos_preview'] = estudiantes
             return render(request, 'coordinador/carga_masiva_estudiantes.html', {'estudiantes': estudiantes})
+
         except Exception as e:
             messages.error(request, f"Error al procesar el archivo: {e}")
             return redirect('carga_masiva_estudiantes')
+
     return render(request, 'coordinador/carga_masiva_estudiantes.html')
 
 @coordinador_required
 def previsualizar_estudiantes(request):
     alumnos = request.session.get('alumnos_preview', [])
+    mensajes_error = []
+
+    def validar_rut2(rut):
+        """Valida que el RUT tenga el formato correcto y sea real."""
+        # Verifica el formato (8 dígitos, guion y dígito verificador)
+        if not re.fullmatch(r'^\d{7,8}-[0-9Kk]$', rut):
+            return False
+        
+        # Separar el número y el dígito verificador
+        cuerpo, dv = rut[:-2], rut[-1].upper()
+        
+        # Calcular el dígito verificador
+        suma = 0
+        multiplicador = 2
+
+        for digito in reversed(cuerpo):
+            suma += int(digito) * multiplicador
+            multiplicador = 2 if multiplicador == 7 else multiplicador + 1
+        
+        # Calcular el dígito verificador esperado
+        resto = suma % 11
+        digito_calculado = 'K' if resto == 1 else '0' if resto == 0 else str(11 - resto)
+        
+        return dv == digito_calculado
+
     if request.method == 'POST':
         for alumno in alumnos:
-            rut = alumno['RUT']
+            rut = alumno['Rut']
             apellido = alumno['Apellido']
             email = alumno['CorreoElectronico']
             nombre = alumno['Nombre']
             domicilio = alumno['Domicilio']
             numero_telefono = alumno['numero_telefono']
             carrera = alumno['Carrera']
+            
+            # Validar el formato y la autenticidad del RUT
+            if not validar_rut2(rut):
+                mensajes_error.append(f"El RUT {rut} no tiene el formato correcto o no es un RUT válido.")
+                continue
+            
+            # Validar formato del teléfono (debe comenzar con 9 y tener 9 dígitos)
+            if not re.fullmatch(r'^9\d{8}$', str(numero_telefono)):
+                mensajes_error.append(f"El número de teléfono {numero_telefono} no es válido. Debe comenzar con 9 y tener 9 dígitos.")
+                continue
+            
+            # Validar formato del correo electrónico
+            if not re.fullmatch(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+                mensajes_error.append(f"El correo {email} no tiene un formato válido.")
+                continue
+            
+            # Validar si el RUT ya está registrado
+            if User.objects.filter(username=rut).exists():
+                mensajes_error.append(f"El RUT {rut} ya está registrado.")
+                continue
+            
+            # Validar si el correo ya está registrado
+            if User.objects.filter(email=email).exists():
+                mensajes_error.append(f"El correo {email} ya está registrado.")
+                continue
+            
+            # Si el RUT no está registrado, crear el usuario y estudiante
+            contrasena = generar_contrasena()
+            usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
+            usuario.set_password(contrasena)
+            usuario.save()
 
-            if not User.objects.filter(username=rut).exists():
-                usuario = User.objects.create_user(username=rut, email=email, first_name=nombre, last_name=apellido)
-                usuario.set_password('password123')
-                usuario.save()
+            grupo, _ = Group.objects.get_or_create(name='Estudiante')
+            usuario.groups.add(grupo)
 
-                grupo, _ = Group.objects.get_or_create(name='Estudiante')
-                usuario.groups.add(grupo)
+            estudiante = Estudiante(
+                usuario=usuario,
+                rut=rut,
+                numero_telefono=numero_telefono,
+                domicilio=domicilio,
+                carrera=carrera
+            )
+            estudiante.save()
 
-                estudiante = Estudiante(
-                    usuario=usuario,
-                    rut=rut,
-                    numero_telefono=numero_telefono,
-                    domicilio=domicilio,
-                    carrera=carrera
+            # Enviar el correo con las credenciales
+            try:
+                send_mail(
+                    'Credenciales de acceso',
+                    f'Hola {nombre},\n\nTu cuenta ha sido creada exitosamente.\n'
+                    f'Tu RUT: {rut}\nTu contraseña: {contrasena}\n\n'
+                    'Por favor, cambia tu contraseña después de iniciar sesión.',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email],
+                    fail_silently=False,
                 )
-                estudiante.save()
+            except Exception as e:
+                # Manejo de excepciones al enviar el correo
+                messages.error(request, f"Error al enviar el correo a {email}: {e}")
+
+        # Si hubo errores, mostramos los mensajes
+        if mensajes_error:
+            for mensaje in mensajes_error:
+                messages.error(request, mensaje)
+        else:
+            messages.success(request, "Estudiantes añadidos exitosamente y se han enviado las credenciales al correo.")
 
         request.session.pop('alumnos_preview', None)
-        messages.success(request, "Estudiantes añadidos exitosamente.")
         return redirect('listar_estudiantes')
+    
     return render(request, 'coordinador/carga_masiva_preview.html', {'alumnos': alumnos})
 
 @coordinador_required
 def descargar_plantilla_estudiantes(request):
-    columnas = ['Nombre','Apellido','Rut','Domicilio','numero_telefono', 'Correo Electrónico','Carrera']
+    columnas = ['Nombre','Apellido','Rut','Domicilio','numero_telefono', 'CorreoElectronico','Carrera']
     df = pd.DataFrame(columns=columnas)
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -599,9 +688,14 @@ def dashboard(request):
     return render(request, 'coordinador/dashboard.html', context)
 @coordinador_required
 def listar_practicas(request):
-    # Obtener todas las inscripciones de prácticas
-    inscripciones = InscripcionPractica.objects.all()
+    # Obtener los RUT de los estudiantes activos
+    estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
+    
+    # Filtrar inscripciones solo para estudiantes con esos RUT
+    inscripciones = InscripcionPractica.objects.filter(rut__in=estudiantes_activos)
+    
     return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
+
 
 @coordinador_required
 def ver_formulario(request, solicitud_id,):

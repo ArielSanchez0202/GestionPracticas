@@ -9,6 +9,7 @@ class Coordinador(models.Model):
     domicilio = models.CharField(max_length=255)
     carrera = models.CharField(max_length=100)
     numero_telefono = models.CharField(max_length=20)
+    first_login = models.BooleanField(default=True)
 
     def __str__(self):
         return f'Coordinador: {self.usuario.first_name} {self.usuario.last_name}'
@@ -20,6 +21,7 @@ class Estudiante(models.Model):
     domicilio = models.CharField(max_length=255)
     carrera = models.CharField(max_length=100)
     numero_telefono = models.CharField(max_length=20)  # Campo agregado para el número de teléfono
+    first_login = models.BooleanField(default=True)
 
     def __str__(self):
         return f'Estudiante: {self.usuario.first_name} {self.usuario.last_name}'

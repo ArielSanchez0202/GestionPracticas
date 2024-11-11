@@ -4,34 +4,40 @@
 
 {% block content %}
 
+<!DOCTYPE html>
+<html lang="es">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Estudiante</title>
-        
-        <!-- Aquí se enlaza directamente el archivo de estilos específico para esta plantilla -->
-        <link rel="stylesheet" href="{% static 'css/estudiante.css' %}">
+        <title>Listado de Prácticas</title>
+        <link rel="stylesheet" href="{% static 'css/listado_practicas.css' %}">
     </head>
-
-    <h1>PRÁCTICAS</h1>
-
-    <form action="/estudiante/inscripcion_practica/" method="get">
-        <button type="submit">Ingresar nueva práctica</button>
-    </form>
-
-    <div class="practicas-container">
-        {% for practica in practicas %}
-        <div class="practica-item">
-            <div>
-                <span class="icon">&#x2705;</span>
-                <strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong><br>
-                Estado: {{ practica.get_estado_display }}<br>  <!-- Si usas un campo ChoiceField para estado -->
-                Nota: {{ practica.nota }}  <!-- Asegúrate de que existe un campo nota en tu modelo -->
+    <body>
+        <div class="container">
+            <div class="form-header">
+                <h15>PRÁCTICAS</h15>
+                <!-- Botón para añadir nueva práctica -->
+                <div class="button-container">
+                    <button onclick="window.location.href='{% url 'inscripcion_practica' %}'">Ingresar nueva práctica</button>
+                </div>
             </div>
-            <button class="detalle-btn">Detalle</button>
+
+            <!-- Tarjetas de prácticas -->
+            <div class="table-container">
+                {% for practica in practicas %}
+                <div class="card">
+                    <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px;">
+                    <div class="card-content">
+                        <span class="practica-label"><strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong></span><br>
+                        Estado: {{ practica.get_estado_display }}<br>
+                        Nota: {{ practica.nota }}<br>
+                        <button class="detalle-btn">Detalle</button>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No hay prácticas registradas.</p>
+                {% endfor %}
+            </div>
         </div>
-        {% empty %}
-        <p>No hay prácticas registradas.</p>
-        {% endfor %}
-    </div>
+    </body>
 {% endblock %}
