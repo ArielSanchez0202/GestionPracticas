@@ -26,10 +26,7 @@ body {
     margin: 20px auto;
     margin-left: 0%; /* Deja espacio para la sidebar */
     margin-right: 0%; /* Deja espacio al borde derecho */
-    background-color: #d3d3d3;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
