@@ -688,9 +688,14 @@ def dashboard(request):
     return render(request, 'coordinador/dashboard.html', context)
 @coordinador_required
 def listar_practicas(request):
-    # Obtener todas las inscripciones de prácticas
-    inscripciones = InscripcionPractica.objects.all()
+    # Obtener los RUT de los estudiantes activos
+    estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
+    
+    # Filtrar inscripciones solo para estudiantes con esos RUT
+    inscripciones = InscripcionPractica.objects.filter(rut__in=estudiantes_activos)
+    
     return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
+
 
 @coordinador_required
 def ver_formulario(request, solicitud_id,):
