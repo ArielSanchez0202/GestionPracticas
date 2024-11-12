@@ -6,5 +6,6 @@ urlpatterns = [
     path('estudiante/', views.estudiante_view, name='estudiantes_main'),
     path('inscripcion_practica/', views.inscripcion_practica_view, name='inscripcion_practica'),
     path('api/verificar_practica1/', verificar_practica1, name='verificar_practica1'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
 ]

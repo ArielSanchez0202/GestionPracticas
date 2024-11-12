@@ -108,3 +108,20 @@ def verificar_practica1(request):
     existe_practica1 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica1=True).exists()
     existe_practica2 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica2=True).exists()
     return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
+
+@estudiante_required
+def dashboard(request):
+    estudiante = Estudiante.objects.get(usuario=request.user)
+    # Filtrar las solicitudes solo del estudiante actual
+    total_solicitudes = InscripcionPractica.objects.filter(rut=estudiante.rut).count()
+    solicitudes_pendientes = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Pendiente').count()
+    solicitudes_aprobadas = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Aprobada').count()
+    solicitudes_recientes = InscripcionPractica.objects.filter(rut=estudiante.rut).order_by('-id')[:5]
+
+    context = {
+        'total_solicitudes': total_solicitudes,
+        'solicitudes_pendientes': solicitudes_pendientes,
+        'solicitudes_aprobadas': solicitudes_aprobadas,
+        'solicitudes_recientes': solicitudes_recientes,
+    }
+    return render(request, 'dashboard.html', context)
