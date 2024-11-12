@@ -1,0 +1,94 @@
+{% extends 'base_estudiante.html' %}
+{% load static %}
+
+{% block title %} Panel de Control {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Bienvenido al Panel de Control</h1>
+    <p class="lead">Aquí puedes ver un resumen general de las solicitudes de práctica.</p>
+
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+    <div class="row mt-4">
+        <!-- Total de Solicitudes -->
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total de Solicitudes</h5>
+                    <p class="card-text">{{ total_solicitudes }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Solicitudes Pendientes -->
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Solicitudes Pendientes</h5>
+                    <p class="card-text">{{ solicitudes_pendientes }}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Solicitudes Aprobadas -->
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Solicitudes Aprobadas</h5>
+                    <p class="card-text">{{ solicitudes_aprobadas }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de "Solicitudes por Estado" -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h3>Solicitudes por Estado</h3>
+            <canvas id="estadoChart"
+                    data-aprobadas="{{ solicitudes_aprobadas }}"
+                    data-rechazadas="{{ solicitudes_rechazadas }}"
+                    data-pendientes="{{ solicitudes_pendientes }}"></canvas>
+        </div>
+    </div>
+
+    <!-- Lista de Solicitudes Recientes -->
+    <h3 class="mt-5">Solicitudes Recientes</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Práctica</th>
+                <th>Razón Social</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes_recientes %}
+            <tr>
+                <td>
+                    {% if solicitud.practica1 %}Práctica 1{% elif solicitud.practica2 %}Práctica 2{% endif %}
+                </td>
+                <td>{{ solicitud.razon_social }}</td>
+                <td>{{ solicitud.estado }}</td>
+                <td>
+                    <!-- Botón Detalle para todas las solicitudes -->
+                    <a href="#" class="btn btn-info btn-sm">Detalle</a>
+                    
+                    <!-- Botón Ver comentarios solo si la solicitud está Rechazada -->
+                    {% if solicitud.estado == 'Rechazada' %}
+                        <a href="#" class="btn btn-danger btn-sm">Ver comentarios</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay solicitudes recientes.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
