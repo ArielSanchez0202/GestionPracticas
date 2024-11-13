@@ -1,44 +1,51 @@
 {% extends 'base_estudiante.html' %}
 
-{% load static %}
+{% load static %}  
+
+{% block title %}Detalle de Práctica Profesional{% endblock %}  <!-- Corregido para cambiar el título de la página -->
+
+{% block styles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/detalle_practica.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Listado de Prácticas</title>
-        <link rel="stylesheet" href="{% static 'css/listado_practicas.css' %}">
-    </head>
-    <body>
-        <div class="container">
-            
-            <div class="back-button">
-                <a href="{% url 'estudiantes_main' %}">
-                    <button type="button" class="image-button">
-                        <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
-                    </button>
-                </a>
-            </div>
-
-            <!-- Tarjetas de prácticas -->
-            <div class="table-container">
-                {% for practica in practicas %}
-                <div class="card">
-                    <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px;">
-                    <div class="card-content">
-                        <span class="practica-label"><strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong></span><br>
-                        Estado: {{ practica.get_estado_display }}<br>
-                        Nota: {{ practica.nota }}<br>
-                        <button class="detalle-btn">Detalle</button>
-                    </div>
-                </div>
-                {% empty %}
-                <p>No hay prácticas registradas.</p>
-                {% endfor %}
-            </div>
+<div class="main-content">
+    <h1>Práctica número</h1>
+    <div class="card">
+        <div class="card-header">
+            <span>Ficha de inscripción práctica profesional</span>
+            <span class="status">Pendiente de aprobación</span>
         </div>
-    </body>
+        <button class="action-button">Descargar Carta de Aprobación</button>
+        <button class="action-button">Ver ficha</button>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span>Informe de avances</span>
+        </div>
+        <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+        <button class="action-button">Subir Informe</button>
+        <button class="action-button">Descargar plantilla</button>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span>Autoevaluación</span>
+        </div>
+        <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+        <button class="action-button">Ver Autoevaluación</button>
+        <button class="action-button">Llenar Autoevaluación</button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>Informe Final</span>
+        </div>
+        <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
+        <button class="action-button">Subir Informe Final</button>
+    </div>
+</div>
 {% endblock %}

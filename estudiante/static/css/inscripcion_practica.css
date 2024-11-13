@@ -17,6 +17,36 @@ body {
     padding: 20px;
 }
 
+.inscripcion-container * {
+    box-sizing: border-box;
+}
+
+.inscripcion-container body {
+    font-family: Arial, sans-serif;
+    background-color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+}
+
+.inscripcion-container .container {
+    width: 100%;
+    margin: 20px auto;
+    margin-left: 0%;
+    margin-right: 0%;
+    padding: 20px;
+}
+
+.inscripcion-container h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
+.inscripcion-container form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
 h1 {
     text-align: center;
     font-size: 3em;
