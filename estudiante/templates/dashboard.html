@@ -42,12 +42,14 @@
 
     <!-- Gráfico de "Solicitudes por Estado" -->
     <div class="row mt-5">
-        <div class="col-md-6">
+        <div class="col-md-6 mx-auto">
             <h3>Solicitudes por Estado</h3>
-            <canvas id="estadoChart"
-                    data-aprobadas="{{ solicitudes_aprobadas }}"
-                    data-rechazadas="{{ solicitudes_rechazadas }}"
-                    data-pendientes="{{ solicitudes_pendientes }}"></canvas>
+            <div class="chart-container">
+                <canvas id="estadoChart"
+                        data-aprobadas="{{ solicitudes_aprobadas }}"
+                        data-rechazadas="{{ solicitudes_rechazadas }}"
+                        data-pendientes="{{ solicitudes_pendientes }}"></canvas>
+            </div>
         </div>
     </div>
 

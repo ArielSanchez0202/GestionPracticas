@@ -4,40 +4,86 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+.container {
+    text-align: center;
+    max-width: 100%;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+/* Estilos para los títulos y subtítulos */
 h1, h3 {
     color: #333;
     font-weight: bold;
+    font-size: 2rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .card {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-bottom: 15px;
+    min-width: 280px;
+    overflow: hidden;
 }
 
 .card-title {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-body {
     padding: 20px;
+    word-wrap: break-word;
 }
 
 .card .card-text {
     font-size: 1.5rem;
     font-weight: 700;
+    white-space: normal;
 }
 
+/* Responsividad y alineación para los cuadros */
+.row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Columna de las cards ajustables */
+.col-md-4, .col-12 {
+    flex: 1 1 100%;
+    max-width: 100%;
+}
+
+/* Tabla de solicitudes */
 table {
     border-collapse: collapse;
     width: 100%;
     margin-top: 20px;
+    table-layout: auto; /* Permite que la tabla ajuste sus columnas de acuerdo al contenido */
 }
 
 table th, table td {
-    padding: 12px 15px;
+    padding: 10px 12px;
     text-align: center;
     border: 1px solid #ddd;
+    font-size: 1rem;
 }
 
 table th {
@@ -76,6 +122,41 @@ table td a.btn-danger:hover {
     background-color: #c0392b;
 }
 
+/* Ajuste de tamaño para el canvas */
+.chart-container {
+    position: relative;
+    min-width: 300px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Para pantallas más grandes */
+@media (min-width: 992px) {
+    .container {
+        max-width: 80%;
+    }
+
+    h1, h3 {
+        font-size: 2.2rem;
+    }
+
+    .row {
+        gap: 20px;
+    }
+
+    /* Cards en 3 columnas */
+    .col-md-4 {
+        flex: 1 1 30%;
+    }
+}
+
+/* Responsividad para pantallas más pequeñas */
 @media (max-width: 768px) {
     .table th, .table td {
         font-size: 0.9rem;
@@ -86,6 +167,27 @@ table td a.btn-danger:hover {
     }
 
     h1, h3 {
-        font-size: 1.2rem;
+        font-size: 1.6rem;
+    }
+
+    .lead {
+        font-size: 1rem;
+    }
+
+    /* Cards en 1 columna para pantallas pequeñas */
+    .col-12 {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    /* Aseguramos que la tabla no sea scrollable y ocupe el mínimo espacio necesario */
+    table {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Asegura que las columnas de la tabla no se expandan innecesariamente */
+    table th, table td {
+        width: auto; /* Permite que las celdas se ajusten al contenido */
     }
 }
