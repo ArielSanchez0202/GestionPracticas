@@ -110,6 +110,11 @@ def verificar_practica1(request):
     return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
 
 @estudiante_required
+def detalle_practica_view(request):
+
+    return render(request, 'detalle_practica.html')
+
+@estudiante_required
 def dashboard(request):
     estudiante = Estudiante.objects.get(usuario=request.user)
     # Filtrar las solicitudes solo del estudiante actual

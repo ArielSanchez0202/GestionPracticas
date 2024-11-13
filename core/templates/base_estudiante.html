@@ -135,7 +135,7 @@
             </li>
 
             <li class="nav-item">
-                <form action="{% url 'logout' %}" method="post" style="margin-top: 170%;">
+                <form action="{% url 'logout' %}" method="post" style="margin-top: 200%;">
                     {% csrf_token %}
                     <a href="#" onclick="this.closest('form').submit()" class="nav-link btn btn-danger" style="border-radius: 5px;">Cerrar Sesión</a>
                 </form>

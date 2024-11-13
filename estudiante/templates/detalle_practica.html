@@ -14,12 +14,13 @@
     </head>
     <body>
         <div class="container">
-            <div class="form-header">
-                <h15>PRÁCTICAS</h15>
-                <!-- Botón para añadir nueva práctica -->
-                <div class="button-container">
-                    <button onclick="window.location.href='{% url 'inscripcion_practica' %}'">Ingresar nueva práctica</button>
-                </div>
+            
+            <div class="back-button">
+                <a href="{% url 'estudiantes_main' %}">
+                    <button type="button" class="image-button">
+                        <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+                    </button>
+                </a>
             </div>
 
             <!-- Tarjetas de prácticas -->
@@ -31,9 +32,7 @@
                         <span class="practica-label"><strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong></span><br>
                         Estado: {{ practica.get_estado_display }}<br>
                         Nota: {{ practica.nota }}<br>
-                        <a href="{% url 'detalle_practica' %}">
-                            <button type="button" class="detalle-btn">Detalle</button>
-                        </a>
+                        <button class="detalle-btn">Detalle</button>
                     </div>
                 </div>
                 {% empty %}
