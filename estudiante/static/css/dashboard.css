@@ -1,4 +1,4 @@
-/* dashboard.css */
+/* Contenedor para el cuerpo de la página */
 body {
     background-color: #f4f7fc;
     font-family: 'Arial', sans-serif;
@@ -7,7 +7,7 @@ body {
 .container {
     text-align: center;
     max-width: 100%;
-    padding: 20px;
+    padding: 15px; /* Reducir padding para ajustar todo en la página */
     margin: 0 auto;
 }
 
@@ -15,29 +15,29 @@ body {
 h1, h3 {
     color: #333;
     font-weight: bold;
-    font-size: 2rem;
+    font-size: 1.5rem; /* Reducir el tamaño del título */
     margin-top: 10px;
     text-align: center;
+    width: 100%; /* Asegura que los títulos ocupen el 100% del ancho */
+    box-sizing: border-box; /* Asegura que el padding y márgenes no afecten el ancho */
+    margin-left: 0;
+    margin-right: 0;
 }
 
-.lead {
-    font-size: 1.25rem;
-    color: #555;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
+/* Estilo para las tarjetas (cards) */
 .card {
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    margin-bottom: 15px;
-    min-width: 280px;
+    border-radius: 8px; /* Reducir bordes de las tarjetas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%; /* Reducir ancho de las tarjetas */
+    margin-bottom: 10px; /* Reducir espacio entre tarjetas */
+    min-width: 150px; /* Ajustar el tamaño mínimo */
+    max-width: 100%;
     overflow: hidden;
+    text-align: center;
 }
 
 .card-title {
-    font-size: 1.5rem;
+    font-size: 1rem; /* Reducir el tamaño del título dentro de las tarjetas */
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -45,94 +45,49 @@ h1, h3 {
 }
 
 .card-body {
-    padding: 20px;
+    padding: 12px; /* Reducir el padding dentro de las tarjetas */
     word-wrap: break-word;
 }
 
 .card .card-text {
-    font-size: 1.5rem;
+    font-size: 1rem; /* Reducir el tamaño del texto dentro de las tarjetas */
     font-weight: 700;
     white-space: normal;
 }
 
-/* Responsividad y alineación para los cuadros */
-.row {
+/* Responsividad para las tarjetas y el gráfico */
+.dashboard-overview {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 3%;
     flex-wrap: wrap;
-    width: 100%;
-    margin: 0 auto;
 }
 
-/* Columna de las cards ajustables */
-.col-md-4, .col-12 {
-    flex: 1 1 100%;
-    max-width: 100%;
-}
-
-/* Tabla de solicitudes */
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 20px;
-    table-layout: auto; /* Permite que la tabla ajuste sus columnas de acuerdo al contenido */
-}
-
-table th, table td {
-    padding: 10px 12px;
-    text-align: center;
-    border: 1px solid #ddd;
-    font-size: 1rem;
-}
-
-table th {
-    background-color: #2c3e50;
-    color: #fff;
-}
-
-table td {
-    background-color: #fff;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table td a {
-    text-decoration: none;
-    color: #fff;
-}
-
-table td a.btn-info {
-    background-color: #3498db;
-    transition: background-color 0.3s ease;
-}
-
-table td a.btn-info:hover {
-    background-color: #2980b9;
-}
-
-table td a.btn-danger {
-    background-color: #e74c3c;
-    transition: background-color 0.3s ease;
-}
-
-table td a.btn-danger:hover {
-    background-color: #c0392b;
+/* Asegura que las tarjetas se ajusten correctamente cuando la pantalla sea pequeña */
+.stats-cards {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Asegura que las tarjetas estén centradas */
+    align-items: center; /* Centra las tarjetas */
+    gap: 10px;
+    margin-top: 20px; /* Agregar margen superior para separarlas del gráfico */
 }
 
 /* Ajuste de tamaño para el canvas */
 .chart-container {
-    position: relative;
+    width: 48%; /* Reducir el tamaño del gráfico */
+    max-width: 450px;
     min-width: 300px;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+    min-height: 200px; /* Reducir la altura mínima */
+    justify-content: center;
+    display: flex;  
+    align-items: center; 
+    flex-direction: column;
 }
 
 canvas {
-    width: 100% !important;
+    width: 85% !important;
     height: auto !important;
 }
 
@@ -143,11 +98,11 @@ canvas {
     }
 
     h1, h3 {
-        font-size: 2.2rem;
+        font-size: 1.75rem; /* Ajustar tamaño de los títulos en pantallas grandes */
     }
 
     .row {
-        gap: 20px;
+        gap: 15px;
     }
 
     /* Cards en 3 columnas */
@@ -157,27 +112,38 @@ canvas {
 }
 
 /* Responsividad para pantallas más pequeñas */
-@media (max-width: 768px) {
-    .table th, .table td {
-        font-size: 0.9rem;
+@media (max-width: 992px) {
+    .dashboard-overview {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-    
+
+    .chart-container, .stats-cards {
+        width: 85%; /* Asegurar que los elementos ocupen más espacio en pantallas pequeñas */
+        max-width: 90%;
+    }
+
     .card-body {
-        padding: 15px;
+        padding: 10px; /* Reducir el padding dentro de las tarjetas */
     }
 
     h1, h3 {
-        font-size: 1.6rem;
+        font-size: 1.3rem; /* Reducir tamaño de título en pantallas pequeñas */
+        margin-top: 20px; /* Añadir margen superior para separación */
+        display: block; /* Asegura que los títulos no se desalineen */
+        width: 100%; /* Asegura que los títulos ocupen el 100% del ancho */
+        text-align: center; /* Centra el texto correctamente */
+        margin-left: 0; /* Elimina cualquier margen a la izquierda */
+        margin-right: 0; /* Elimina cualquier margen a la derecha */
     }
 
     .lead {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
-    /* Cards en 1 columna para pantallas pequeñas */
-    .col-12 {
-        flex: 1 1 100%;
-        max-width: 100%;
+    .table th, .table td {
+        font-size: 0.8rem;
     }
 
     /* Aseguramos que la tabla no sea scrollable y ocupe el mínimo espacio necesario */
@@ -189,5 +155,19 @@ canvas {
     /* Asegura que las columnas de la tabla no se expandan innecesariamente */
     table th, table td {
         width: auto; /* Permite que las celdas se ajusten al contenido */
+    }
+
+    /* Estilo adicional para las tarjetas debajo del gráfico */
+    .stats-cards {
+        width: 80%; /* Se agranda para ocupar más espacio en pantallas pequeñas */
+        margin-top: 20px; /* Aumentar la separación entre el gráfico y las tarjetas */
+        text-align: center;
+    }
+
+    /* Asegura que las tarjetas siempre estén centradas */
+    .dashboard-overview {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Asegura que el contenido esté centrado */
     }
 }

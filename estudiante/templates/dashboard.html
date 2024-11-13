@@ -5,50 +5,46 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Bienvenido al Panel de Control</h1>
-    <p class="lead">Aquí puedes ver un resumen general de las solicitudes de práctica.</p>
+    <h1>Panel de Control</h1>
 
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 
-    <div class="row mt-4">
-        <!-- Total de Solicitudes -->
-        <div class="col-md-4">
+    <!-- Contenedor de flexbox para alinear el gráfico y las tarjetas -->
+    <div class="dashboard-overview mt-4">
+        <!-- Gráfico de "Solicitudes por Estado" -->
+        <div class="chart-container">
+            <h3>Solicitudes por Estado</h3>
+            <canvas id="estadoChart"
+                    data-aprobadas="{{ solicitudes_aprobadas }}"
+                    data-rechazadas="{{ solicitudes_rechazadas }}"
+                    data-pendientes="{{ solicitudes_pendientes }}"></canvas>
+        </div>
+
+        <!-- Cards de estadísticas -->
+        <div class="stats-cards">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Total de Solicitudes</h5>
+                    <h5 class="card-title">Solicitudes</h5>
                     <p class="card-text">{{ total_solicitudes }}</p>
                 </div>
             </div>
-        </div>
-        <!-- Solicitudes Pendientes -->
-        <div class="col-md-4">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Solicitudes Pendientes</h5>
+                    <h5 class="card-title">Pendientes</h5>
                     <p class="card-text">{{ solicitudes_pendientes }}</p>
                 </div>
             </div>
-        </div>
-        <!-- Solicitudes Aprobadas -->
-        <div class="col-md-4">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Solicitudes Aprobadas</h5>
+                    <h5 class="card-title">Aprobadas</h5>
                     <p class="card-text">{{ solicitudes_aprobadas }}</p>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Gráfico de "Solicitudes por Estado" -->
-    <div class="row mt-5">
-        <div class="col-md-6 mx-auto">
-            <h3>Solicitudes por Estado</h3>
-            <div class="chart-container">
-                <canvas id="estadoChart"
-                        data-aprobadas="{{ solicitudes_aprobadas }}"
-                        data-rechazadas="{{ solicitudes_rechazadas }}"
-                        data-pendientes="{{ solicitudes_pendientes }}"></canvas>
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Rechazadas</h5>
+                    <p class="card-text">{{ solicitudes_rechazadas }}</p>
+                </div>
             </div>
         </div>
     </div>

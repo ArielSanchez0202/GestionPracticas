@@ -15,5 +15,18 @@ var estadoChart = new Chart(ctx1, {
             data: [aprobadas, rechazadas, pendientes],
             backgroundColor: ['#4caf50', '#f44336', '#ffeb3b']
         }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 15,  // Cambia el tamaño de la fuente de la leyenda
+                        weight: 'bold'
+                    },
+                    color: '#333'
+                }
+            }
+        }
     }
 });

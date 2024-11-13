@@ -121,12 +121,14 @@ def dashboard(request):
     total_solicitudes = InscripcionPractica.objects.filter(rut=estudiante.rut).count()
     solicitudes_pendientes = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Pendiente').count()
     solicitudes_aprobadas = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Aprobada').count()
+    solicitudes_rechazadas = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Rechazada').count()
     solicitudes_recientes = InscripcionPractica.objects.filter(rut=estudiante.rut).order_by('-id')[:5]
 
     context = {
         'total_solicitudes': total_solicitudes,
         'solicitudes_pendientes': solicitudes_pendientes,
         'solicitudes_aprobadas': solicitudes_aprobadas,
+        'solicitudes_rechazadas': solicitudes_rechazadas,
         'solicitudes_recientes': solicitudes_recientes,
     }
     return render(request, 'dashboard.html', context)
