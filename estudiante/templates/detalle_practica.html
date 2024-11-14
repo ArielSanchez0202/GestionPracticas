@@ -12,15 +12,17 @@
 
 {% block content %}
 <div class="main-content">
-    <a href="javascript:history.back()" class="back-arrow">&#8592;</a>
+    <a href="javascript:history.back()" class="back-arrow">
+        <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+    </a>
     
-    <h1>PRÁCTICA</h1>
+    <h1>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</h1>
     
     <div class="card">
         <div class="card-header">
             <span>Ficha de inscripción práctica profesional</span>
-            <br>Estado: {{ practica.get_estado_display }}<br>
         </div>
+        <p>Estado: {{ practica.get_estado_display }}</p>
         <button class="action-button">Descargar carta de aprobación</button>
         <button class="action-button">Ver ficha</button>
     </div>

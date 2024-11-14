@@ -31,7 +31,7 @@
                         <span class="practica-label"><strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong></span><br>
                         Estado: {{ practica.get_estado_display }}<br>
                         Nota: {{ practica.nota }}<br>
-                        <a href="{% url 'detalle_practica' %}">
+                        <a href="{% url 'detalle_practica' practica.id %}">
                             <button type="button" class="detalle-btn">Detalle</button>
                         </a>
                     </div>

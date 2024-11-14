@@ -110,9 +110,9 @@ def verificar_practica1(request):
     return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
 
 @estudiante_required
-def detalle_practica_view(request):
-
-    return render(request, 'detalle_practica.html')
+def detalle_practica(request, practica_id):
+    practica = get_object_or_404(InscripcionPractica, id=practica_id)
+    return render(request, 'detalle_practica.html', {'practica': practica})
 
 @estudiante_required
 def dashboard(request):
