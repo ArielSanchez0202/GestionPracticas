@@ -2,7 +2,7 @@
 
 {% load static %}  
 
-{% block title %}Detalle de Práctica Profesional{% endblock %}  <!-- Corregido para cambiar el título de la página -->
+{% block title %}Detalle de Práctica Profesional{% endblock %}
 
 {% block styles %}
     <meta charset="UTF-8">
@@ -12,13 +12,16 @@
 
 {% block content %}
 <div class="main-content">
-    <h1>Práctica número</h1>
+    <a href="javascript:history.back()" class="back-arrow">&#8592;</a>
+    
+    <h1>PRÁCTICA</h1>
+    
     <div class="card">
         <div class="card-header">
             <span>Ficha de inscripción práctica profesional</span>
-            <span class="status">Pendiente de aprobación</span>
+            <br>Estado: {{ practica.get_estado_display }}<br>
         </div>
-        <button class="action-button">Descargar Carta de Aprobación</button>
+        <button class="action-button">Descargar carta de aprobación</button>
         <button class="action-button">Ver ficha</button>
     </div>
     
@@ -27,7 +30,7 @@
             <span>Informe de avances</span>
         </div>
         <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-        <button class="action-button">Subir Informe</button>
+        <button class="action-button">Subir informe de avances</button>
         <button class="action-button">Descargar plantilla</button>
     </div>
     
@@ -36,8 +39,8 @@
             <span>Autoevaluación</span>
         </div>
         <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
-        <button class="action-button">Ver Autoevaluación</button>
-        <button class="action-button">Llenar Autoevaluación</button>
+        <button class="action-button">Ver autoevaluación</button>
+        <button class="action-button">Llenar autoevaluación</button>
     </div>
 
     <div class="card">
@@ -45,7 +48,7 @@
             <span>Informe Final</span>
         </div>
         <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
-        <button class="action-button">Subir Informe Final</button>
+        <button class="action-button">Subir informe final</button>
     </div>
 </div>
 {% endblock %}

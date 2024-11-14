@@ -45,5 +45,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.checked = false;  // Desmarcar "Práctica II" si "Práctica I" no está seleccionada
             }
         }
-    });z
+    });
 });

@@ -1,10 +1,21 @@
 .main-content {
     padding: 20px;
     color: #333;
+    max-width: 600px;
+    margin: auto;
 }
 
 .main-content h1 {
     font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.back-arrow {
+    font-size: 1.5em;
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
     margin-bottom: 20px;
 }
 
@@ -14,6 +25,7 @@
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .card-header {
@@ -21,12 +33,12 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1.2em;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .status {
     font-weight: bold;
-    color: #888;
+    color: #8bc34a; /* Green color for approved status */
 }
 
 .action-button {
@@ -37,8 +49,16 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .action-button:hover {
     background-color: #c0392b;
+}
+
+.card p {
+    margin-bottom: 15px;
+    color: #bbb; /* Light gray text for paragraph */
+    line-height: 1.5;
 }
