@@ -5,10 +5,13 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Panel de Control</h1>
-
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-
+    <div style="display: flex; align-items: center;">
+        <a href="javascript:history.back()" class="back-arrow" style="margin-right: 10px;">
+            <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+        </a>
+        <h1>Panel de Control</h1>
+    </div>
     <!-- Contenedor de flexbox para alinear el gráfico y las tarjetas -->
     <div class="dashboard-overview mt-4">
         <!-- Gráfico de "Solicitudes por Estado" -->

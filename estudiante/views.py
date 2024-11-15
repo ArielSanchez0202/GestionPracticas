@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from autenticacion.decorators import estudiante_required,coordinador_required
 from coordinador.models import Estudiante, Practica , Coordinador
 from django.utils import timezone
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from .models import InscripcionPractica
 from datetime import datetime
+from django.conf import settings
+import os
 
 # Create your views here.
 @estudiante_required
@@ -112,6 +114,28 @@ def verificar_practica1(request):
 @estudiante_required
 def detalle_practica(request, practica_id):
     practica = get_object_or_404(InscripcionPractica, id=practica_id)
+
+    if practica.informe_avances_subido and not request.POST.get('overwrite'):
+        mensaje_error = "El archivo ya ha sido subido. Si deseas cambiarlo, marca la opción de sobreescribir."
+        return render(request, 'detalle_practica.html', {'practica': practica, 'mensaje_error': mensaje_error})
+
+    if request.method == 'POST':
+        if 'archivo_informe_avances' in request.FILES:
+            # Si el archivo ya ha sido subido y se quiere sobreescribir
+            if practica.informe_avances_subido:
+                if request.POST.get('overwrite'):
+                    practica.archivo_informe_avances.delete()
+
+            # Asigna el archivo subido al modelo
+            practica.archivo_informe_avances = request.FILES['archivo_informe_avances']
+            # Marca que el informe de avances ha sido subido
+            practica.informe_avances_subido = True
+            # Guarda la instancia con el archivo
+            practica.save()
+
+            # Redirige después de guardar
+            return redirect('detalle_practica', practica_id=practica.id)
+
     return render(request, 'detalle_practica.html', {'practica': practica})
 
 @estudiante_required
@@ -120,6 +144,18 @@ def ver_ficha(request, solicitud_id,):
     solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
     # Renderizar el template y pasar la solicitud al contexto
     return render(request, 'ver_ficha', {'solicitud': solicitud})
+
+@estudiante_required
+def descargar_plantilla(request, practica_id):
+    file_path = os.path.join(settings.BASE_DIR, 'estudiante', 'static', 'documents', 'Plantilla_informe.docx')
+
+    # Verificar si el archivo existe
+    if os.path.exists(file_path):
+        # Enviar el archivo como respuesta HTTP para la descarga
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename='Plantilla_informe.docx')
+    else:
+        # Si no se encuentra el archivo, enviar un error
+        return HttpResponse('Archivo no encontrado', status=404)
 
 @estudiante_required
 def dashboard(request):

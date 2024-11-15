@@ -21,7 +21,7 @@ h1, h3 {
     width: 100%; /* Asegura que los títulos ocupen el 100% del ancho */
     box-sizing: border-box; /* Asegura que el padding y márgenes no afecten el ancho */
     margin-left: 0;
-    margin-right: 0;
+    margin-right: 30px;
 }
 
 /* Estilo para las tarjetas (cards) */
@@ -60,7 +60,7 @@ h1, h3 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 3%;
+    gap: 15%;
     flex-wrap: wrap;
 }
 
@@ -94,7 +94,7 @@ canvas {
 /* Para pantallas más grandes */
 @media (min-width: 992px) {
     .container {
-        max-width: 80%;
+        max-width: 100%;
     }
 
     h1, h3 {
@@ -135,7 +135,7 @@ canvas {
         width: 100%; /* Asegura que los títulos ocupen el 100% del ancho */
         text-align: center; /* Centra el texto correctamente */
         margin-left: 0; /* Elimina cualquier margen a la izquierda */
-        margin-right: 0; /* Elimina cualquier margen a la derecha */
+        margin-right: 30px; /* Elimina cualquier margen a la derecha */
     }
 
     .lead {

@@ -31,6 +31,10 @@ class InscripcionPractica(models.Model):
     depto_trabajar = models.CharField(max_length=100)
     actividades_realizar = models.CharField(max_length=100)
 
+    informe_avances_subido = models.BooleanField(default=False)
+
+    archivo_informe_avances = models.FileField(upload_to='informes_avances/', null=True, blank=True)
+
     class Meta:
         db_table = 'estudiante_inscripcionpractica'  # Enlazar a la tabla específica
 
