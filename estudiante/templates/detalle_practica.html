@@ -4,13 +4,11 @@
 
 {% block title %}Detalle de Práctica Profesional{% endblock %}
 
-{% block styles %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/detalle_practica.css' %}">
-{% endblock %}
-
 {% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/detalle_practica.css' %}">
+
 <div class="main-content">
     <a href="javascript:history.back()" class="back-arrow">
         <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
@@ -20,37 +18,49 @@
     
     <div class="card">
         <div class="card-header">
+            <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
             <span>Ficha de inscripción práctica profesional</span>
         </div>
+        <div class="card-data">
         <p>Estado: {{ practica.get_estado_display }}</p>
         <button class="action-button">Descargar carta de aprobación</button>
         <button class="action-button">Ver ficha</button>
+        </div>
     </div>
     
     <div class="card">
         <div class="card-header">
+            <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
             <span>Informe de avances</span>
         </div>
-        <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-        <button class="action-button">Subir informe de avances</button>
-        <button class="action-button">Descargar plantilla</button>
+        <div class="card-data">
+            <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+            <button class="action-button">Subir informe de avances</button>
+            <button class="action-button">Descargar plantilla</button>
+        </div>
     </div>
     
     <div class="card">
         <div class="card-header">
+            <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
             <span>Autoevaluación</span>
         </div>
+        <div class="card-data">
         <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
         <button class="action-button">Ver autoevaluación</button>
         <button class="action-button">Llenar autoevaluación</button>
     </div>
+    </div>
 
     <div class="card">
         <div class="card-header">
+            <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
             <span>Informe Final</span>
         </div>
+        <div class="card-data">
         <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
         <button class="action-button">Subir informe final</button>
+        </div>
     </div>
 </div>
 {% endblock %}
