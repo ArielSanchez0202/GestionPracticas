@@ -11,20 +11,32 @@
 
 <div class="main-content">
     <a href="javascript:history.back()" class="back-arrow">
-        <img src="{% static 'img/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
     </a>
     
-    <h1>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</h1>
+    <h1>{{ practica.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</h1>
     
     <div class="card">
         <div class="card-header">
-            <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
-            <span>Ficha de inscripción práctica profesional</span>
+            {% if practica.estado == 'Pendiente' %}
+                <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% elif practica.estado == 'Aprobada' %}
+                <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% endif %}
+            <span>Ficha de Inscripción Práctica Profesional</span>
         </div>
         <div class="card-data">
         <p>Estado: {{ practica.get_estado_display }}</p>
-        <button class="action-button">Descargar carta de aprobación</button>
-        <button class="action-button">Ver ficha</button>
+        {% if practica.estado == 'Pendiente' %}
+            <a href="{% url 'ver_ficha' practica.id %}">
+                <button class="action-button">Ver ficha</button>
+            </a>
+        {% elif practica.estado == 'Aprobada' %}
+            <button class="action-button">Descargar carta de aprobación</button>
+            <a href="{% url 'ver_ficha' practica.id %}">
+                <button class="action-button">Ver ficha</button>
+            </a>
+        {% endif %}
         </div>
     </div>
     
@@ -42,7 +54,9 @@
     
     <div class="card">
         <div class="card-header">
-            <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
+                <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
+            <!--<img src="{% static 'icons/In_Process.svg' %}" style="width: 25px; margin-right: 10px;">-->
+            <!--<img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">-->
             <span>Autoevaluación</span>
         </div>
         <div class="card-data">

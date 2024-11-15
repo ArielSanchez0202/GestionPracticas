@@ -696,7 +696,6 @@ def listar_practicas(request):
     
     return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
 
-
 @coordinador_required
 def ver_formulario(request, solicitud_id,):
     # Obtener la solicitud de práctica específica por su ID

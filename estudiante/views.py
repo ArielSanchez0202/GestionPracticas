@@ -115,6 +115,13 @@ def detalle_practica(request, practica_id):
     return render(request, 'detalle_practica.html', {'practica': practica})
 
 @estudiante_required
+def ver_ficha(request, solicitud_id,):
+    # Obtener la solicitud de práctica específica por su ID
+    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
+    # Renderizar el template y pasar la solicitud al contexto
+    return render(request, 'ver_ficha', {'solicitud': solicitud})
+
+@estudiante_required
 def dashboard(request):
     estudiante = Estudiante.objects.get(usuario=request.user)
     # Filtrar las solicitudes solo del estudiante actual
