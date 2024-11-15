@@ -73,7 +73,7 @@
                 <td>{{ solicitud.estado }}</td>
                 <td>
                     <!-- Botón Detalle para todas las solicitudes -->
-                    <a href="#" class="btn btn-info btn-sm">Detalle</a>
+                    <a href="{% url 'detalle_practica' solicitud.id %}" class="btn btn-info btn-sm">Detalle</a>
                     
                     <!-- Botón Ver comentarios solo si la solicitud está Rechazada -->
                     {% if solicitud.estado == 'Rechazada' %}
