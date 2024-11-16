@@ -8,16 +8,24 @@ body {
 }
 
 .main-content {
-    max-width: 800px;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
     margin: auto;
     padding: 20px;
 }
 
 h1 {
-    color: #4CAF50;
-    text-align: center;
+    color: black;
+    text-align: left;
+    padding-left: 30px;
+    margin-bottom: 60px;
+    font-size: 70px;
 }
 
+.card-data{
+    margin-left: 40px;
+}
 .back-arrow {
     display: inline-block;
     margin-bottom: 20px;
@@ -28,7 +36,9 @@ h1 {
 
 /* Card */
 .card {
-    background-color: #fff;
+    width: 100%;
+    background-color: #1e1e1e;
+    color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
@@ -37,24 +47,23 @@ h1 {
 
 .card-header {
     font-weight: bold;
-    color: #333;
+    color: #fff;
     font-size: 1.1em;
     margin-bottom: 10px;
 }
 
 p {
     font-size: 0.95em;
-    line-height: 1.5;
-    color: #666;
+    color: #747373;
 }
 
 /* Buttons */
 .action-button {
     display: inline-block;
-    background-color: #4CAF50;
+    background-color: #303030;
     color: #fff;
-    border: none;
-    border-radius: 5px;
+    border-color: #949494;
+    border-radius: 8px;
     padding: 10px 15px;
     margin: 5px 0;
     cursor: pointer;
@@ -63,6 +72,3 @@ p {
     font-size: 0.95em;
 }
 
-.action-button:hover {
-    background-color: #45a049;
-}

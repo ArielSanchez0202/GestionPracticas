@@ -1,8 +1,13 @@
 {% extends 'base_coordinador.html' %}
 
+{% load static %}  
+
 {% block title %} Lista de Prácticas {% endblock %}
 
 {% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/listar_practicas.css' %}">
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="table-responsive py-5">
@@ -46,10 +51,9 @@
                             </td>
                             <td>
                                 {% if inscripcion.estado == "Aprobada" %}
-                                    <a href="{% url 'listar_practicas' %}" class="btn btn-warning">Ver Carta</a>
+                                    <a href="{% url 'listar_practicas' %}" class="btn btn-warning custom-warning-btn">Ver Carta</a>
                                 {% endif %}
-                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info">Ver Formulario</a>
-                                <!-- Otras acciones según sea necesario -->
+                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
                             </td>
                         </tr>
                     {% empty %}

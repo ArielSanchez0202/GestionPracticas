@@ -7,6 +7,7 @@ urlpatterns = [
     path('inscripcion_practica/', views.inscripcion_practica_view, name='inscripcion_practica'),
     path('api/verificar_practica1/', verificar_practica1, name='verificar_practica1'),
     path('detalle_practica/<int:practica_id>/', views.detalle_practica, name='detalle_practica'),
+    path('ver_ficha/<int:solicitud_id>/', views.ver_ficha, name='ver_ficha'),
     path('dashboard/', views.dashboard, name='dashboard'),
-
+    path('descargar_plantilla/<int:practica_id>/', views.descargar_plantilla, name='descargar_plantilla'),
 ]
