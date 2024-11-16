@@ -115,28 +115,37 @@ def verificar_practica1(request):
 def detalle_practica(request, practica_id):
     practica = get_object_or_404(InscripcionPractica, id=practica_id)
 
-    if practica.informe_avances_subido and not request.POST.get('overwrite'):
-        mensaje_error = "El archivo ya ha sido subido. Si deseas cambiarlo, marca la opción de sobreescribir."
-        return render(request, 'detalle_practica.html', {'practica': practica, 'mensaje_error': mensaje_error})
+    if request.method == "POST":
+        archivo = request.FILES.get("archivo_informe_avances")
+        if archivo:
+            # Eliminar el archivo anterior si existe
+            if practica.archivo_informe_avances:
+                # Borrar el archivo anterior
+                practica.archivo_informe_avances.delete()
 
-    if request.method == 'POST':
-        if 'archivo_informe_avances' in request.FILES:
-            # Si el archivo ya ha sido subido y se quiere sobreescribir
-            if practica.informe_avances_subido:
-                if request.POST.get('overwrite'):
-                    practica.archivo_informe_avances.delete()
-
-            # Asigna el archivo subido al modelo
-            practica.archivo_informe_avances = request.FILES['archivo_informe_avances']
-            # Marca que el informe de avances ha sido subido
-            practica.informe_avances_subido = True
-            # Guarda la instancia con el archivo
+            # Guardar el nuevo archivo
+            practica.archivo_informe_avances = archivo
+            practica.intentos_subida += 1
             practica.save()
 
-            # Redirige después de guardar
+            # Redirigir para evitar reenvío del formulario al recargar la página
             return redirect('detalle_practica', practica_id=practica.id)
+    
+    # Calcula los intentos restantes
+    intentos_restantes = max(practica.MAX_INTENTOS - practica.intentos_subida, 0)
 
-    return render(request, 'detalle_practica.html', {'practica': practica})
+    # Obtener solo el nombre del archivo (sin la ruta)
+    archivo_nombre = os.path.basename(practica.archivo_informe_avances.name) if practica.archivo_informe_avances else None
+
+    return render(
+        request, 
+        'detalle_practica.html', 
+        {
+            'practica': practica, 
+            'intentos_restantes': intentos_restantes,
+            'archivo_nombre': archivo_nombre
+        }
+    )
 
 @estudiante_required
 def ver_ficha(request, solicitud_id,):

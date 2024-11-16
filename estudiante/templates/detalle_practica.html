@@ -58,24 +58,75 @@
     {% endif %}
 
     {% if practica.estado == "Aprobada" %}
+    {% if intentos_restantes == 2 %}
     <div class="card">
         <div class="card-header">
             <img src="{% static 'icons/Loader.svg' %}" style="width: 25px; margin-right: 10px;">
             <span>Informe de avances</span>
         </div>
         <div class="card-data">
-            {% if practica.informe_avances_subido %}
                 <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-                <button class="action-button" id="btnSubirInforme">Subir nuevo informe de avances</button>
-            {% else %}
-                <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-                <button class="action-button" id="btnSubirInforme">Subir informe de avances</button>
-            {% endif %}
-            <a href="{% url 'descargar_plantilla' practica.id %}">
-                <button class="action-button">Descargar plantilla</button>
-            </a>
+                <p>Intentos restantes: {{ intentos_restantes }}</p>
+                <div class="form-container">
+                    <form method="POST" enctype="multipart/form-data" class="custom-form">
+                        {% csrf_token %}
+                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
+                        <button type="submit" class="submit-button">Subir Archivo</button>
+                    </form>
+                    <a href="{% url 'descargar_plantilla' practica.id %}">
+                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                    </a>
+                </div>
         </div>
     </div>
+    {% endif %}
+    {% if intentos_restantes == 1 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+            <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+            <p>Intentos restantes: {{ intentos_restantes }}</p>
+            <p>Archivo subido: {{ archivo_nombre }}</p>
+            <div class="form-container">
+                <form method="POST" enctype="multipart/form-data" class="custom-form">
+                    {% csrf_token %}
+                    <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
+                    <button type="submit" class="submit-button">Subir Archivo</button>
+                </form>
+                <a href="{% url 'descargar_plantilla' practica.id %}">
+                    <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    {% endif %}
+    {% if intentos_restantes == 0 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+                <p>Archivo subido: {{ archivo_nombre }}</p>
+                <p>Limite de intentos excedido.</p>
+                <div class="form-container">
+                    <form method="POST" enctype="multipart/form-data" class="custom-form">
+                        {% csrf_token %}
+                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  disabled>
+                        <button type="submit" class="submit-button" disabled>Subir Archivo</button>
+                    </form>
+                    <a href="{% url 'descargar_plantilla' practica.id %}">
+                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                    </a>
+                </div>
+                 
+        </div>
+    </div>
+    {% endif %}
     {% endif %}
 
     <div class="card">

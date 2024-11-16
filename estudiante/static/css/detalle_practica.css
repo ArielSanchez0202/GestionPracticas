@@ -8,7 +8,7 @@ body {
 }
 
 .main-content {
-    max-width: 100%;
+    max-width: 1000px;
     align-items: center;
     justify-content: center;
     margin: auto;
@@ -17,10 +17,7 @@ body {
 
 h1 {
     color: black;
-    text-align: left;
-    padding-left: 30px;
-    margin-bottom: 60px;
-    font-size: 70px;
+    text-align: center;
 }
 
 .card-data{
@@ -72,3 +69,18 @@ p {
     font-size: 0.95em;
 }
 
+.form-container {
+    display: flex;
+    align-items: center;  /* Alinea verticalmente los elementos al centro */
+    gap: 10px;  /* Espacio entre el formulario y el botón */
+}
+
+.custom-form {
+    display: flex;
+    align-items: center;
+}
+
+.submit-button {
+    margin-left: 20px;
+    width: 30%
+}
