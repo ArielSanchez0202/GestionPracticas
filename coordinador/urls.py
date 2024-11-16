@@ -18,6 +18,7 @@ urlpatterns = [
     path('autoevaluaciones/', views.autoevaluaciones, name='autoevaluaciones'),
     path('informes_finales/', views.informes_finales, name='informes_finales'),
     path('documentos/', views.documentos, name='documentos'),
+    path('ver_documento/<int:document_id>/', views.ver_documento, name='ver_documento'),
     #Lista Coordinadores
     path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador'),
     path('crear_coordinador/',views.crear_coordinador,name='crear_coordinador'),

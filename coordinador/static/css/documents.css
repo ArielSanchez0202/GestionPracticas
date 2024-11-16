@@ -1,0 +1,149 @@
+/* General Styles */
+.container {
+    max-width: 100%;
+    padding: 20px;
+}
+
+/* Tarjetas */
+.documento-card {
+    background-color: #1E1E1E; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+    border: none;
+    border-radius: 10px;
+    transition: box-shadow 0.3s ease;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.documento-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+/* Títulos */
+.documento-card h3 {
+    font-size: 1.2rem;
+    color: #ffffff; /* Blanco */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.documento-card h3 i {
+    font-size: 1.5rem;
+}
+
+/* Texto auxiliar */
+.text-muted {
+    font-size: 0.9rem;
+    color: #ffffff; /* Blanco */
+}
+
+/* Botones */
+.btn {
+    border-radius: 20px;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border: none;
+    color: #ffffff; /* Texto blanco */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-info {
+    background-color: #4A90E2; /* Azul */
+}
+
+.btn-info:hover {
+    background-color: #357ABD;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background-color: #7ED321; /* Verde */
+}
+
+.btn-success:hover {
+    background-color: #5CA417;
+    transform: scale(1.05);
+}
+
+.btn-warning {
+    background-color: #F5A623; /* Amarillo */
+    color: #000000; /* Texto negro */
+}
+
+.btn-warning:hover {
+    background-color: #D4881C;
+    transform: scale(1.05);
+}
+
+.btn-primary {
+    background-color: #BD10E0; /* Morado */
+}
+
+.btn-primary:hover {
+    background-color: #940BB3;
+    transform: scale(1.05);
+}
+
+/* Formularios */
+form {
+    margin-top: 15px;
+}
+
+input[type="file"] {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 0.9rem;
+    background-color: #2C2C2C; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+
+/* Espaciado entre elementos */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .documento-card {
+        padding: 15px;
+    }
+
+    .documento-card h3 {
+        font-size: 1rem;
+        gap: 8px;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 6px 15px;
+    }
+
+    input[type="file"] {
+        font-size: 0.8rem;
+        padding: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .documento-card {
+        padding: 10px;
+    }
+
+    .documento-card h3 {
+        font-size: 0.9rem;
+        gap: 5px;
+    }
+
+    .btn {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+    }
+
+    input[type="file"] {
+        font-size: 0.7rem;
+    }
+}

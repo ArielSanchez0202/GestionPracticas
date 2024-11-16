@@ -99,3 +99,18 @@ class InformeFinal(models.Model):
 
     def __str__(self):
         return f'Informe Final - Práctica {self.practica.pk}'
+    
+class Document(models.Model):
+    DOCUMENT_TYPES = [
+        ('reglamento', 'Reglamento Práctica Profesional'),
+        ('inscripcion', 'Ficha de inscripción práctica profesional'),
+        ('avance', 'Informe de avances'),
+        ('autoevaluacion', 'Autoevaluación'),
+    ]
+    
+    tipo = models.CharField(max_length=50, choices=DOCUMENT_TYPES)
+    archivo = models.FileField(upload_to='documentos_estaticos/')
+    descripcion = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.get_tipo_display()
