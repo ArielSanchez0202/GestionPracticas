@@ -10,13 +10,14 @@
     color: #ffffff; /* Texto blanco */
     border: none;
     border-radius: 10px;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Efecto adicional de zoom */
     padding: 20px;
     margin-bottom: 20px;
 }
 
 .documento-card:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* Sombra más visible */
+    transform: scale(1.02); /* Efecto de zoom ligero */
 }
 
 /* Títulos */
@@ -30,33 +31,46 @@
 }
 
 .documento-card h3 i {
-    font-size: 1.5rem;
+    font-size: 1.2rem; /* Ícono ligeramente más pequeño */
+    transition: color 0.3s ease; /* Transición en color para hover */
+}
+
+.documento-card h3 i:hover {
+    color: #f5a623; /* Cambia el ícono a amarillo en hover */
 }
 
 /* Texto auxiliar */
 .text-muted {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #ffffff; /* Blanco */
+    text-align: center;
 }
 
 /* Botones */
 .btn {
     border-radius: 20px;
     font-size: 0.9rem;
-    padding: 8px 20px;
+    padding: 10px 25px;
     border: none;
     color: #ffffff; /* Texto blanco */
     font-weight: bold;
+    margin-right: 10px; /* Espaciado entre botones */
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.btn:hover {
+    background-color: #ffffff !important; /* Fondo blanco */
+    color: #000000 !important; /* Texto negro */
+    transform: scale(1.05); /* Zoom */
+}
+
+/* Botones específicos */
 .btn-info {
     background-color: #4A90E2; /* Azul */
 }
 
 .btn-info:hover {
     background-color: #357ABD;
-    transform: scale(1.05);
 }
 
 .btn-success {
@@ -65,7 +79,6 @@
 
 .btn-success:hover {
     background-color: #5CA417;
-    transform: scale(1.05);
 }
 
 .btn-warning {
@@ -75,7 +88,6 @@
 
 .btn-warning:hover {
     background-color: #D4881C;
-    transform: scale(1.05);
 }
 
 .btn-primary {
@@ -84,14 +96,23 @@
 
 .btn-primary:hover {
     background-color: #940BB3;
-    transform: scale(1.05);
 }
 
 /* Formularios */
 form {
     margin-top: 15px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
 }
 
+form[style*="display: block;"] {
+    opacity: 1;
+    height: auto;
+}
+
+/* Inputs */
 input[type="file"] {
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -99,11 +120,11 @@ input[type="file"] {
     font-size: 0.9rem;
     background-color: #2C2C2C; /* Fondo oscuro */
     color: #ffffff; /* Texto blanco */
+    transition: border-color 0.3s ease;
 }
 
-/* Espaciado entre elementos */
-.mb-4 {
-    margin-bottom: 1.5rem !important;
+input[type="file"]:hover {
+    border-color: #f5a623; /* Bordes amarillos en hover */
 }
 
 /* Responsividad */

@@ -3,6 +3,7 @@
 {% block content %}
 <!-- Vincula el archivo CSS -->
 <link rel="stylesheet" href="{% static 'css/documents.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 <div class="container">
     <!-- Título principal -->
@@ -11,25 +12,39 @@
     {% for doc in documentos %}
         <div class="documento-card">
             <h3>
-                <i class="fas fa-file-alt"></i> <!-- Ícono -->
+                <!-- Ícono directamente en el HTML con color blanco -->
+                <i class="fas fa-file-alt" style="color: #ffffff; transition: color 0.3s;"></i>
                 {{ doc.descripcion }}
             </h3>
             
             {% if doc.documento and doc.documento.archivo %}
                 <div class="btn-group">
                     <!-- Botón para ver el documento -->
-                    <a href="{% url 'ver_documento' document_id=doc.documento.id %}" class="btn btn-info" target="_blank">Ver</a>
+                    <a href="{% url 'ver_documento' document_id=doc.documento.id %}" class="btn btn-primary-outline" target="_blank" 
+                        style="transition: background-color 0.3s, transform 0.2s;">
+                        <i class="fas fa-eye" style="color: #ffffff; transition: color 0.3s;"></i> Ver
+                    </a>
                     
                     <!-- Botón para descargar el documento -->
-                    <a href="{{ doc.documento.archivo.url }}" class="btn btn-success" download>Descargar</a>
+                    <a href="{{ doc.documento.archivo.url }}" class="btn btn-secondary-outline" download 
+                        style="transition: background-color 0.3s, transform 0.2s;">
+                        <i class="fas fa-download" style="color: #ffffff; transition: color 0.3s;"></i> Descargar
+                    </a>
                     
                     <!-- Botón para actualizar el documento -->
-                    <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-warning">Actualizar</button>
+                    <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-warning-outline" 
+                        style="transition: background-color 0.3s, transform 0.2s;">
+                        <i class="fas fa-edit" style="color: #ffffff; transition: color 0.3s;"></i> Actualizar
+                    </button>
                 </div>
             {% else %}
-                <p class="text-muted">Documento no disponible.</p>
+                <!-- Texto con color blanco directamente en HTML -->
+                <p class="text-muted" style="color: #ffffff;">Documento no disponible.</p>
                 <!-- Botón para subir un documento -->
-                <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-primary">Subir documento</button>
+                <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-success-outline" 
+                    style="transition: background-color 0.3s, transform 0.2s;">
+                    <i class="fas fa-upload" style="color: #ffffff; transition: color 0.3s;"></i> Subir documento
+                </button>
             {% endif %}
             
             <!-- Formulario para subir/actualizar un documento -->
@@ -37,7 +52,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="tipo" value="{{ doc.tipo }}">
                 <input type="file" name="archivo" class="form-control" required>
-                <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+                <button type="submit" class="btn btn-primary-outline mt-2">Guardar</button>
             </form>
         </div>
     {% endfor %}
