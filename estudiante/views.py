@@ -156,6 +156,15 @@ def descargar_plantilla(request, practica_id):
     else:
         # Si no se encuentra el archivo, enviar un error
         return HttpResponse('Archivo no encontrado', status=404)
+    
+@estudiante_required
+def autoevaluacion(request, solicitud_id):
+    # Cargar datos relacionados si es necesario
+    estudiante = ...  # Obtener el estudiante actual según tu lógica
+    return render(request, 'autoevaluacion.html', {
+        'solicitud_id': solicitud_id,
+        'estudiante': estudiante,
+    })
 
 @estudiante_required
 def dashboard(request):
