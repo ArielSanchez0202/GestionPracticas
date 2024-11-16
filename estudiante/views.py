@@ -143,7 +143,7 @@ def ver_ficha(request, solicitud_id,):
     # Obtener la solicitud de práctica específica por su ID
     solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
     # Renderizar el template y pasar la solicitud al contexto
-    return render(request, 'ver_ficha', {'solicitud': solicitud})
+    return render(request, 'ver_ficha.html', {'solicitud': solicitud})
 
 @estudiante_required
 def descargar_plantilla(request, practica_id):

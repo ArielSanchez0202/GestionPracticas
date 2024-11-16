@@ -6,6 +6,10 @@
     <script src="{% static 'js/validaciones.js' %}"></script>
 
     <div class="container">
+        <div class="main-content">
+            <a href="javascript:history.back()" class="back-arrow">
+                <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+            </a>
         <div class="form-header">
             <h1>AGREGAR ALUMNO</h1>
             <button class="btn-carga-masiva" onclick="window.location.href='{% url 'carga_masiva_estudiantes' %}'">Carga Masiva</button>
