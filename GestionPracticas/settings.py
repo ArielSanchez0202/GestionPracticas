@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'GestionPracticas.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'practicas',
+        'NAME': 'practicas3',
         'USER': 'postgres',
-        'PASSWORD': '692001',
+        'PASSWORD': 'Futrilla',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -165,3 +165,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración para la duración de la sesión
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Cambia esto a True si deseas que la sesión expire al cerrar el navegador
 SESSION_COOKIE_AGE = 1209600  # 2 semanas (ajusta el valor según tus necesidades)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -7,20 +7,20 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from autenticacion.decorators import coordinador_required
 from .models import Estudiante
-from django.http import BadHeaderError, HttpResponse, HttpResponseNotFound, JsonResponse
-import openpyxl
-from django.contrib.auth.decorators import login_required
+from django.http import BadHeaderError, HttpResponse, JsonResponse
 from django.core.mail import send_mail
 from .models import Coordinador
 import re
 from smtplib import SMTPException
-from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.messages import get_messages
 from estudiante.models import InscripcionPractica
-from django.db.models import Count
-from django.utils import timezone
-from datetime import datetime
 from estudiante.models import InscripcionPractica
+from django.shortcuts import render, redirect
+from .models import Document
+from .forms import DocumentForm
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from .models import Document
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -669,10 +669,6 @@ def autoevaluaciones(request):
 def informes_finales(request):
     return render(request, 'coordinador/informes_finales.html')
 
-@coordinador_required
-def documentos(request):
-    return render(request, 'coordinador/documentos.html')
-
 def dashboard(request):
     total_solicitudes = InscripcionPractica.objects.count()
     solicitudes_pendientes = InscripcionPractica.objects.filter(estado='Pendiente').count()
@@ -721,3 +717,77 @@ def actualizar_estado(request, solicitud_id):
         
         # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
         return redirect('listar_practicas')  # Cambia a la vista adecuada
+    
+
+def manage_documents_view(request):
+    documents = Document.objects.all()
+    return render(request, 'documentos.html', {'documents': documents})
+
+def update_document(request, document_id):
+    document = get_object_or_404(Document, id=document_id)
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES, instance=document)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_documents')
+    else:
+        form = DocumentForm(instance=document)
+    return render(request, 'documentos.html', {'form': form, 'documents': Document.objects.all()})
+@coordinador_required
+def documentos(request):
+    tipo_documentos = {
+        'reglamento': 'Reglamento Práctica Profesional',
+        'ficha_inscripcion': 'Ficha de inscripción práctica profesional',
+        'informe_avances': 'Informe de avances',
+        'autoevaluacion': 'Autoevaluación',
+    }
+
+    documentos = []
+    for tipo, descripcion in tipo_documentos.items():
+        documento = Document.objects.filter(tipo=tipo).first()
+        documentos.append({
+            'tipo': tipo,
+            'descripcion': descripcion,
+            'documento': documento
+        })
+
+    form = DocumentForm()
+
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            tipo_documento = request.POST.get('tipo')
+            documento = Document.objects.filter(tipo=tipo_documento).first()
+            if documento:
+                documento.archivo = form.cleaned_data['archivo']
+            else:
+                documento = form.save(commit=False)
+                documento.tipo = tipo_documento
+            documento.save()
+            return redirect('documentos')
+        else:
+            # Si el formulario no es válido, mostramos los errores en los mensajes
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
+
+    return render(request, 'coordinador/documentos.html', {'documentos': documentos, 'form': form})
+# Vista para ver documentos en el navegador (PDF y Word)
+def ver_documento(request, document_id):
+    documento = get_object_or_404(Document, id=document_id)
+    file_path = documento.archivo.path
+
+    # Si es un PDF, lo mostramos en línea
+    if documento.archivo.name.endswith('.pdf'):
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename="{}"'.format(documento.archivo.name)
+            return response
+
+    # Si es un documento Word (.docx o .doc)
+    elif documento.archivo.name.endswith('.docx') or documento.archivo.name.endswith('.doc'):
+        file_url = documento.archivo.url  # URL pública del archivo
+        return redirect(f"https://docs.google.com/viewer?url={file_url}&embedded=true")
+
+    else:
+        return HttpResponse("Formato no soportado", status=400)

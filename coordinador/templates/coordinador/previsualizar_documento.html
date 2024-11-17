@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsualizar Documento</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+</head>
+<body>
+    <h1>Previsualizar {{ documento.get_tipo_display }}</h1>
+    <canvas id="pdf-canvas"></canvas>
+
+    <script>
+        const url = "{{ documento.archivo.url }}";
+        const canvas = document.getElementById('pdf-canvas');
+        const context = canvas.getContext('2d');
+
+        pdfjsLib.getDocument(url).promise.then(pdf => {
+            pdf.getPage(1).then(page => {
+                const scale = 1.5;
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                });
+            });
+        });
+    </script>
+</body>
+</html>

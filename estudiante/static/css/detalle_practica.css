@@ -72,3 +72,48 @@ p {
     font-size: 0.95em;
 }
 
+.form-container, .form-container2 {
+    display: flex;
+    align-items: center;
+    gap: 4.5px; /* Espacio entre los botones */
+    flex-wrap: wrap;
+}
+
+.custom-form {
+    display: flex;
+    align-items: center;
+}
+
+.submit-button {
+    display: inline-block;
+    background-color: #303030;
+    color: #fff;
+    border-color: #949494;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin: 5px 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 0.95em;
+}
+
+/* Medias Queries para pantallas pequeñas */
+@media (max-width: 600px) {
+    .form-container, .form-container2 {
+        flex-direction: column; /* Organiza los botones en columna en pantallas más pequeñas */
+        gap: 10px; /* Espaciado entre los botones */
+    }
+}
+
+/* Medias Queries para pantallas medianas */
+@media (max-width: 768px) {
+    .form-container, .form-container2 {
+        flex-direction: column; /* Alinea los botones verticalmente */
+        gap: 10px; /* Espaciado entre los botones */
+    }
+}
+
+#btnSubirInformeFinal {
+    margin-right: 7px;
+}

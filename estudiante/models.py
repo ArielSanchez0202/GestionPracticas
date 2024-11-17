@@ -30,11 +30,13 @@ class InscripcionPractica(models.Model):
     cargo_desarrollar = models.CharField(max_length=100)
     depto_trabajar = models.CharField(max_length=100)
     actividades_realizar = models.CharField(max_length=100)
+    archivo_informe_avances = models.FileField(upload_to='informes_avances/',null=True,blank=True)
+    intentos_subida = models.PositiveIntegerField(default=0)
+    archivo_informe_final = models.FileField(upload_to='informes_finales/', null=True, blank=True)
+    intentos_subida_final = models.PositiveIntegerField(default=0)
 
-    informe_avances_subido = models.BooleanField(default=False)
-
-    archivo_informe_avances = models.FileField(upload_to='informes_avances/', null=True, blank=True)
-
+    # Máximo de intentos permitidos
+    MAX_INTENTOS = 2
     class Meta:
         db_table = 'estudiante_inscripcionpractica'  # Enlazar a la tabla específica
 
