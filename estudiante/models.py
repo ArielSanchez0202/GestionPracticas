@@ -32,6 +32,8 @@ class InscripcionPractica(models.Model):
     actividades_realizar = models.CharField(max_length=100)
     archivo_informe_avances = models.FileField(upload_to='informes_avances/',null=True,blank=True)
     intentos_subida = models.PositiveIntegerField(default=0)
+    archivo_informe_final = models.FileField(upload_to='informes_finales/', null=True, blank=True)
+    intentos_subida_final = models.PositiveIntegerField(default=0)
 
     # Máximo de intentos permitidos
     MAX_INTENTOS = 2

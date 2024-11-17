@@ -116,34 +116,42 @@ def detalle_practica(request, practica_id):
     practica = get_object_or_404(InscripcionPractica, id=practica_id)
 
     if request.method == "POST":
-        archivo = request.FILES.get("archivo_informe_avances")
-        if archivo:
-            # Eliminar el archivo anterior si existe
-            if practica.archivo_informe_avances:
-                # Borrar el archivo anterior
-                practica.archivo_informe_avances.delete()
+        if "archivo_informe_avances" in request.FILES:
+            archivo = request.FILES.get("archivo_informe_avances")
+            if archivo:
+                if practica.archivo_informe_avances:
+                    practica.archivo_informe_avances.delete()
+                practica.archivo_informe_avances = archivo
+                practica.intentos_subida += 1
+                practica.save()
+        
+        if "archivo_informe_final" in request.FILES:
+            archivo_final = request.FILES.get("archivo_informe_final")
+            if archivo_final:
+                if practica.archivo_informe_final:
+                    practica.archivo_informe_final.delete()
+                practica.archivo_informe_final = archivo_final
+                practica.intentos_subida_final += 1
+                practica.save()
 
-            # Guardar el nuevo archivo
-            practica.archivo_informe_avances = archivo
-            practica.intentos_subida += 1
-            practica.save()
+        # Devuelve un JSON si la subida fue exitosa
+        return redirect('detalle_practica', practica_id=practica.id)
 
-            # Redirigir para evitar reenvío del formulario al recargar la página
-            return redirect('detalle_practica', practica_id=practica.id)
-    
-    # Calcula los intentos restantes
-    intentos_restantes = max(practica.MAX_INTENTOS - practica.intentos_subida, 0)
+    intentos_restantes_avances = max(practica.MAX_INTENTOS - practica.intentos_subida, 0)
+    intentos_restantes_final = max(practica.MAX_INTENTOS - practica.intentos_subida_final, 0)
 
-    # Obtener solo el nombre del archivo (sin la ruta)
-    archivo_nombre = os.path.basename(practica.archivo_informe_avances.name) if practica.archivo_informe_avances else None
+    archivo_nombre_avances = os.path.basename(practica.archivo_informe_avances.name) if practica.archivo_informe_avances else None
+    archivo_nombre_final = os.path.basename(practica.archivo_informe_final.name) if practica.archivo_informe_final else None
 
     return render(
-        request, 
-        'detalle_practica.html', 
+        request,
+        'detalle_practica.html',
         {
-            'practica': practica, 
-            'intentos_restantes': intentos_restantes,
-            'archivo_nombre': archivo_nombre
+            'practica': practica,
+            'intentos_restantes_avances': intentos_restantes_avances,
+            'intentos_restantes_final': intentos_restantes_final,
+            'archivo_nombre_avances': archivo_nombre_avances,
+            'archivo_nombre_final': archivo_nombre_final
         }
     )
 
@@ -184,3 +192,19 @@ def dashboard(request):
         'solicitudes_recientes': solicitudes_recientes,
     }
     return render(request, 'dashboard.html', context)
+
+@estudiante_required
+def descargar_archivo_final(request, practica_id):
+    # Buscar la inscripción de práctica usando el ID
+    practica = get_object_or_404(InscripcionPractica, id=practica_id)
+    
+    # Verificar que el número de intentos esté agotado
+    if practica.intentos_subida_final < 2:
+        # Verificar si hay un archivo subido
+        if practica.archivo_informe_final:
+            archivo_path = practica.archivo_informe_final.path  # Obtener la ruta del archivo
+            return FileResponse(open(archivo_path, 'rb'), as_attachment=True, filename=practica.archivo_informe_final.name)
+        else:
+            return HttpResponse("No se ha subido ningún archivo para este informe final.", status=404)
+    else:
+        return HttpResponse("No se puede descargar el informe final, los intentos no han sido agotados.", status=403)

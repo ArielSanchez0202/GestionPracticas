@@ -10,4 +10,5 @@ urlpatterns = [
     path('ver_ficha/<int:solicitud_id>/', views.ver_ficha, name='ver_ficha'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('descargar_plantilla/<int:practica_id>/', views.descargar_plantilla, name='descargar_plantilla'),
+    path('descargar-final/<int:practica_id>/', views.descargar_archivo_final, name='descargar_archivo_final'),
 ]
