@@ -52,12 +52,6 @@ h1 {
     font-size: 3em;
 }
 
-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
 fieldset {
     width: 100%;
     border: none;

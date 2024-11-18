@@ -22,16 +22,6 @@
     width: 100%;
 }
 /* Estilos de los botones */
-.btn {
-    background-color: #DD211C;
-    color: white;
-    padding: 15px 40px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
 .btn:hover {
     background-color: #C11A18;
 }

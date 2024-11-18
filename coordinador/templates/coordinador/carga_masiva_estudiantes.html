@@ -5,9 +5,9 @@
     <div class="carga-masiva-container">
         <h1>Carga Masiva</h1>
         <div class="botones-carga">
-            <button class="btn" onclick="window.history.back();">Volver</button>
-            <a href="{% url 'descargar_plantilla_estudiantes' %}" class="btn">Descargar Plantilla</a>
-            <button class="btn" id="btnSubirCarga">Subir Carga Masiva</button>
+            <button class="boton" onclick="window.history.back();">Volver</button>
+            <a href="{% url 'descargar_plantilla_estudiantes' %}" class="boton">Descargar Plantilla</a>
+            <button class="boton" id="botonSubirCarga">Subir Carga Masiva</button>
         </div>
         <div>
             {% for message in messages %}
@@ -43,7 +43,7 @@
         </table>
         <form method="POST" action="{% url 'previsualizar_estudiantes' %}">
             {% csrf_token %}
-            <button type="submit"  class="btn btn-add-list">Añadir Listado</button>
+            <button type="submit"  class="boton boton-add-list">Añadir Listado</button>
         </form>
         {% elif error %}
             <div class="error-message">{{ error }}</div>
@@ -63,7 +63,7 @@
                         <img src="{% static 'Delete.svg' %}" id="deleteFile" alt="Eliminar archivo">
                     </div>
                 </label>
-                <button class="close-btn" type="submit">Subir Archivo</button>
+                <button class="close-boton" type="submit">Subir Archivo</button>
             </form>
         </div>
     </div>
