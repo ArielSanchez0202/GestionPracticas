@@ -124,17 +124,27 @@
 
     <div class="card">
         <div class="card-header">
+            {% if practica.estado == 'Pendiente' %}
                 <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
             <!--<img src="{% static 'icons/In_Process.svg' %}" style="width: 25px; margin-right: 10px;">-->
             <!--<img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">-->
+            {% endif %}
+            {% if practica.estado == "Aprobada" %}
+                <img src="{% static 'icons/In_Process.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% endif %}
             <span>Autoevaluación</span>
         </div>
         <div class="card-data">
+        {% if practica.estado == 'Pendiente' %}
+        <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+        {% endif %}
+        {% if practica.estado == "Aprobada" %}
         <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
         <button class="action-button">Ver autoevaluación</button>
         <a href="{% url 'autoevaluacion' practica.id %}">
             <button class="action-button">Llenar autoevaluación</button>
         </a>
+        {% endif %}
     </div>
     </div>
     {% if practica.estado == "Aprobada" %}

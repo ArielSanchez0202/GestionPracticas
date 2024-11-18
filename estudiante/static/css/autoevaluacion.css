@@ -40,6 +40,40 @@ input[type="email"] {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+input[type="radio"] {
+    -webkit-appearance: none;  /* Elimina el estilo predeterminado en algunos navegadores */
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;  /* Tamaño del radio button */
+    height: 20px;
+    border: 2px solid #000;  /* Color del borde */
+    border-radius: 50%;  /* Lo hace redondo */
+    background-color: white;  /* Fondo blanco */
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+input[type="radio"]:checked {
+    background-color: white;  /* Color blanco cuando está seleccionado */
+    border-color: black;  /* Borde negro */
+}
+
+input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: black;  /* Color del círculo interno */
+}
+
+input[type="radio"]:hover {
+    transform: scale(1.2);  /* Hace que el radio button se agrande cuando se pasa el mouse */
+}
+
 label {
     display: block;
     margin: 5px 0;
@@ -59,7 +93,7 @@ textarea {
 }
 
 textarea:focus {
-    border-color: #4CAF50;
+    border-color: black;
     outline: none;
     background-color: #fff;
 }
@@ -68,7 +102,7 @@ button {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #DD211C;
     color: white;
     font-size: 16px;
     border: none;
@@ -77,5 +111,5 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #d64540;
 }
