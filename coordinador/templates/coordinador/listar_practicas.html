@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                 {% if inscripcion.estado == "Aprobada" %}
-                                    <a href="{% url 'listar_practicas' %}" class="btn btn-warning custom-warning-btn">Ver Carta</a>
+                                <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="btn btn-warning custom-warning-btn" target="_blank">Ver Carta</a>
                                 {% endif %}
                                 <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
                             </td>

@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from autenticacion.decorators import estudiante_required,coordinador_required
-from coordinador.models import Estudiante, Practica , Coordinador
-from django.utils import timezone
+from autenticacion.decorators import estudiante_required
+from coordinador.models import Estudiante
 from django.http import HttpResponse, JsonResponse, FileResponse
 from .models import InscripcionPractica
 from datetime import datetime
 from django.conf import settings
 import os
+from coordinador.models import Document, PracticaConfig
+
 
 # Create your views here.
 @estudiante_required
@@ -36,6 +37,11 @@ def inscripcion_practica_view(request):
             'error': 'Ya tienes ambas prácticas (I y II) inscritas. No puedes agregar más.'
         })
 
+    # Obtener límites de fecha configurados por el coordinador
+    configuracion = PracticaConfig.objects.first()
+    fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
+    fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
+
     if request.method == 'POST':
         # Recuperar los datos enviados por el formulario
         practica1 = True if request.POST.get('practica1') else False  # checkbox
@@ -55,10 +61,18 @@ def inscripcion_practica_view(request):
             # Asegurarse de que las fechas estén en el formato YYYY-MM-DD
             fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
             fecha_termino = datetime.strptime(fecha_termino, '%Y-%m-%d').date()
-        except ValueError:
-            # Manejar el error si las fechas no están en el formato correcto
+
+            # Validar fechas contra los límites
+            if fecha_inicio_limite and fecha_inicio < fecha_inicio_limite:
+                raise ValueError(f'La fecha de inicio no puede ser anterior a {fecha_inicio_limite}.')
+            if fecha_termino_limite and fecha_termino > fecha_termino_limite:
+                raise ValueError(f'La fecha de término no puede ser posterior a {fecha_termino_limite}.')
+
+        except ValueError as e:
+            # Manejar el error si las fechas no están en el formato correcto o no cumplen con los límites
             return render(request, 'inscripcion_practica.html', {
-                'error': 'Formato de fecha inválido. Use YYYY-MM-DD.'
+                'error': str(e),
+                'estudiante': estudiante,
             })
 
         horario_trabajo = request.POST.get('horario_trabajo')
@@ -98,9 +112,11 @@ def inscripcion_practica_view(request):
             return redirect('estudiantes_main')
         except Exception as e:
             print(f'Error al guardar: {e}')
-    
+
     context = {
         'estudiante': estudiante,
+        'fecha_inicio_limite': fecha_inicio_limite,
+        'fecha_termino_limite': fecha_termino_limite,
     }
     return render(request, 'inscripcion_practica.html', context)
 
@@ -115,34 +131,42 @@ def verificar_practica1(request):
 def detalle_practica(request, practica_id):
     practica = get_object_or_404(InscripcionPractica, id=practica_id)
 
+    # Recuperar el documento de tipo 'inscripcion' (plantilla o reglamento)
+    documento = Document.objects.filter(tipo='inscripcion').first()
+
     if request.method == "POST":
+        # Subida de archivo de avance
         if "archivo_informe_avances" in request.FILES:
             archivo = request.FILES.get("archivo_informe_avances")
             if archivo:
                 if practica.archivo_informe_avances:
-                    practica.archivo_informe_avances.delete()
+                    practica.archivo_informe_avances.delete()  # Eliminar archivo anterior
                 practica.archivo_informe_avances = archivo
                 practica.intentos_subida += 1
                 practica.save()
-        
+
+        # Subida de archivo final
         if "archivo_informe_final" in request.FILES:
             archivo_final = request.FILES.get("archivo_informe_final")
             if archivo_final:
                 if practica.archivo_informe_final:
-                    practica.archivo_informe_final.delete()
+                    practica.archivo_informe_final.delete()  # Eliminar archivo anterior
                 practica.archivo_informe_final = archivo_final
                 practica.intentos_subida_final += 1
                 practica.save()
 
-        # Devuelve un JSON si la subida fue exitosa
+        # Redirigir al mismo detalle de práctica después de la subida
         return redirect('detalle_practica', practica_id=practica.id)
 
+    # Calcular intentos restantes para avances y finales
     intentos_restantes_avances = max(practica.MAX_INTENTOS - practica.intentos_subida, 0)
     intentos_restantes_final = max(practica.MAX_INTENTOS - practica.intentos_subida_final, 0)
 
+    # Obtener los nombres de los archivos subidos
     archivo_nombre_avances = os.path.basename(practica.archivo_informe_avances.name) if practica.archivo_informe_avances else None
     archivo_nombre_final = os.path.basename(practica.archivo_informe_final.name) if practica.archivo_informe_final else None
 
+    # Pasar la plantilla/documento subido por el coordinador a la plantilla
     return render(
         request,
         'detalle_practica.html',
@@ -151,9 +175,11 @@ def detalle_practica(request, practica_id):
             'intentos_restantes_avances': intentos_restantes_avances,
             'intentos_restantes_final': intentos_restantes_final,
             'archivo_nombre_avances': archivo_nombre_avances,
-            'archivo_nombre_final': archivo_nombre_final
+            'archivo_nombre_final': archivo_nombre_final,
+            'documento': documento  # Esto es lo que permitirá la descarga de la plantilla
         }
     )
+
 
 @estudiante_required
 def ver_ficha(request, solicitud_id,):

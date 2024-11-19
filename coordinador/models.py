@@ -114,3 +114,11 @@ class Document(models.Model):
     
     def __str__(self):
         return self.get_tipo_display()
+    
+
+class PracticaConfig(models.Model):
+    fecha_inicio_limite = models.DateField(default="2024-01-01")  # Fecha predeterminada
+    fecha_termino_limite = models.DateField(default="2024-12-31")  # Fecha predeterminada
+
+    def __str__(self):
+        return f"Configuración Práctica: {self.fecha_inicio_limite} - {self.fecha_termino_limite}"

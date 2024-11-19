@@ -1,26 +1,26 @@
+import re
 import secrets
 import string
-from django.conf import settings
-import pandas as pd
-from django.contrib.auth.models import User, Group
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib import messages
-from autenticacion.decorators import coordinador_required
-from .models import Estudiante
-from django.http import BadHeaderError, HttpResponse, JsonResponse
-from django.core.mail import send_mail
-from .models import Coordinador
-import re
+from datetime import datetime
 from smtplib import SMTPException
+
+import pandas as pd
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.models import User, Group
 from django.contrib.messages import get_messages
+from django.core.mail import send_mail
+from django.http import BadHeaderError, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
+
+from autenticacion.decorators import coordinador_required
 from estudiante.models import InscripcionPractica
-from estudiante.models import InscripcionPractica
-from django.shortcuts import render, redirect
-from .models import Document
 from .forms import DocumentForm
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from .models import Document
+from coordinador.models import Coordinador, Document, Estudiante, PracticaConfig
+
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -735,6 +735,7 @@ def update_document(request, document_id):
     return render(request, 'documentos.html', {'form': form, 'documents': Document.objects.all()})
 @coordinador_required
 def documentos(request):
+    # Tipos de documentos permitidos
     tipo_documentos = {
         'reglamento': 'Reglamento Práctica Profesional',
         'ficha_inscripcion': 'Ficha de inscripción práctica profesional',
@@ -742,6 +743,7 @@ def documentos(request):
         'autoevaluacion': 'Autoevaluación',
     }
 
+    # Obtener los documentos existentes por tipo
     documentos = []
     for tipo, descripcion in tipo_documentos.items():
         documento = Document.objects.filter(tipo=tipo).first()
@@ -751,27 +753,40 @@ def documentos(request):
             'documento': documento
         })
 
+    # Formulario inicial vacío
     form = DocumentForm()
 
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            tipo_documento = request.POST.get('tipo')
+            # Determinar el tipo de documento
+            tipo_documento = form.cleaned_data.get('tipo')
+            archivo_nuevo = form.cleaned_data.get('archivo')
+
+            # Buscar documento existente por tipo
             documento = Document.objects.filter(tipo=tipo_documento).first()
+
             if documento:
-                documento.archivo = form.cleaned_data['archivo']
+                # Si existe, sobrescribir archivo
+                documento.archivo = archivo_nuevo
+                documento.save()
             else:
-                documento = form.save(commit=False)
-                documento.tipo = tipo_documento
-            documento.save()
+                # Si no existe, crear uno nuevo
+                nuevo_documento = form.save(commit=False)
+                nuevo_documento.tipo = tipo_documento
+                nuevo_documento.save()
+
+            # Redirigir tras guardar
             return redirect('documentos')
+
         else:
-            # Si el formulario no es válido, mostramos los errores en los mensajes
+            # Mostrar errores en los mensajes
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, error)
+                    messages.error(request, f"Error en {field}: {error}")
 
     return render(request, 'coordinador/documentos.html', {'documentos': documentos, 'form': form})
+
 # Vista para ver documentos en el navegador (PDF y Word)
 def ver_documento(request, document_id):
     documento = get_object_or_404(Document, id=document_id)
@@ -791,3 +806,75 @@ def ver_documento(request, document_id):
 
     else:
         return HttpResponse("Formato no soportado", status=400)
+    
+def configurar_fechas(request):
+    # Obtener la configuración de fechas de la práctica (asegurarte de que existe o crear una nueva si es necesario)
+    practica_config = PracticaConfig.objects.first()  # O la lógica que utilices
+
+    if request.method == 'POST':
+        # Guardar las nuevas fechas
+        practica_config.fecha_inicio_limite = request.POST['fecha_inicio_limite']
+        practica_config.fecha_termino_limite = request.POST['fecha_termino_limite']
+        practica_config.save()
+        # Redirigir a la misma página o a otra, según lo que desees hacer
+        return redirect('documentos')
+
+    return render(request, 'coordinador/configurar_fechas.html', {
+        'practica_config': practica_config
+    })
+
+
+def generar_pdf_practica(request, estudiante_id):
+    # Obtén al estudiante
+    try:
+        estudiante = Estudiante.objects.get(pk=estudiante_id)
+    except Estudiante.DoesNotExist:
+        return HttpResponse("Estudiante no encontrado", status=404)
+    
+    # Obtén la inscripción asociada al estudiante (puedes ajustar según tu relación)
+    try:
+        inscripcion = InscripcionPractica.objects.get(rut=estudiante.rut)
+    except InscripcionPractica.DoesNotExist:
+        return HttpResponse("Inscripción de práctica no encontrada", status=404)
+
+    # Configurar la respuesta HTTP para el PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="practica_{estudiante.usuario.username}.pdf"'
+
+    # Crear el objeto Canvas
+    buffer = canvas.Canvas(response, pagesize=letter)
+    buffer.setFont("Helvetica", 12)
+
+    # Escribir el encabezado
+    buffer.drawString(50, 750, "UNIVERSIDAD AUTÓNOMA DE CHILE")
+    buffer.drawString(50, 730, f"Fecha: {datetime.now().strftime('%d de %B del %Y')}")
+
+    # Información del estudiante
+    buffer.drawString(50, 700, "Información del Estudiante")
+    buffer.drawString(50, 680, f"Nombre: {estudiante.usuario.first_name} {estudiante.usuario.last_name}")
+    buffer.drawString(50, 660, f"RUT: {estudiante.rut}")
+    buffer.drawString(50, 640, f"Domicilio: {estudiante.domicilio}")
+    buffer.drawString(50, 620, f"Teléfono: {estudiante.numero_telefono}")
+    buffer.drawString(50, 600, f"Carrera: {estudiante.carrera}")
+
+    # Información de la práctica
+    buffer.drawString(50, 570, "Información de la Práctica")
+    tipo_practica = "Práctica 1" if inscripcion.practica1 else "Práctica 2"
+    buffer.drawString(50, 550, f"Tipo de práctica: {tipo_practica}")
+    buffer.drawString(50, 530, f"Razón social: {inscripcion.razon_social}")
+    buffer.drawString(50, 510, f"Dirección empresa: {inscripcion.direccion_empresa}")
+    buffer.drawString(50, 490, f"Fecha de inicio: {inscripcion.fecha_inicio.strftime('%d/%m/%Y')}")
+    buffer.drawString(50, 470, f"Fecha de término: {inscripcion.fecha_termino.strftime('%d/%m/%Y')}")
+    buffer.drawString(50, 450, f"Cargo a desarrollar: {inscripcion.cargo_desarrollar}")
+
+    # Información adicional
+    buffer.drawString(50, 420, "Información del Supervisor")
+    buffer.drawString(50, 400, f"Jefe directo: {inscripcion.jefe_directo}")
+    buffer.drawString(50, 380, f"Cargo: {inscripcion.cargo}")
+    buffer.drawString(50, 360, f"Teléfono jefe: {inscripcion.telefono_jefe}")
+    buffer.drawString(50, 340, f"Correo jefe: {inscripcion.correo_jefe}")
+
+    # Finalizar el PDF
+    buffer.showPage()
+    buffer.save()
+    return response

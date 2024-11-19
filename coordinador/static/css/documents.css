@@ -10,39 +10,43 @@
     color: #ffffff; /* Texto blanco */
     border: none;
     border-radius: 10px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Efecto adicional de zoom */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
     padding: 20px;
     margin-bottom: 20px;
 }
 
 .documento-card:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* Sombra más visible */
-    transform: scale(1.02); /* Efecto de zoom ligero */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
 }
 
 /* Títulos */
 .documento-card h3 {
     font-size: 1.2rem;
-    color: #ffffff; /* Blanco */
+    color: #ffffff;
     font-weight: bold;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.documento-card h3 i {
-    font-size: 1.2rem; /* Ícono ligeramente más pequeño */
-    transition: color 0.3s ease; /* Transición en color para hover */
+.documento-card h3 i,
+.btn i {
+    font-size: 1.2rem;
+    color: #ffffff; /* Blanco */
+    transition: color 0.3s ease; /* Transición en color */
 }
 
-.documento-card h3 i:hover {
-    color: #f5a623; /* Cambia el ícono a amarillo en hover */
+/* Asegura que los íconos dentro de botones cambien de color */
+.documento-card h3 i:hover,
+.btn i:hover {
+    color: #000000 !important; /* Cambia a negro con prioridad */
 }
 
 /* Texto auxiliar */
 .text-muted {
     font-size: 0.85rem;
-    color: #ffffff; /* Blanco */
+    color: #ffffff;
     text-align: center;
 }
 
@@ -52,50 +56,16 @@
     font-size: 0.9rem;
     padding: 10px 25px;
     border: none;
-    color: #ffffff; /* Texto blanco */
+    color: #ffffff; /* Blanco */
     font-weight: bold;
-    margin-right: 10px; /* Espaciado entre botones */
+    margin-right: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn:hover {
     background-color: #ffffff !important; /* Fondo blanco */
     color: #000000 !important; /* Texto negro */
-    transform: scale(1.05); /* Zoom */
-}
-
-/* Botones específicos */
-.btn-info {
-    background-color: #4A90E2; /* Azul */
-}
-
-.btn-info:hover {
-    background-color: #357ABD;
-}
-
-.btn-success {
-    background-color: #7ED321; /* Verde */
-}
-
-.btn-success:hover {
-    background-color: #5CA417;
-}
-
-.btn-warning {
-    background-color: #F5A623; /* Amarillo */
-    color: #000000; /* Texto negro */
-}
-
-.btn-warning:hover {
-    background-color: #D4881C;
-}
-
-.btn-primary {
-    background-color: #BD10E0; /* Morado */
-}
-
-.btn-primary:hover {
-    background-color: #940BB3;
+    transform: scale(1.05);
 }
 
 /* Formularios */
@@ -119,52 +89,10 @@ input[type="file"] {
     padding: 5px;
     font-size: 0.9rem;
     background-color: #2C2C2C; /* Fondo oscuro */
-    color: #ffffff; /* Texto blanco */
+    color: #ffffff; /* Blanco */
     transition: border-color 0.3s ease;
 }
 
 input[type="file"]:hover {
-    border-color: #f5a623; /* Bordes amarillos en hover */
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-    .documento-card {
-        padding: 15px;
-    }
-
-    .documento-card h3 {
-        font-size: 1rem;
-        gap: 8px;
-    }
-
-    .btn {
-        font-size: 0.8rem;
-        padding: 6px 15px;
-    }
-
-    input[type="file"] {
-        font-size: 0.8rem;
-        padding: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .documento-card {
-        padding: 10px;
-    }
-
-    .documento-card h3 {
-        font-size: 0.9rem;
-        gap: 5px;
-    }
-
-    .btn {
-        font-size: 0.7rem;
-        padding: 5px 10px;
-    }
-
-    input[type="file"] {
-        font-size: 0.7rem;
-    }
+    border-color: #f5a623; /* Amarillo en hover */
 }
