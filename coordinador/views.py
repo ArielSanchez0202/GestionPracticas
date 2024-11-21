@@ -669,6 +669,7 @@ def autoevaluaciones(request):
 def informes_finales(request):
     return render(request, 'coordinador/informes_finales.html')
 
+@coordinador_required
 def dashboard(request):
     total_solicitudes = InscripcionPractica.objects.count()
     solicitudes_pendientes = InscripcionPractica.objects.filter(estado='Pendiente').count()
@@ -682,6 +683,7 @@ def dashboard(request):
         'solicitudes_recientes': solicitudes_recientes,
     }
     return render(request, 'coordinador/dashboard.html', context)
+
 @coordinador_required
 def listar_practicas(request):
     # Obtener los RUT de los estudiantes activos

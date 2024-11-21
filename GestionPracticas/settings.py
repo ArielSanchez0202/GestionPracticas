@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'GestionPracticas.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'practicas3',
+        'NAME': 'practicas',
         'USER': 'postgres',
-        'PASSWORD': 'Futrilla',
+        'PASSWORD': '692001',
         'HOST': 'localhost',
         'PORT': '5432',
     }
