@@ -17,9 +17,8 @@ from django.http import BadHeaderError, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from autenticacion.decorators import coordinador_required
-from estudiante.models import InscripcionPractica
 from .forms import DocumentForm
-from coordinador.models import Coordinador, Document, Estudiante, PracticaConfig
+from coordinador.models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion
 
 
 def generar_contrasena(length=8):
@@ -671,10 +670,10 @@ def informes_finales(request):
 
 @coordinador_required
 def dashboard(request):
-    total_solicitudes = InscripcionPractica.objects.count()
-    solicitudes_pendientes = InscripcionPractica.objects.filter(estado='Pendiente').count()
-    solicitudes_aprobadas = InscripcionPractica.objects.filter(estado='Aprobada').count()
-    solicitudes_recientes = InscripcionPractica.objects.order_by('-id')[:5]  # Últimas 5 solicitudes
+    total_solicitudes = FichaInscripcion.objects.count()
+    solicitudes_pendientes = FichaInscripcion.objects.filter(estado='Pendiente').count()
+    solicitudes_aprobadas = FichaInscripcion.objects.filter(estado='Aprobada').count()
+    solicitudes_recientes = FichaInscripcion.objects.order_by('-id')[:5]  # Últimas 5 solicitudes
 
     context = {
         'total_solicitudes': total_solicitudes,
@@ -690,14 +689,15 @@ def listar_practicas(request):
     estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
     
     # Filtrar inscripciones solo para estudiantes con esos RUT
-    inscripciones = InscripcionPractica.objects.filter(rut__in=estudiantes_activos)
+    inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
+
     
     return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
 
 @coordinador_required
 def ver_formulario(request, solicitud_id,):
     # Obtener la solicitud de práctica específica por su ID
-    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
+    solicitud = get_object_or_404(FichaInscripcion, pk=solicitud_id)
             
     # Renderizar el template y pasar la solicitud al contexto
     return render(request, 'coordinador/ver_formulario.html', {'solicitud': solicitud})
@@ -706,7 +706,7 @@ def ver_formulario(request, solicitud_id,):
 def actualizar_estado(request, solicitud_id):
     if request.method == 'POST':
         # Obtén la solicitud específica
-        solicitud = get_object_or_404(InscripcionPractica, id=solicitud_id)
+        solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
         
         
         # Verifica el valor de estado_solicitud y actualiza el estado en el modelo
@@ -835,8 +835,8 @@ def generar_pdf_practica(request, estudiante_id):
     
     # Obtén la inscripción asociada al estudiante (puedes ajustar según tu relación)
     try:
-        inscripcion = InscripcionPractica.objects.get(rut=estudiante.rut)
-    except InscripcionPractica.DoesNotExist:
+        inscripcion = FichaInscripcion.objects.get(rut=estudiante.rut)
+    except FichaInscripcion.DoesNotExist:
         return HttpResponse("Inscripción de práctica no encontrada", status=404)
 
     # Configurar la respuesta HTTP para el PDF

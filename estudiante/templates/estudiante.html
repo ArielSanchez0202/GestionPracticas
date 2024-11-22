@@ -31,7 +31,17 @@
                 <div class="card">
                     <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px;">
                     <div class="card-content">
-                        <span class="practica-label"><strong>{{ practica.practica1|yesno:"Práctica I,Práctica II" }}</strong></span><br>
+                        <span class="practica-label">
+                            <strong>
+                                {% if ficha.practica1 %}
+                                    Práctica I
+                                {% elif ficha.practica2 %}
+                                    Práctica II
+                                {% else %}
+                                    Sin práctica seleccionada
+                                {% endif %}
+                            </strong>
+                        </span><br>
                         Estado: {{ practica.get_estado_display }}<br>
                         Nota: {{ practica.nota }}<br>
                         <a href="{% url 'detalle_practica' practica.id %}">

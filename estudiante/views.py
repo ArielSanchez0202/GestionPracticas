@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from autenticacion.decorators import estudiante_required
-from coordinador.models import Estudiante
+from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document
 from django.http import HttpResponse, JsonResponse, FileResponse
 from .models import InscripcionPractica
 from datetime import datetime
@@ -15,8 +15,8 @@ def estudiante_view(request):
     # Obtener el estudiante asociado al usuario en sesión
     estudiante = Estudiante.objects.get(usuario=request.user)
 
-    # Filtrar las prácticas de este estudiante
-    practicas = InscripcionPractica.objects.filter(rut=estudiante.rut)
+    # Filtrar las prácticas de este estudiante (usando el modelo Practica)
+    practicas = Practica.objects.filter(estudiante=estudiante)
 
     context = {
         'practicas': practicas,
@@ -28,8 +28,8 @@ def inscripcion_practica_view(request):
     estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
 
     # Verificar si el estudiante ya tiene ambas prácticas (I y II)
-    practica1_inscrita = InscripcionPractica.objects.filter(rut=estudiante.rut, practica1=True).exists()
-    practica2_inscrita = InscripcionPractica.objects.filter(rut=estudiante.rut, practica2=True).exists()
+    practica1_inscrita = FichaInscripcion.objects.filter(estudiante=estudiante, practica1=True).exists()
+    practica2_inscrita = FichaInscripcion.objects.filter(estudiante=estudiante, practica2=True).exists()
 
     # Si ya tiene ambas prácticas, mostramos un mensaje y no permitimos más inscripciones
     if practica1_inscrita and practica2_inscrita:
@@ -81,14 +81,9 @@ def inscripcion_practica_view(request):
         depto_trabajar = request.POST.get('depto_trabajar')
         actividades_realizar = request.POST.get('actividades_realizar')
 
-        # Crear una nueva instancia del modelo InscripcionPractica
-        inscripcion = InscripcionPractica(
-            nombre_completo=estudiante.usuario.get_full_name(),
-            rut=estudiante.rut,
-            domicilio=estudiante.domicilio,
-            telefono=estudiante.numero_telefono,
-            correo=estudiante.usuario.email,
-            carrera=estudiante.carrera,
+        # Crear una nueva instancia del modelo FichaInscripcion
+        inscripcion = FichaInscripcion(
+            estudiante=estudiante,  # Relacionar con el estudiante logueado
             practica1=practica1,
             practica2=practica2,
             razon_social=razon_social,
@@ -123,68 +118,61 @@ def inscripcion_practica_view(request):
 @estudiante_required
 def verificar_practica1(request):
     estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
-    existe_practica1 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica1=True).exists()
-    existe_practica2 = InscripcionPractica.objects.filter(rut=estudiante.rut, practica2=True).exists()
+    existe_practica1 = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, practica1=True).exists()
+    existe_practica2 = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, practica2=True).exists()
     return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
 
 @estudiante_required
-def detalle_practica(request, practica_id):
-    practica = get_object_or_404(InscripcionPractica, id=practica_id)
-
-    # Recuperar el documento de tipo 'inscripcion' (plantilla o reglamento)
+def detalle_practica(request, id):
+    practica = get_object_or_404(Practica, id=id)    
     documento = Document.objects.filter(tipo='inscripcion').first()
 
     if request.method == "POST":
-        # Subida de archivo de avance
         if "archivo_informe_avances" in request.FILES:
             archivo = request.FILES.get("archivo_informe_avances")
             if archivo:
-                if practica.archivo_informe_avances:
-                    practica.archivo_informe_avances.delete()  # Eliminar archivo anterior
-                practica.archivo_informe_avances = archivo
-                practica.intentos_subida += 1
-                practica.save()
+                informe_avances = InformeAvances.objects.filter(practica=practica).first()
+                if not informe_avances:
+                    informe_avances = InformeAvances(practica=practica, intentos_subida=0)
+                if informe_avances.archivo_informe_avances:
+                    informe_avances.archivo_informe_avances.delete()  # Eliminar archivo anterior
+                informe_avances.archivo_informe_avances = archivo
+                informe_avances.intentos_subida += 1
+                informe_avances.save()
 
-        # Subida de archivo final
         if "archivo_informe_final" in request.FILES:
             archivo_final = request.FILES.get("archivo_informe_final")
             if archivo_final:
-                if practica.archivo_informe_final:
-                    practica.archivo_informe_final.delete()  # Eliminar archivo anterior
-                practica.archivo_informe_final = archivo_final
-                practica.intentos_subida_final += 1
-                practica.save()
+                informe_final = InformeFinal.objects.filter(practica=practica).first()
+                if not informe_final:
+                    informe_final = InformeFinal(practica=practica, intentos_subida_final=0)
+                if informe_final.archivo_informe_final:
+                    informe_final.archivo_informe_final.delete()  # Eliminar archivo anterior
+                informe_final.archivo_informe_final = archivo_final
+                informe_final.intentos_subida_final += 1
+                informe_final.save()
 
-        # Redirigir al mismo detalle de práctica después de la subida
-        return redirect('detalle_practica', practica_id=practica.id)
+        return redirect('detalle_practica', id=practica.id)
 
-    # Calcular intentos restantes para avances y finales
-    intentos_restantes_avances = max(practica.MAX_INTENTOS - practica.intentos_subida, 0)
-    intentos_restantes_final = max(practica.MAX_INTENTOS - practica.intentos_subida_final, 0)
+    # Calcular intentos restantes desde los modelos relacionados
+    informe_avances = InformeAvances.objects.filter(practica=practica).first()
+    informe_final = InformeFinal.objects.filter(practica=practica).first()
 
-    # Obtener los nombres de los archivos subidos
-    archivo_nombre_avances = os.path.basename(practica.archivo_informe_avances.name) if practica.archivo_informe_avances else None
-    archivo_nombre_final = os.path.basename(practica.archivo_informe_final.name) if practica.archivo_informe_final else None
+    intentos_restantes_avances = max(informe_avances.MAX_INTENTOS - informe_avances.intentos_subida, 0) if informe_avances else 0
+    intentos_restantes_final = max(informe_final.MAX_INTENTOS - informe_final.intentos_subida_final, 0) if informe_final else 0
 
-    # Pasar la plantilla/documento subido por el coordinador a la plantilla
-    return render(
-        request,
-        'detalle_practica.html',
-        {
-            'practica': practica,
-            'intentos_restantes_avances': intentos_restantes_avances,
-            'intentos_restantes_final': intentos_restantes_final,
-            'archivo_nombre_avances': archivo_nombre_avances,
-            'archivo_nombre_final': archivo_nombre_final,
-            'documento': documento  # Esto es lo que permitirá la descarga de la plantilla
-        }
-    )
+    return render(request, 'detalle_practica.html', {
+        'practica': practica,
+        'documento': documento,
+        'intentos_restantes_avances': intentos_restantes_avances,
+        'intentos_restantes_final': intentos_restantes_final,
+    })
 
 
 @estudiante_required
 def ver_ficha(request, solicitud_id,):
     # Obtener la solicitud de práctica específica por su ID
-    solicitud = get_object_or_404(InscripcionPractica, pk=solicitud_id)
+    solicitud = get_object_or_404(FichaInscripcion, pk=solicitud_id)
     # Renderizar el template y pasar la solicitud al contexto
     return render(request, 'ver_ficha.html', {'solicitud': solicitud})
 
@@ -202,22 +190,28 @@ def descargar_plantilla(request, practica_id):
     
 @estudiante_required
 def autoevaluacion(request, solicitud_id):
-    # Cargar datos relacionados si es necesario
-    estudiante = ...  # Obtener el estudiante actual según tu lógica
-    return render(request, 'autoevaluacion.html', {
-        'solicitud_id': solicitud_id,
+    # Obtener el estudiante actual
+    estudiante = get_object_or_404(Estudiante, usuario=request.user)
+    
+    # Obtener la solicitud de práctica
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+    
+    context = {
         'estudiante': estudiante,
-    })
+        'solicitud': solicitud,
+        'solicitud_id': solicitud_id,  # Agregar solicitud_id al contexto
+    }
+    return render(request, 'autoevaluacion.html', context)
 
 @estudiante_required
 def dashboard(request):
     estudiante = Estudiante.objects.get(usuario=request.user)
     # Filtrar las solicitudes solo del estudiante actual
-    total_solicitudes = InscripcionPractica.objects.filter(rut=estudiante.rut).count()
-    solicitudes_pendientes = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Pendiente').count()
-    solicitudes_aprobadas = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Aprobada').count()
-    solicitudes_rechazadas = InscripcionPractica.objects.filter(rut=estudiante.rut, estado='Rechazada').count()
-    solicitudes_recientes = InscripcionPractica.objects.filter(rut=estudiante.rut).order_by('-id')[:5]
+    total_solicitudes = FichaInscripcion.objects.filter(rut=estudiante.rut).count()
+    solicitudes_pendientes = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Pendiente').count()
+    solicitudes_aprobadas = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Aprobada').count()
+    solicitudes_rechazadas = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Rechazada').count()
+    solicitudes_recientes = FichaInscripcion.objects.filter(rut=estudiante.rut).order_by('-id')[:5]
 
     context = {
         'total_solicitudes': total_solicitudes,
@@ -231,7 +225,7 @@ def dashboard(request):
 @estudiante_required
 def descargar_archivo_final(request, practica_id):
     # Buscar la inscripción de práctica usando el ID
-    practica = get_object_or_404(InscripcionPractica, id=practica_id)
+    practica = get_object_or_404(FichaInscripcion, id=practica_id)
     
     # Verificar que el número de intentos esté agotado
     if practica.intentos_subida_final < 2:
