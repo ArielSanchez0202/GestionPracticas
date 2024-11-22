@@ -58,11 +58,15 @@
                 <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
             </div>
         
-            <div class="checkbox-group" >
-                <input type="checkbox" id="practica1" name="practica1" class="custom-checkbox" {% if solicitud.practica1 %}checked{% endif %} disabled>
+            <div class="radio-group">
+                <!-- Radio para Práctica I -->
+                <input type="radio" id="practica1" name="practica" class="custom-radio" value="practica1" 
+                    {% if solicitud.practica1 %}checked{% endif %} disabled>
                 <label for="practica1">Práctica I</label>
-            
-                <input type="checkbox" id="practica2" name="practica2" class="custom-checkbox" {% if solicitud.practica2 %}checked{% endif %} disabled>
+                
+                <!-- Radio para Práctica II -->
+                <input type="radio" id="practica2" name="practica" class="custom-radio" value="practica2" 
+                    {% if solicitud.practica2 %}checked{% endif %} disabled>
                 <label for="practica2">Práctica II</label>
             </div>
 
@@ -134,12 +138,22 @@
                     <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required value="{{solicitud.actividades_realizar}}" readonly></td>
                 </tr>
             </table>   
-            <div class="button-container">
-                <button type="submit" class="btn btn-success" onclick="aprobar()">Aprobar</button>
-            </div>
-            <div class="button-container">
-                <button type="submit" class="send-button" onclick="rechazar()">Rechazar</button>
-            </div>
+            <body style="margin: 0; padding: 0; padding-bottom: 20px;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; width: 100%; margin-top: 20px;">
+                    <button 
+                        type="submit" 
+                        onclick="aprobar()" 
+                        style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background-color: #28a745; color: white; cursor: pointer;">
+                        Aprobar
+                    </button>
+                    <button 
+                        type="submit" 
+                        onclick="rechazar()" 
+                        style="padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background-color: #dc3545; color: white; cursor: pointer;">
+                        Rechazar
+                    </button>
+                </div>
+                <div style="height: 20px;"></div>       
                       
         </form>
         <script>

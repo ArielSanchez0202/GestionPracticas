@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Document
+from .models import Document, PracticaConfig
 
 
 # Validador personalizado para solo permitir PDF y archivos Word (.doc, .docx)
@@ -17,3 +17,11 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ['archivo']
+class PracticaConfigForm(forms.ModelForm):
+    class Meta:
+        model = PracticaConfig
+        fields = ['fecha_inicio_limite', 'fecha_termino_limite']
+        widgets = {
+            'fecha_inicio_limite': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'fecha_termino_limite': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }

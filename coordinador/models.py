@@ -150,3 +150,4 @@ class PracticaConfig(models.Model):
 
     def __str__(self):
         return f"Configuración Práctica: {self.fecha_inicio_limite} - {self.fecha_termino_limite}"
+

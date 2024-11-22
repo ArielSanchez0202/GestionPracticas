@@ -64,21 +64,19 @@
     <!-- Formulario para mostrar las fechas en modo solo lectura -->
     <div class="form-group">
         <label for="fecha_inicio_limite">Fecha de Inicio:</label>
-        <p>{{ practica_config.fecha_inicio_limite|date:'d M Y' }}</p>
+        <p>{{ practica_config.fecha_inicio_limite}}</p>
     </div>
     <div class="form-group">
         <label for="fecha_termino_limite">Fecha de Término:</label>
         <input type="date" id="fecha_termino_limite" name="fecha_termino_limite" class="form-control" 
                value="{{ practica_config.fecha_termino_limite|date:'Y-m-d' }}" readonly>
     </div>
-
     <hr class="my-5">
     <div class="text-center">
         <a href="{% url 'configurar_fechas' %}" class="btn btn-primary">
             <i class="fas fa-calendar-alt"></i> Configurar Fechas de Prácticas
         </a>
-    </div>
-</div>
+    </div>    
 
 <script>
     function toggleFileInput(docTipo) {

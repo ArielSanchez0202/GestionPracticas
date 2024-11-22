@@ -1,3 +1,4 @@
+import locale
 import re
 import secrets
 import string
@@ -16,7 +17,15 @@ from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm
 from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion
-
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.lib.utils import ImageReader
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -818,15 +827,22 @@ def ver_documento(request, document_id):
         return HttpResponse("Formato no soportado", status=400)
     
 def configurar_fechas(request):
-    # Obtener la configuración de fechas de la práctica (asegurarte de que existe o crear una nueva si es necesario)
-    practica_config = PracticaConfig.objects.first()  # O la lógica que utilices
+    # Obtener la configuración de fechas de la práctica, o crear una nueva si no existe
+    practica_config = PracticaConfig.objects.first()
+
+    # Si no existe una configuración de práctica, crear una nueva
+    if not practica_config:
+        practica_config = PracticaConfig.objects.create(
+            fecha_inicio_limite="2024-01-01",  # O las fechas predeterminadas que desees
+            fecha_termino_limite="2024-12-31"
+        )
 
     if request.method == 'POST':
-        # Guardar las nuevas fechas
-        practica_config.fecha_inicio_limite = request.POST['fecha_inicio_limite']
-        practica_config.fecha_termino_limite = request.POST['fecha_termino_limite']
+        # Guardar las nuevas fechas (asegurarse de que los datos sean válidos)
+        practica_config.fecha_inicio_limite = request.POST.get('fecha_inicio_limite', practica_config.fecha_inicio_limite)
+        practica_config.fecha_termino_limite = request.POST.get('fecha_termino_limite', practica_config.fecha_termino_limite)
         practica_config.save()
-        # Redirigir a la misma página o a otra, según lo que desees hacer
+        # Redirigir a la página de documentos u otra página de tu elección
         return redirect('documentos')
 
     return render(request, 'coordinador/configurar_fechas.html', {
@@ -834,18 +850,27 @@ def configurar_fechas(request):
     })
 
 
-def generar_pdf_practica(request, estudiante_id):
-    # Obtén al estudiante
+
+
+# Configuración de idioma para fechas en español
+locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
+
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+
+def generar_pdf_practica(request, ficha_id):
     try:
-        estudiante = Estudiante.objects.get(pk=estudiante_id)
-    except Estudiante.DoesNotExist:
-        return HttpResponse("Estudiante no encontrado", status=404)
-    
-    # Obtén la inscripción asociada al estudiante (puedes ajustar según tu relación)
-    try:
-        inscripcion = FichaInscripcion.objects.get(estudiante__rut=estudiante.rut)
+        ficha = FichaInscripcion.objects.get(pk=ficha_id)
     except FichaInscripcion.DoesNotExist:
-        return HttpResponse("Inscripción de práctica no encontrada", status=404)
+        return HttpResponse("Ficha de inscripción no encontrada", status=404)
+
+    estudiante = ficha.estudiante
 
     # Configurar la respuesta HTTP para el PDF
     response = HttpResponse(content_type='application/pdf')
@@ -853,41 +878,118 @@ def generar_pdf_practica(request, estudiante_id):
 
     # Crear el objeto Canvas
     buffer = canvas.Canvas(response, pagesize=letter)
-    buffer.setFont("Helvetica", 12)
+    width, height = letter
 
-    # Escribir el encabezado
-    buffer.drawString(50, 750, "UNIVERSIDAD AUTÓNOMA DE CHILE")
-    buffer.drawString(50, 730, f"Fecha: {datetime.now().strftime('%d de %B del %Y')}")
+    # Fuentes y estilos
+    encabezado_font = "Helvetica-Bold"
+    cuerpo_font = "Helvetica"
+    buffer.setFont(cuerpo_font, 12)
 
-    # Información del estudiante
-    buffer.drawString(50, 700, "Información del Estudiante")
-    buffer.drawString(50, 680, f"Nombre: {estudiante.usuario.first_name} {estudiante.usuario.last_name}")
-    buffer.drawString(50, 660, f"RUT: {estudiante.rut}")
-    buffer.drawString(50, 640, f"Domicilio: {estudiante.domicilio}")
-    buffer.drawString(50, 620, f"Teléfono: {estudiante.numero_telefono}")
-    buffer.drawString(50, 600, f"Carrera: {estudiante.carrera}")
+    # Espacios y márgenes
+    margen_izquierdo = 50
+    margen_derecho = 550
+    margen_texto = 10  # Margen entre el logo y el texto
 
-    # Información de la práctica
-    buffer.drawString(50, 570, "Información de la Práctica")
-    tipo_practica = "Práctica 1" if inscripcion.practica1 else "Práctica 2"
-    buffer.drawString(50, 550, f"Tipo de práctica: {tipo_practica}")
-    buffer.drawString(50, 530, f"Razón social: {inscripcion.razon_social}")
-    buffer.drawString(50, 510, f"Dirección empresa: {inscripcion.direccion_empresa}")
-    buffer.drawString(50, 490, f"Fecha de inicio: {inscripcion.fecha_inicio.strftime('%d/%m/%Y')}")
-    buffer.drawString(50, 470, f"Fecha de término: {inscripcion.fecha_termino.strftime('%d/%m/%Y')}")
-    buffer.drawString(50, 450, f"Cargo a desarrollar: {inscripcion.cargo_desarrollar}")
+    # Encabezado: Logo arriba a la izquierda con escala
+    logo_path = 'autenticacion/static/img/universidad_logo.png'
+    try:
+        logo = ImageReader(logo_path)
+        original_width, original_height = logo.getSize()
+        max_logo_height = 45
+        scale_factor = max_logo_height / original_height
+        scaled_width = original_width * scale_factor
+        scaled_height = original_height * scale_factor
+        buffer.drawImage(
+            logo, margen_izquierdo, height - scaled_height - 30,
+            width=scaled_width, height=scaled_height, mask='auto'
+        )
+    except Exception as e:
+        print(f"Error cargando el logo: {e}")
 
-    # Información adicional
-    buffer.drawString(50, 420, "Información del Supervisor")
-    buffer.drawString(50, 400, f"Jefe directo: {inscripcion.jefe_directo}")
-    buffer.drawString(50, 380, f"Cargo: {inscripcion.cargo}")
-    buffer.drawString(50, 360, f"Teléfono jefe: {inscripcion.telefono_jefe}")
-    buffer.drawString(50, 340, f"Correo jefe: {inscripcion.correo_jefe}")
+    # Ajustar el texto para que esté a la derecha del logo
+    text_x_position = margen_izquierdo + scaled_width + margen_texto
+
+    # Título centrado
+    buffer.setFont(encabezado_font, 14)
+    buffer.drawString(text_x_position, height - 50, "UNIVERSIDAD AUTÓNOMA DE CHILE")
+
+    # Subtítulo
+    buffer.setFont(cuerpo_font, 12)
+    buffer.drawString(text_x_position, height - 70, "Facultad de Ingeniería - Sede Santiago")
+
+    # Fecha a la derecha
+    buffer.drawRightString(margen_derecho, height - 140, f"Santiago, {datetime.now().strftime('%d de %B del %Y')}")
+
+    # Saludo
+    buffer.setFont(cuerpo_font, 12)
+    buffer.drawString(margen_izquierdo, height - 200, "Señores:")
+
+    # Datos en negrita
+    buffer.setFont(encabezado_font, 12)
+    buffer.drawString(margen_izquierdo, height - 220, f"{ficha.razon_social}")
+    buffer.setFont(cuerpo_font, 12)
+    buffer.drawString(margen_izquierdo, height - 240, "Presente")
+
+    # Cuerpo del texto con datos en negrita
+    texto = f"""
+    De nuestra consideración:
+
+    UNIVERSIDAD AUTÓNOMA DE CHILE informa a usted que <b>{estudiante.usuario.first_name} {estudiante.usuario.last_name}</b>, 
+    RUN <b>{estudiante.rut}</b>, es alumno regular de la carrera de <b>{estudiante.carrera}</b> de la Facultad de Ingeniería.
+
+    De conformidad con el plan de estudios, debe realizar su Práctica Profesional, la cual comenzará el día 
+    <b>{ficha.fecha_inicio.strftime('%d de %B del %Y')}</b> y finalizará el <b>{ficha.fecha_termino.strftime('%d de %B del %Y')}</b>, ambas fechas inclusive. 
+
+    Tanto el periodo como las funciones realizadas por el alumno en práctica serán 
+    inspeccionadas constantemente por el Coordinador de Prácticas de la carrera de 
+    Ingeniería Civil Informática.
+
+    Se hace mención que, durante el periodo de práctica antes indicado, el alumno se 
+    encuentra protegido por la Ley 16.744, sobre Accidentes del Trabajo y Enfermedades 
+    Profesionales.
+    """
+    
+    # Estilos para el texto justificado
+    style = ParagraphStyle(
+        name='Normal', 
+        fontName='Helvetica', 
+        fontSize=12, 
+        spaceAfter=6,
+        alignment=4,  # Justificado
+        leftIndent=20,  # Margen izquierdo
+        rightIndent=20,  # Margen derecho
+        wordSpace=1.0,
+        lineHeight=14,
+    )
+
+    # Crear el párrafo con el texto a insertar
+    paragraph = Paragraph(texto, style)
+
+    # Dibujar el párrafo en el canvas en la posición deseada
+    paragraph_width, paragraph_height = paragraph.wrap(width - 100, height)  # Ajuste de márgenes
+    paragraph.drawOn(buffer, margen_izquierdo, height - 300 - paragraph_height)
+
+    # Timbre al final de la página (centrado)
+    timbre_path = 'autenticacion/static/img/timbre.png'
+    try:
+        timbre = ImageReader(timbre_path)
+        timbre_width, timbre_height = timbre.getSize()
+        max_timbre_height = 250
+        timbre_scale_factor = max_timbre_height / timbre_height
+        scaled_timbre_width = timbre_width * timbre_scale_factor
+        scaled_timbre_height = timbre_height * timbre_scale_factor
+        timbre_x = (width - scaled_timbre_width) / 2
+        timbre_y = 50
+        buffer.drawImage(timbre, timbre_x, timbre_y, width=scaled_timbre_width, height=scaled_timbre_height, mask='auto')
+    except Exception as e:
+        print(f"Error cargando el timbre: {e}")
 
     # Finalizar el PDF
     buffer.showPage()
     buffer.save()
     return response
+
+
 
 @coordinador_required
 def autoevaluaciones(request):

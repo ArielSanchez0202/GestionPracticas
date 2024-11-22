@@ -32,5 +32,5 @@ urlpatterns = [
     path('ver_formulario/<int:solicitud_id>/', views.ver_formulario, name='ver_formulario'),
     path('actualizar_estado/<int:solicitud_id>/', views.actualizar_estado, name='actualizar_estado'),
     path('configurar_fechas/', views.configurar_fechas, name='configurar_fechas'),
-    path('generar-pdf-practica/<int:estudiante_id>/', views.generar_pdf_practica, name='generar_pdf_practica'),
+    path('generar-pdf-practica/<int:ficha_id>/', views.generar_pdf_practica, name='generar_pdf_practica'),
 ]

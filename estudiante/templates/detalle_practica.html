@@ -34,7 +34,7 @@
             </a>
         {% elif practica.estado == 'Aprobada' %}
             <button class="action-button">Descargar carta de aprobación</button>
-            <a href="{% url 'ver_ficha' practica.id %}">
+            <a href="{% url 'generar_pdf_practica' inscripcion.pk %}"</a>
                 <button class="action-button">Ver ficha</button>
             </a>
         {% endif %}
