@@ -3,11 +3,9 @@ import secrets
 import string
 from datetime import datetime
 from smtplib import SMTPException
-
 import pandas as pd
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
@@ -15,10 +13,9 @@ from django.contrib.messages import get_messages
 from django.core.mail import send_mail
 from django.http import BadHeaderError, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm
-from coordinador.models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion
+from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion
 
 
 def generar_contrasena(length=8):
@@ -336,17 +333,21 @@ def listar_estudiantes(request):
         'estudiantes': estudiantes,
     }
     return render(request, 'coordinador/listar_estudiantes.html', context)
+
 @coordinador_required
 def coordinadores(request):
     return render(request,'coordinador/coordinadores.html')
+
 @coordinador_required
 def listar_coordinador(request):
     coordinadores = Coordinador.objects.all()
     return render(request,'coordinador/listar_coordinador.html',{'coordinadores':coordinadores})
+
 @coordinador_required
 def crear_coordinador(request):
     usuarios = Coordinador.objects.all()
     return render(request,'coordinador/crear_coordinador.html',{'usuarios':usuarios})
+
 @coordinador_required
 def registrar_coordinador(request):
     # Limpiar mensajes de la sesión para evitar acumulaciones
@@ -460,6 +461,7 @@ def registrar_coordinador(request):
 
     # Renderizar la página si el método es GET
     return render(request, 'coordinador/crear_coordinador.html')
+
 @coordinador_required
 def editar_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
@@ -629,11 +631,13 @@ def editar_coordinador(request, coordinador_id):
     return render(request, 'coordinador/editar_coordinador.html', {
         'coordinador': coordinador,
     })
+
 @coordinador_required
 def ver_coordinador(request, coordinador_id):
     coordinadores = get_object_or_404(Coordinador, usuario_id=coordinador_id)
 
     return render(request, 'coordinador/ver_coordinador.html', {'coordinadores': coordinadores})
+
 @coordinador_required
 def detalle_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
@@ -650,7 +654,6 @@ def verificar_rut(request):
     rut = request.GET.get('rut')
     existe = User.objects.filter(username=rut).exists()
     return JsonResponse({'existe': existe})
-
 
 @coordinador_required
 def solicitudes_practica(request):
@@ -690,18 +693,22 @@ def listar_practicas(request):
     
     # Filtrar inscripciones solo para estudiantes con esos RUT
     inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
-
     
     return render(request, 'coordinador/listar_practicas.html', {'inscripciones': inscripciones})
 
 @coordinador_required
-def ver_formulario(request, solicitud_id,):
+def ver_formulario(request, solicitud_id):
     # Obtener la solicitud de práctica específica por su ID
     solicitud = get_object_or_404(FichaInscripcion, pk=solicitud_id)
-            
-    # Renderizar el template y pasar la solicitud al contexto
-    return render(request, 'coordinador/ver_formulario.html', {'solicitud': solicitud})
 
+    # Obtener los datos del estudiante relacionado con la solicitud
+    estudiante = solicitud.estudiante
+
+    # Renderizar el template y pasar la solicitud y los datos del estudiante al contexto
+    return render(request, 'coordinador/ver_formulario.html', {
+        'solicitud': solicitud,
+        'estudiante': estudiante
+    })
 
 def actualizar_estado(request, solicitud_id):
     if request.method == 'POST':
@@ -735,6 +742,7 @@ def update_document(request, document_id):
     else:
         form = DocumentForm(instance=document)
     return render(request, 'documentos.html', {'form': form, 'documents': Document.objects.all()})
+
 @coordinador_required
 def documentos(request):
     # Tipos de documentos permitidos
@@ -835,7 +843,7 @@ def generar_pdf_practica(request, estudiante_id):
     
     # Obtén la inscripción asociada al estudiante (puedes ajustar según tu relación)
     try:
-        inscripcion = FichaInscripcion.objects.get(rut=estudiante.rut)
+        inscripcion = FichaInscripcion.objects.get(estudiante__rut=estudiante.rut)
     except FichaInscripcion.DoesNotExist:
         return HttpResponse("Inscripción de práctica no encontrada", status=404)
 
@@ -880,3 +888,13 @@ def generar_pdf_practica(request, estudiante_id):
     buffer.showPage()
     buffer.save()
     return response
+
+@coordinador_required
+def autoevaluaciones(request):
+    # Obtener los RUT de los estudiantes activos
+    estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
+    
+    # Filtrar inscripciones solo para estudiantes con esos RUT
+    inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
+    
+    return render(request, 'coordinador/autoevaluaciones.html', {'inscripciones': inscripciones})

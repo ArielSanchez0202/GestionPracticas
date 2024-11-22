@@ -28,9 +28,9 @@
                     {% for inscripcion in inscripciones %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ inscripcion.nombre_completo }}</td>
-                            <td>{{ inscripcion.rut }}</td>
-                            <td>{{ inscripcion.carrera }}</td>
+                            <td>{{ inscripcion.estudiante.usuario.first_name }} {{ inscripcion.estudiante.usuario.last_name }}</td>
+                            <td>{{ inscripcion.estudiante.rut }}</td>
+                            <td>{{ inscripcion.estudiante.carrera }}</td>
                             <td>
                                 {% if inscripcion.practica1 %}
                                     Práctica 1

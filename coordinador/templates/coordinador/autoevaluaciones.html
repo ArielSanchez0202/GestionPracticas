@@ -1,7 +1,69 @@
 {% extends 'base_coordinador.html' %}
 
+{% load static %}  
+
+{% block title %} Lista de Prácticas {% endblock %}
+
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">{{ "Autoevaluacionees" }}</h1>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/listar_practicas.css' %}">
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive py-5">
+            <h1>Revisión de Autoevaluaciones</h1>
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>RUT</th>
+                        <th>Carrera</th>
+                        <th>Práctica</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inscripcion in inscripciones %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ inscripcion.estudiante.usuario.first_name }} {{ inscripcion.estudiante.usuario.last_name }}</td>
+                            <td>{{ inscripcion.estudiante.rut }}</td>
+                            <td>{{ inscripcion.estudiante.carrera }}</td>
+                            <td>
+                                {% if inscripcion.practica1 %}
+                                    Práctica 1
+                                {% elif inscripcion.practica2 %}
+                                    Práctica 2
+                                {% else %}
+                                    No seleccionada
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inscripcion.estado == "Aprobada" %}
+                                    <span class="badge bg-success">Aprobada</span>
+                                {% elif inscripcion.estado == "Rechazada" %}
+                                    <span class="badge bg-danger">Rechazada</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if inscripcion.estado == "Aprobada" %}
+                                <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="btn btn-warning custom-warning-btn" target="_blank">Ver Carta</a>
+                                {% endif %}
+                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">No hay solicitudes de prácticas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 {% endblock %}

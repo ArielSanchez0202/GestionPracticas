@@ -207,11 +207,11 @@ def autoevaluacion(request, solicitud_id):
 def dashboard(request):
     estudiante = Estudiante.objects.get(usuario=request.user)
     # Filtrar las solicitudes solo del estudiante actual
-    total_solicitudes = FichaInscripcion.objects.filter(rut=estudiante.rut).count()
-    solicitudes_pendientes = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Pendiente').count()
-    solicitudes_aprobadas = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Aprobada').count()
-    solicitudes_rechazadas = FichaInscripcion.objects.filter(rut=estudiante.rut, estado='Rechazada').count()
-    solicitudes_recientes = FichaInscripcion.objects.filter(rut=estudiante.rut).order_by('-id')[:5]
+    total_solicitudes = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut).count()
+    solicitudes_pendientes = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, estado='Pendiente').count()
+    solicitudes_aprobadas = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, estado='Aprobada').count()
+    solicitudes_rechazadas = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, estado='Rechazada').count()
+    solicitudes_recientes = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut).order_by('-id')[:5]
 
     context = {
         'total_solicitudes': total_solicitudes,
