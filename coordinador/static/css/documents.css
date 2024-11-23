@@ -1,5 +1,5 @@
 /* General Styles */
-.container {
+.documento-container {
     max-width: 100%;
     padding: 20px;
 }
@@ -31,7 +31,7 @@
 }
 
 .documento-card h3 i,
-.btn i {
+.boton i {
     font-size: 1.2rem;
     color: #ffffff; /* Blanco */
     transition: color 0.3s ease; /* Transición en color */
@@ -39,7 +39,7 @@
 
 /* Cambio de color de íconos en hover */
 .documento-card h3 i:hover,
-.btn i:hover {
+.boton i:hover {
     color: #000000 !important; /* Cambia a negro con prioridad */
 }
 
@@ -51,25 +51,25 @@
 }
 
 /* Botones */
-.btn {
+.boton {
     border-radius: 20px;
     font-size: 0.9rem;
     padding: 10px 25px;
     border: none;
-    color: #ffffff; /* Blanco */
+    color: black; /* Blanco */
     font-weight: bold;
     margin-right: 10px;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.btn:hover {
+.boton:hover {
     background-color: #ffffff !important; /* Fondo blanco */
     color: #000000 !important; /* Texto negro */
     transform: scale(1.05);
 }
 
 /* Formularios */
-form {
+.documento-container form {
     margin-top: 15px;
     opacity: 0;
     height: 0;
@@ -78,7 +78,7 @@ form {
 }
 
 /* Mostrar el formulario si tiene display block */
-form[style*="display: block;"] {
+.documento-container form[style*="display: block;"] {
     opacity: 1;
     height: auto;
 }
@@ -97,18 +97,4 @@ input[type="file"] {
 /* Efecto hover en los inputs */
 input[type="file"]:hover {
     border-color: #f5a623; /* Amarillo en hover */
-}
-
-/* Evita que el estilo global de los botones afecte otros botones de la sidebar */
-.sidebar .btn {
-    background-color: #444; /* Establece un color diferente para los botones de la sidebar */
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-}
-
-/* Asegura que los botones en la sidebar no sean afectados por el hover de documentos */
-.sidebar .btn:hover {
-    background-color: #333;
 }

@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/documents.css' %}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-<div class="container">
+<div class="documento-container">
     <!-- Título principal -->
     <h1 class="page-title">Documentos</h1>
 
@@ -18,21 +18,21 @@
             </h3>
             
             {% if doc.documento and doc.documento.archivo %}
-                <div class="btn-group">
+                <div class="boton-group">
                     <!-- Botón para ver el documento -->
-                    <a href="{% url 'ver_documento' document_id=doc.documento.id %}" class="btn btn-primary-outline" target="_blank" 
+                    <a href="{% url 'ver_documento' document_id=doc.documento.id %}" class="boton boton-primary-outline" target="_blank" 
                         style="transition: background-color 0.3s, transform 0.2s;">
                         <i class="fas fa-eye" style="color: #ffffff; transition: color 0.3s;"></i> Ver
                     </a>
                     
                     <!-- Botón para descargar el documento -->
-                    <a href="{{ doc.documento.archivo.url }}" class="btn btn-secondary-outline" download 
+                    <a href="{{ doc.documento.archivo.url }}" class="boton boton-secondary-outline" download 
                         style="transition: background-color 0.3s, transform 0.2s;">
                         <i class="fas fa-download" style="color: #ffffff; transition: color 0.3s;"></i> Descargar
                     </a>
                     
                     <!-- Botón para actualizar el documento -->
-                    <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-warning-outline" 
+                    <button onclick="toggleFileInput('{{ doc.tipo }}')" class="boton boton-warning-outline" 
                         style="transition: background-color 0.3s, transform 0.2s;">
                         <i class="fas fa-edit" style="color: #ffffff; transition: color 0.3s;"></i> Actualizar
                     </button>
@@ -41,7 +41,7 @@
                 <!-- Texto con color blanco directamente en HTML -->
                 <p class="text-muted" style="color: #ffffff;">Documento no disponible.</p>
                 <!-- Botón para subir un documento -->
-                <button onclick="toggleFileInput('{{ doc.tipo }}')" class="btn btn-success-outline">
+                <button onclick="toggleFileInput('{{ doc.tipo }}')" class="boton boton-success-outline">
                     <i class="fas fa-upload"></i> Subir documento
                 </button>                
             {% endif %}
@@ -51,7 +51,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="tipo" value="{{ doc.tipo }}">
                 <input type="file" name="archivo" class="form-control" required>
-                <button type="submit" class="btn btn-primary-outline mt-2">Guardar</button>
+                <button type="submit" class="boton boton-primary-outline mt-2">Guardar</button>
             </form>
         </div>
     {% endfor %}
@@ -73,7 +73,7 @@
     </div>
     <hr class="my-5">
     <div class="text-center">
-        <a href="{% url 'configurar_fechas' %}" class="btn btn-primary">
+        <a href="{% url 'configurar_fechas' %}" class="boton boton-primary">
             <i class="fas fa-calendar-alt"></i> Configurar Fechas de Prácticas
         </a>
     </div>    
