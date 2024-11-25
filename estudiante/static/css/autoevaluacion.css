@@ -99,9 +99,20 @@ textarea:focus {
     background-color: #fff;
 }
 
+/* Contenedor del botón */
+.button-container {
+    display: flex;
+    justify-content: center; /* Centra el botón horizontalmente */
+    align-items: center;     /* Centra el botón verticalmente si es necesario */
+    width: 100%;             /* Asegura que ocupe todo el ancho */
+    margin-top: 20px;        /* Ajusta el margen superior según tus necesidades */
+    grid-column: span 2; /* Asegura que el botón ocupe todo el ancho */
+}
+
+
 button {
     display: block;
-    width: 100%;
+    width: 10%;
     padding: 10px;
     background-color: #DD211C;
     color: white;
