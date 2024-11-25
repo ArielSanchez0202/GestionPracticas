@@ -1,4 +1,4 @@
-{% extends 'base_estudiante.html' %}
+{% extends 'base_coordinador.html' %}
 
 {% load static %}
 
@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="{% static 'css/inscripcion_practica.css' %}">
     </head>
 
-    <div class="container">
+    <div class="inscripcion-container">
 
         <div class="back-button">
             <a href="javascript:history.back()" class="back-arrow">
@@ -30,39 +30,43 @@
             
             <div class="form-group">
                 <label for="nombre_completo">Nombre Completo</label>
-                <input type="text" id="nombre_completo" name="nombre_completo" value="{{solicitud.nombre_completo}}" readonly>
+                <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}" readonly>
             </div>
         
             <div class="form-group">
                 <label for="rut">Rut</label>
-                <input type="text" id="rut" name="rut" value="{{solicitud.rut}}" readonly>
+                <input type="text" id="rut" name="rut" value="{{ estudiante.rut }}" readonly>
             </div>
         
             <div class="form-group">
                 <label for="domicilio">Domicilio</label>
-                <input type="text" id="domicilio" name="domicilio" value="{{solicitud.domicilio}}" readonly>
+                <input type="text" id="domicilio" name="domicilio" value="{{estudiante.domicilio}}" readonly>
             </div>
         
             <div class="form-group">
                 <label for="telefono">Número de Teléfono</label>
-                <input type="text" id="telefono" name="telefono" value="{{solicitud.telefono}}" readonly>
+                <input type="text" id="telefono" name="telefono" value="{{ estudiante.numero_telefono }}" readonly>
             </div>
         
             <div class="form-group">
                 <label for="correo">Correo Electrónico</label>
-                <input type="email" id="correo" name="correo" value="{{solicitud.correo}}" readonly>
+                <input type="email" id="correo" name="correo" value="{{ estudiante.usuario.email }}" readonly>
             </div>
         
             <div class="form-group">
                 <label for="carrera">Carrera</label>
-                <input type="text" id="carrera" name="carrera" value="{{solicitud.carrera}}" readonly>
+                <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
             </div>
         
-            <div class="checkbox-group" >
-                <input type="checkbox" id="practica1" name="practica1" class="custom-checkbox" {% if solicitud.practica1 %}checked{% endif %} disabled>
+            <div class="radio-group">
+                <!-- Radio para Práctica I -->
+                <input type="radio" id="practica1" name="practica" class="custom-radio" value="practica1" 
+                    {% if solicitud.practica1 %}checked{% endif %} disabled>
                 <label for="practica1">Práctica I</label>
-            
-                <input type="checkbox" id="practica2" name="practica2" class="custom-checkbox" {% if solicitud.practica2 %}checked{% endif %} disabled>
+                
+                <!-- Radio para Práctica II -->
+                <input type="radio" id="practica2" name="practica" class="custom-radio" value="practica2" 
+                    {% if solicitud.practica2 %}checked{% endif %} disabled>
                 <label for="practica2">Práctica II</label>
             </div>
 
@@ -134,6 +138,8 @@
                     <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required value="{{solicitud.actividades_realizar}}" readonly></td>
                 </tr>
             </table>   
+
+            <div style="height: 20px;"></div>       
                       
         </form>
                 
