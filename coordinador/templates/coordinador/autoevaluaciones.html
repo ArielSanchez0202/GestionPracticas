@@ -20,7 +20,7 @@
                         <th>RUT</th>
                         <th>Carrera</th>
                         <th>Práctica</th>
-                        <th>Estado</th>
+                        <th>Fecha de Entrega</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -41,24 +41,15 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if inscripcion.estado == "Aprobada" %}
-                                    <span class="badge bg-success">Aprobada</span>
-                                {% elif inscripcion.estado == "Rechazada" %}
-                                    <span class="badge bg-danger">Rechazada</span>
-                                {% else %}
-                                    <span class="badge bg-warning">Pendiente</span>
-                                {% endif %}
+
                             </td>
                             <td>
-                                {% if inscripcion.estado == "Aprobada" %}
-                                <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="btn btn-warning custom-warning-btn" target="_blank">Ver Carta</a>
-                                {% endif %}
-                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
+                                <a href="{% url 'revisar_autoevaluacion' %}?practica_id={{ practica.id }}">Ver Autoevaluaciones</a>
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7">No hay solicitudes de prácticas.</td>
+                            <td colspan="7">No hay autoevaluaciones.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

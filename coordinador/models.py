@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User  # Importa el modelo de usuario de Django
+from datetime import datetime, date
 import uuid
 
 # Modelo Coordinador
@@ -36,7 +37,7 @@ class Practica(models.Model):
 
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='practicas')
     estado = models.CharField(max_length=50, choices=ESTADO_CHOICES, default='pendiente')
-    fecha_inscripcion = models.DateField()
+    fecha_inscripcion = models.DateField(default=date.today)
 
     def __str__(self):
         return f'Práctica {self.pk} - {self.get_estado_display()}'
@@ -73,18 +74,71 @@ class FichaInscripcion(models.Model):
 # Modelo Autoevaluación
 class Autoevaluacion(models.Model):
     practica = models.ForeignKey(Practica, on_delete=models.CASCADE)
-    nota = models.DecimalField(max_digits=3, decimal_places=1)
-    observaciones = models.TextField()
+    nota = models.DecimalField(max_digits=3, decimal_places=1, null=True)
+    observaciones = models.TextField(null=True)
+    pregunta1 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta2 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta3 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta4 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta5 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta6 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta7 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta8 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta9 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                         ('Frecuentemente', 'Frecuentemente'),
+                                                         ('A veces', 'A veces'),
+                                                         ('Nunca', 'Nunca')])
+    pregunta10 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                          ('Frecuentemente', 'Frecuentemente'),
+                                                          ('A veces', 'A veces'),
+                                                          ('Nunca', 'Nunca')])
+    pregunta11 = models.CharField(max_length=20, choices=[('Siempre', 'Siempre'), 
+                                                          ('Frecuentemente', 'Frecuentemente'),
+                                                          ('A veces', 'A veces'),
+                                                          ('Nunca', 'Nunca')])
+    comentarios1 = models.TextField()
+    comentarios2 = models.TextField(blank=True, null=True)
+    pregunta12 = models.CharField(max_length=3, choices=[('Si', 'Sí'), ('No', 'No')])
+    comentarios3 = models.TextField()
+
 
     def __str__(self):
         return f'Autoevaluación - Práctica {self.practica.pk}'
+    
+    class Meta:
+        verbose_name = 'Autoevaluación'
+        verbose_name_plural = 'Autoevaluaciones'
 
 # Modelo Informe Confidencial
 class InformeConfidencial(models.Model):
     practica = models.ForeignKey(Practica, on_delete=models.CASCADE)
     rubrica = models.ForeignKey('Rubrica', on_delete=models.CASCADE)
     comentario = models.TextField()
-
+    
     def __str__(self):
         return f'Informe Confidencial - Práctica {self.practica.pk}'
 

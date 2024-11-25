@@ -9,7 +9,6 @@ def asociar_practica(sender, instance, created, **kwargs):
         practica = Practica.objects.create(
             estudiante=instance.estudiante,
             estado='pendiente',
-            fecha_inscripcion=instance.fecha_inicio,  # Usar fecha_inicio como fecha de inscripción
         )
         # Asociar la práctica creada a la ficha
         instance.practica = practica

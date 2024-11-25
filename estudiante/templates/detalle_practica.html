@@ -11,28 +11,28 @@
 <link rel="stylesheet" href="{% static 'css/informe_de_avance.css' %}">
 
 <div class="main-content">
-    <a href="javascript:history.back()" class="back-arrow">
+    <a href="{% url 'estudiantes_main' %}">
         <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
     </a>
     
-    <h1>{{ practica.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</h1>
+    <h1>{{ ficha_inscripcion.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</h1>
     
     <div class="card">
         <div class="card-header">
-            {% if practica.estado == 'Pendiente' %}
+            {% if ficha_inscripcion.estado == 'Pendiente' %}
                 <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
-            {% elif practica.estado == 'Aprobada' %}
+            {% elif ficha_inscripcion.estado == 'Aprobada' %}
                 <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
             {% endif %}
             <span>Ficha de Inscripción Práctica Profesional</span>
         </div>
         <div class="card-data">
-        <p>Estado: {{ practica.get_estado_display }}</p>
-        {% if practica.estado == 'Pendiente' %}
+        <p>Estado: {{ ficha_inscripcion.get_estado_display }}</p>
+        {% if ficha_inscripcion.estado == 'Pendiente' %}
             <a href="{% url 'ver_ficha' practica.id %}">
                 <button class="action-button">Ver ficha</button>
             </a>
-        {% elif practica.estado == 'Aprobada' %}
+        {% elif ficha_inscripcion.estado == 'Aprobada' %}
             <button class="action-button">Descargar carta de aprobación</button>
             <a href="{% url 'generar_pdf_practica' inscripcion.pk %}"</a>
                 <button class="action-button">Ver ficha</button>
@@ -41,7 +41,7 @@
         </div>
     </div>
     
-    {% if practica.estado == "Pendiente" %}
+    {% if ficha_inscripcion.estado == "Pendiente" %}
     <div class="card">
         <div class="card-header">
             <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
@@ -138,8 +138,10 @@
         </div>
         <div class="card-data">
         <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
-        <button class="action-button">Ver autoevaluación</button>
-        <a href="{% url 'autoevaluacion' id=practica.id %}">
+        <a href="{% url 'ver_autoevaluacion' solicitud_id=practica.id %}">
+            <button class="action-button">Ver autoevaluación</button>
+        </a>
+        <a href="{% url 'autoevaluacion' solicitud_id=practica.id %}">
             <button class="action-button">Llenar autoevaluación</button>
         </a>
     </div>

@@ -27,8 +27,8 @@
 
             <!-- Tarjetas de prácticas -->
             <div class="table-container">
-                {% for practica in practicas %}
-                <div class="card">
+                {% for ficha in fichas_inscripcion %}
+                <div class="card" style="height: 230px;">
                     <img src="{% static 'icons/Check_circle.svg' %}" style="margin-bottom: 100px;">
                     <div class="card-content">
                         <span class="practica-label">
@@ -42,9 +42,10 @@
                                 {% endif %}
                             </strong>
                         </span><br>
-                        Estado: {{ practica.get_estado_display }}<br>
-                        Nota: {{ practica.nota }}<br>
-                        <a href="{% url 'detalle_practica' practica.id %}">
+                        Estado: {{ ficha.practica.get_estado_display }}<br>
+                        Fecha de Inscripción: {{ ficha.practica.fecha_inscripcion }} <br>
+                        Nota: {{ ficha.practica.nota }}<br>
+                        <a href="{% url 'detalle_practica' ficha.id %}">
                             <button type="button" class="detalle-btn">Detalle</button>
                         </a>
                     </div>

@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from autenticacion.decorators import estudiante_required
-from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document
+from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document, Autoevaluacion
 from django.http import HttpResponse, JsonResponse, FileResponse
-from .models import InscripcionPractica
 from datetime import datetime
 from django.conf import settings
 import os
@@ -13,14 +12,19 @@ from coordinador.models import Document, PracticaConfig
 @estudiante_required
 def estudiante_view(request):
     # Obtener el estudiante asociado al usuario en sesión
-    estudiante = Estudiante.objects.get(usuario=request.user)
+    estudiante = get_object_or_404(Estudiante, usuario=request.user)
 
     # Filtrar las prácticas de este estudiante (usando el modelo Practica)
     practicas = Practica.objects.filter(estudiante=estudiante)
 
+    # Filtrar las fichas de inscripción asociadas al estudiante
+    fichas_inscripcion = FichaInscripcion.objects.filter(estudiante=estudiante)
+
     context = {
         'practicas': practicas,
+        'fichas_inscripcion': fichas_inscripcion
     }
+
     return render(request, 'estudiante.html', context)
 
 @estudiante_required
@@ -123,8 +127,9 @@ def verificar_practica1(request):
     return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
 
 @estudiante_required
-def detalle_practica(request, id):
-    practica = get_object_or_404(Practica, id=id)    
+def detalle_practica(request, solicitud_id):
+    practica = get_object_or_404(Practica, id=solicitud_id)
+    ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()    
     documento = Document.objects.filter(tipo='inscripcion').first()
 
     if request.method == "POST":
@@ -163,6 +168,8 @@ def detalle_practica(request, id):
 
     return render(request, 'detalle_practica.html', {
         'practica': practica,
+        'ficha_inscripcion': ficha_inscripcion,
+        'estado_ficha': ficha_inscripcion.estado,
         'documento': documento,
         'intentos_restantes_avances': intentos_restantes_avances,
         'intentos_restantes_final': intentos_restantes_final,
@@ -190,18 +197,89 @@ def descargar_plantilla(request, practica_id):
     
 @estudiante_required
 def autoevaluacion(request, solicitud_id):
+    # Obtener la práctica asociada
+    practica = get_object_or_404(Practica, id=solicitud_id)
     # Obtener el estudiante actual
     estudiante = get_object_or_404(Estudiante, usuario=request.user)
-    
     # Obtener la solicitud de práctica
     solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
-    
-    context = {
+
+    if request.method == 'POST':
+        # Obtener los datos del formulario desde request.POST
+        nota = request.POST.get('nota')
+        observaciones = request.POST.get('observaciones')
+        pregunta1 = request.POST.get('pregunta1')
+        pregunta2 = request.POST.get('pregunta2')
+        pregunta3 = request.POST.get('pregunta3')
+        pregunta4 = request.POST.get('pregunta4')
+        pregunta5 = request.POST.get('pregunta5')
+        pregunta6 = request.POST.get('pregunta6')
+        pregunta7 = request.POST.get('pregunta7')
+        pregunta8 = request.POST.get('pregunta8')
+        pregunta9 = request.POST.get('pregunta9')
+        pregunta10 = request.POST.get('pregunta10')
+        pregunta11 = request.POST.get('pregunta11')
+        comentarios1 = request.POST.get('comentarios1')
+        comentarios2 = request.POST.get('comentarios2')
+        pregunta12 = request.POST.get('pregunta12')
+        comentarios3 = request.POST.get('comentarios3')
+
+        # Crear una instancia de Autoevaluacion y asignar los valores
+        autoevaluacion = Autoevaluacion(
+            practica=practica,  # Asociar la práctica
+            nota=nota,
+            observaciones=observaciones,
+            pregunta1=pregunta1,
+            pregunta2=pregunta2,
+            pregunta3=pregunta3,
+            pregunta4=pregunta4,
+            pregunta5=pregunta5,
+            pregunta6=pregunta6,
+            pregunta7=pregunta7,
+            pregunta8=pregunta8,
+            pregunta9=pregunta9,
+            pregunta10=pregunta10,
+            pregunta11=pregunta11,
+            comentarios1=comentarios1,
+            comentarios2=comentarios2,
+            pregunta12=pregunta12,
+            comentarios3=comentarios3
+        )
+
+        # Guardar la autoevaluación
+        autoevaluacion.save()
+
+        # Redirigir al usuario a una página de éxito o confirmación
+        return redirect('detalle_practica', solicitud_id=solicitud_id) 
+
+    # Si no es un POST, renderiza el formulario vacío
+    return render(request, 'autoevaluacion.html', {
+        'practica': practica,
         'estudiante': estudiante,
         'solicitud': solicitud,
-        'solicitud_id': solicitud_id,  # Agregar solicitud_id al contexto
+        'solicitud_id': solicitud_id,
+    })
+
+@estudiante_required
+def ver_autoevaluacion(request, solicitud_id):
+    # Obtener la práctica específica
+    practica = get_object_or_404(Practica, id=solicitud_id)
+    # Obtener el estudiante actual
+    estudiante = get_object_or_404(Estudiante, usuario=request.user)
+    # Obtener la solicitud de práctica
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+    # Obtener la autoevaluación asociada a la práctica
+    autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
+
+    # Contexto para pasar a la plantilla
+    context = {
+        'practica': practica,
+        'estudiante': estudiante,
+        'solicitud': solicitud,
+        'autoevaluacion': autoevaluacion,
     }
-    return render(request, 'autoevaluacion.html', context)
+
+    return render(request, 'ver_autoevaluacion.html', context)
 
 @estudiante_required
 def dashboard(request):

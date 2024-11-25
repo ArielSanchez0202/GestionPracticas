@@ -16,7 +16,7 @@ from django.http import BadHeaderError, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm
-from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion
+from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion, Autoevaluacion, Practica
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -674,7 +674,39 @@ def informes_avances(request):
 
 @coordinador_required
 def autoevaluaciones(request):
-    return render(request, 'coordinador/autoevaluaciones.html')
+    # Obtener los RUT de los estudiantes activos
+    estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
+    
+    # Filtrar inscripciones solo para estudiantes con esos RUT
+    inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
+
+    autoevaluaciones = Autoevaluacion
+    
+    return render(request, 'coordinador/autoevaluaciones.html', {'autoevaluaciones': autoevaluaciones})
+
+@coordinador_required
+def revisar_autoevaluacion(request, solicitud_id):
+    # Obtener la solicitud de práctica específica
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+    
+    # Obtener la práctica asociada a la solicitud de práctica
+    practica = solicitud.practica  
+    
+    # Obtener el estudiante actual
+    estudiante = get_object_or_404(Estudiante, usuario=request.user)
+    
+    # Obtener la autoevaluación asociada a la práctica
+    autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
+    
+    # Contexto para pasar a la plantilla
+    context = {
+        'practica': practica,
+        'estudiante': estudiante,
+        'solicitud': solicitud,
+        'autoevaluacion': autoevaluacion,
+    }
+    
+    return render(request, 'coordinador/revisar_autoevaluacion.html', context)
 
 @coordinador_required
 def informes_finales(request):
@@ -988,15 +1020,3 @@ def generar_pdf_practica(request, ficha_id):
     buffer.showPage()
     buffer.save()
     return response
-
-
-
-@coordinador_required
-def autoevaluaciones(request):
-    # Obtener los RUT de los estudiantes activos
-    estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
-    
-    # Filtrar inscripciones solo para estudiantes con esos RUT
-    inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
-    
-    return render(request, 'coordinador/autoevaluaciones.html', {'inscripciones': inscripciones})
