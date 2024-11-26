@@ -11,6 +11,6 @@ urlpatterns = [
     path('autoevaluacion/<int:solicitud_id>/', views.autoevaluacion, name='autoevaluacion'),
     path('ver_autoevaluacion/<int:solicitud_id>/', views.ver_autoevaluacion, name='ver_autoevaluacion'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('descargar_plantilla/<int:solicitud_id>/', views.descargar_plantilla, name='descargar_plantilla'),
+    path('descargar_plantilla/<int:practica_id>/', views.descargar_plantilla, name='descargar_plantilla'),
     path('descargar-final/<int:solicitud_id>/', views.descargar_archivo_final, name='descargar_archivo_final'),
 ]

@@ -33,7 +33,7 @@ input[type="email"] {
     width: 40%;
     padding: 10px;
     margin: 8px 0;
-    border: 2px solid #ccc; /* Puedes ajustar el color según la imagen */
+    border: 2px solid black; /* Puedes ajustar el color según la imagen */
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;

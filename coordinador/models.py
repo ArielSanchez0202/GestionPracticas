@@ -155,8 +155,8 @@ class Rubrica(models.Model):
 # Modelo Informe de Avances
 class InformeAvances(models.Model):
     practica = models.ForeignKey(Practica, on_delete=models.CASCADE)
-    rubrica = models.ForeignKey(Rubrica, on_delete=models.CASCADE)
-    nota_avance = models.DecimalField(max_digits=3, decimal_places=1)
+    rubrica = models.ForeignKey(Rubrica, on_delete=models.CASCADE, null=True,blank=True)
+    nota_avance = models.DecimalField(max_digits=3, decimal_places=1, null=True,blank=True)
     retroalimentacion = models.TextField()
     archivo_informe_avances = models.FileField(upload_to='informes_avances/',null=True,blank=True)
     intentos_subida = models.PositiveIntegerField(default=0)
@@ -170,8 +170,8 @@ class InformeAvances(models.Model):
 # Modelo Informe Final
 class InformeFinal(models.Model):
     practica = models.ForeignKey(Practica, on_delete=models.CASCADE)
-    rubrica = models.ForeignKey(Rubrica, on_delete=models.CASCADE)
-    nota = models.DecimalField(max_digits=3, decimal_places=1)
+    rubrica = models.ForeignKey(Rubrica, on_delete=models.CASCADE, null=True, blank=True)
+    nota = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     retroalimentacion = models.TextField()
     archivo_informe_final = models.FileField(upload_to='informes_finales/', null=True, blank=True)
     intentos_subida_final = models.PositiveIntegerField(default=0)

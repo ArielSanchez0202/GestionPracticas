@@ -157,14 +157,20 @@ def detalle_practica(request, solicitud_id):
                 informe_final.intentos_subida_final += 1
                 informe_final.save()
 
-        return redirect('detalle_practica', id=practica.id)
+        return redirect('detalle_practica', solicitud_id=practica.id)
 
     # Calcular intentos restantes desde los modelos relacionados
     informe_avances = InformeAvances.objects.filter(practica=practica).first()
     informe_final = InformeFinal.objects.filter(practica=practica).first()
 
-    intentos_restantes_avances = max(informe_avances.MAX_INTENTOS - informe_avances.intentos_subida, 0) if informe_avances else 0
-    intentos_restantes_final = max(informe_final.MAX_INTENTOS - informe_final.intentos_subida_final, 0) if informe_final else 0
+    # Verificar si hay un informe de avances asociado
+    informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
+    
+    # Verificar si hay una autoevaluación asociada
+    autoevaluacion_completada = Autoevaluacion.objects.filter(practica=practica).exists()
+
+    intentos_restantes_avances = max(informe_avances.MAX_INTENTOS - informe_avances.intentos_subida, 0) if informe_avances else 2
+    intentos_restantes_final = max(informe_final.MAX_INTENTOS - informe_final.intentos_subida_final, 0) if informe_final else 2
 
     return render(request, 'detalle_practica.html', {
         'practica': practica,
@@ -173,6 +179,8 @@ def detalle_practica(request, solicitud_id):
         'documento': documento,
         'intentos_restantes_avances': intentos_restantes_avances,
         'intentos_restantes_final': intentos_restantes_final,
+        'autoevaluacion_completada': autoevaluacion_completada,
+        'informe_avances_enviado': informe_avances_enviado,
     })
 
 
