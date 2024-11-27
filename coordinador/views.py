@@ -679,33 +679,27 @@ def autoevaluaciones(request):
     
     # Filtrar inscripciones solo para estudiantes con esos RUT
     inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
-
-    autoevaluaciones = Autoevaluacion
     
-    return render(request, 'coordinador/autoevaluaciones.html', {'autoevaluaciones': autoevaluaciones})
+    return render(request, 'coordinador/autoevaluaciones.html', {'inscripciones': inscripciones})
 
 @coordinador_required
-def revisar_autoevaluacion(request, solicitud_id):
-    # Obtener la solicitud de práctica específica
-    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
-    
-    # Obtener la práctica asociada a la solicitud de práctica
-    practica = solicitud.practica  
-    
-    # Obtener el estudiante actual
-    estudiante = get_object_or_404(Estudiante, usuario=request.user)
-    
+def revisar_autoevaluacion(request, practica_id):
+    # Recuperar la FichaInscripcion asociada
+    ficha_inscripcion = get_object_or_404(FichaInscripcion, id=practica_id)
+
+    # Acceder a la instancia de Practica desde FichaInscripcion
+    practica = ficha_inscripcion.practica
+
     # Obtener la autoevaluación asociada a la práctica
     autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
-    
-    # Contexto para pasar a la plantilla
+
+    # Renderizar la plantilla con los datos del estudiante, la práctica y la autoevaluación
     context = {
-        'practica': practica,
-        'estudiante': estudiante,
-        'solicitud': solicitud,
-        'autoevaluacion': autoevaluacion,
+        'estudiante': ficha_inscripcion.estudiante,  # Datos del estudiante desde FichaInscripcion
+        'solicitud': ficha_inscripcion,              # Información sobre la solicitud (cargo, empresa, etc.)
+        'autoevaluacion': autoevaluacion,            # Autoevaluación asociada a la práctica
     }
-    
+
     return render(request, 'coordinador/revisar_autoevaluacion.html', context)
 
 @coordinador_required

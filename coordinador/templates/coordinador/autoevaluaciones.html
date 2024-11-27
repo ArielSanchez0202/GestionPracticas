@@ -44,7 +44,9 @@
 
                             </td>
                             <td>
-                                <a href="{% url 'revisar_autoevaluacion' %}?practica_id={{ practica.id }}">Ver Autoevaluaciones</a>
+                                <a href="{% url 'revisar_autoevaluacion' inscripcion.practica.id %}">
+                                    <button class="action-button">Ver Autoevaluación</button>
+                                </a>
                             </td>
                         </tr>
                     {% empty %}

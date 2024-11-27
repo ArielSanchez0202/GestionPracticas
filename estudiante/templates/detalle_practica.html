@@ -39,7 +39,7 @@
                 <button class="action-button">Ver ficha</button>
             </a>
         {% elif ficha_inscripcion.estado == 'Aprobada' %}           
-            <a href="{% url 'generar_pdf_practica' ficha_inscripcion.pk %}"</a>
+            <a href="{% url 'generar_pdf_practica' ficha_inscripcion.pk %}">
                 <button class="action-button">Descargar carta de aprobación</button>
             </a>
             <a href="{% url 'ver_ficha' practica.id %}">

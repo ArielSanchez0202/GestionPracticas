@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block content %}
+
+<div class="back-button">
+    <a href="javascript:history.back()" class="back-arrow">
+        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+    </a>
+</div>
+
 <div class="container">
     <h1>Configurar Fechas de la Práctica</h1>
     <form method="post">
