@@ -1082,35 +1082,54 @@ def enviar_formulario(request, ficha_id):
 
 
 def completar_formulario(request, token):
+    """
+    Maneja la visualización y envío del formulario confidencial asociado a una ficha.
+    
+    Args:
+        request: Objeto de solicitud HTTP.
+        token: Token único asociado al formulario.
+    
+    Returns:
+        Renderiza la plantilla 'coordinador/completar_formulario.html'.
+    """
     # Obtener el token y la ficha asociada
     formulario_token = get_object_or_404(FormularioToken, token=token)
     ficha = formulario_token.ficha_inscripcion
 
-    form_success = False  # Control del popup en la plantilla
+    # Control para mostrar el modal de éxito en la plantilla
+    form_success = False
 
     if request.method == 'POST':
-        # Asegúrate de pasar ficha_inscripcion al formulario
+        # Crear una instancia del formulario con los datos enviados
         form = InformeConfidencialForm(request.POST, ficha_inscripcion=ficha)
         if form.is_valid():
-            informe_confidencial = form.save(commit=False)  # No guardamos aún
+            # Crear la instancia pero no guardarla aún en la base de datos
+            informe_confidencial = form.save(commit=False)
 
-            # Calcular la nota manualmente antes de guardar el informe
+            # Calcular la nota antes de guardar el informe
             informe_confidencial.calcular_nota()
 
-            # Guardamos con la nota calculada
+            # Guardar el informe con la nota calculada
             informe_confidencial.save()
-            form_success = True  # Indica que el formulario se guardó exitosamente
+
+            # Marcar el formulario como exitosamente completado
+            form_success = True
         else:
-            # Imprimir los errores para depurar
-            print("Errores del formulario:", form.errors)  # Ayuda a depurar problemas del formulario
+            # Mostrar los errores en la consola para facilitar la depuración
+            print("Errores del formulario:", form.errors)
     else:
-        # En caso de GET, mostrar el formulario vacío con los datos de la ficha
+        # Si la solicitud es GET, renderizar el formulario vacío
         form = InformeConfidencialForm(ficha_inscripcion=ficha)
 
+    # Renderizar la plantilla con el formulario y el estado de éxito
     return render(
-        request, 
-        'coordinador/completar_formulario.html', 
-        {'form': form, 'ficha': ficha, 'form_success': form_success}
+        request,
+        'coordinador/completar_formulario.html',
+        {
+            'form': form,
+            'ficha': ficha,
+            'form_success': form_success,  # Indica si se debe mostrar el modal
+        }
     )
 
 
