@@ -20,7 +20,7 @@ import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm, InformeConfidencialForm
-from .models import Coordinador, Document, Estudiante, InformeConfidencial, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken
+from .models import Coordinador, Document, Estudiante, InformeConfidencial, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken, Practica
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
@@ -795,14 +795,10 @@ def actualizar_estado(request, solicitud_id):
 
             # Si el estado es "Aprobada", actualiza el estado de la práctica
             if estado == 'Aprobada':
-                try:
-                    # Usa el nombre correcto del campo relacionado
-                    practica = Practica.objects.get(fichainscripcion=solicitud)
-                    practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
-                    practica.save()
-                except Practica.DoesNotExist:
-                    # Manejo de error en caso de que no exista una práctica asociada
-                    messages.error(request, "No se encontró una práctica asociada a esta solicitud.")
+                # Usa el nombre correcto del campo relacionado
+                practica = Practica.objects.get(fichainscripcion=solicitud)
+                practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
+                practica.save()
 
         # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
         return redirect('listar_practicas')  # Cambia a la vista adecuada
