@@ -20,7 +20,7 @@ import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm, InformeConfidencialForm
-from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken
+from .models import Coordinador, Document, Estudiante, InformeConfidencial, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
@@ -1090,7 +1090,13 @@ def completar_formulario(request, token):
         # Asegúrate de pasar ficha_inscripcion al formulario
         form = InformeConfidencialForm(request.POST, ficha_inscripcion=ficha)
         if form.is_valid():
-            form.save()
+            informe_confidencial = form.save(commit=False)  # No guardamos aún
+
+            # Calcular la nota manualmente antes de guardar el informe
+            informe_confidencial.calcular_nota()
+
+            # Ahora sí guardamos con la nota calculada
+            informe_confidencial.save()
             messages.success(request, 'El formulario se completó correctamente.')
         else:
             # Imprimir los errores para depurar
@@ -1101,3 +1107,32 @@ def completar_formulario(request, token):
 
     return render(request, 'coordinador/completar_formulario.html', {'form': form, 'ficha': ficha})
 
+
+def listado_informes_confidenciales(request):
+    # Obtener todos los informes confidenciales
+    informes = InformeConfidencial.objects.all()
+
+    return render(request, 'coordinador/listado_informes_confidenciales.html', {'informes': informes})
+
+def editar_informe_confidencial(request, informe_id):
+    # Obtener el informe correspondiente
+    informe = get_object_or_404(InformeConfidencial, id=informe_id)
+
+    if request.method == 'POST':
+        # Obtener la nota manual desde el formulario (si se envía)
+        nota_manual = request.POST.get('nota_manual')
+        
+        # Si se ha proporcionado una nota manual, intentamos actualizarla
+        if nota_manual:
+            try:
+                informe.nota = float(nota_manual)  # Convertimos la nota a flotante
+                informe.save()  # Guardamos el cambio directamente en el registro
+                messages.success(request, 'Nota actualizada con éxito.')
+            except ValueError:
+                # Si no se puede convertir la nota a un número flotante, agregamos un error
+                messages.error(request, 'La nota manual debe ser un número válido.')
+        
+        return redirect('listado_informes_confidenciales')  # Redirigir al listado de informes
+
+    # Si el método es GET, simplemente mostramos la vista para editar
+    return render(request, 'coordinador/editar_informe_confidencial.html', {'informe': informe})

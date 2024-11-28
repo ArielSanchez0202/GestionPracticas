@@ -135,12 +135,10 @@ class Autoevaluacion(models.Model):
         verbose_name_plural = 'Autoevaluaciones'
 
 # Modelo Informe Confidencial
-from django.db import models
-from .models import Practica
-
 class InformeConfidencial(models.Model):
     ficha_inscripcion = models.OneToOneField(FichaInscripcion, on_delete=models.CASCADE, related_name='informe_confidencial')
-    nota=float()
+    nota = models.FloatField(default=0)  # Cambié esto a FloatField
+
     # Aspectos técnicos
     calidad_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
     calidad_observacion = models.TextField(blank=True, null=True)
@@ -182,9 +180,37 @@ class InformeConfidencial(models.Model):
 
     # Información adicional
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    
+    def calcular_nota(self):
+        # Definir los valores para cada respuesta
+        valores = {
+            'S': 7,
+            'F': 5,
+            'A': 3,
+            'N': 1
+        }
 
-    def __str__(self):
-        return f"Informe Confidencial - {self.ficha_inscripcion}"
+        # Lista de campos con las respuestas
+        campos_respuesta = [
+            self.calidad_trabajo,
+            self.efectividad_trabajo,
+            self.conocimientos_profesionales,
+            self.adaptabilidad_cambios,
+            self.organizacion_trabajo,
+            self.interes_trabajo,
+            self.responsabilidad,
+            self.cooperacion_trabajo,
+            self.creatividad,
+            self.iniciativa,
+            self.integracion_grupo
+        ]
+
+        # Sumar las notas de todos los campos
+        total = sum(valores[respuesta] for respuesta in campos_respuesta if respuesta in valores)
+        
+        # Promediar y asignar la nota final
+        self.nota = total / len(campos_respuesta)
+        self.nota = round(self.nota, 1)
 
 # Modelo Rubrica
 class Rubrica(models.Model):
