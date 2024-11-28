@@ -12,11 +12,12 @@ def validate_file_type(value):
         raise forms.ValidationError("Solo se permiten archivos PDF y Word (.doc, .docx)")
 
 class DocumentForm(forms.ModelForm):
+    tipo = forms.ChoiceField(choices=Document.DOCUMENT_TYPES, required=True)
     archivo = forms.FileField(validators=[validate_file_type])  # Aplicamos el validador
 
     class Meta:
         model = Document
-        fields = ['archivo']
+        fields = ['tipo', 'archivo']
 class PracticaConfigForm(forms.ModelForm):
     class Meta:
         model = PracticaConfig

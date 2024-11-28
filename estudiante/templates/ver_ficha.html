@@ -59,15 +59,16 @@
             </div>
         
             <div class="radio-group">
-                <!-- Radio para Práctica I -->
-                <input type="radio" id="practica1" name="practica" class="custom-radio" value="practica1" 
-                    {% if solicitud.practica1 %}checked{% endif %} disabled>
-                <label for="practica1">Práctica I</label>
-                
-                <!-- Radio para Práctica II -->
-                <input type="radio" id="practica2" name="practica" class="custom-radio" value="practica2" 
-                    {% if solicitud.practica2 %}checked{% endif %} disabled>
-                <label for="practica2">Práctica II</label>
+                <!-- Mostrar la práctica seleccionada -->
+                {% if solicitud.practica1 %}
+                    <input type="radio" id="practica1" name="practica" class="custom-radio" value="practica1" checked disabled>
+                    <label for="practica1">Práctica I</label>
+                {% elif solicitud.practica2 %}
+                    <input type="radio" id="practica2" name="practica" class="custom-radio" value="practica2" checked >
+                    <label for="practica2">Práctica II</label>
+                {% else %}
+                    <p>No se ha seleccionado ninguna práctica.</p>
+                {% endif %}
             </div>
 
         
@@ -145,6 +146,6 @@
                 
     </div>
 
-    <script src="{% static 'js/checkbox_validation.js' %}"></script>
+
 
 {% endblock %}
