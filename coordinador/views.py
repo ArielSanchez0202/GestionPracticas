@@ -19,17 +19,17 @@ import json
 import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
-from .forms import DocumentForm
-from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion, Autoevaluacion, Practica
+from .forms import DocumentForm, InformeConfidencialForm
+from .models import Coordinador, Document, Estudiante, InformeConfidencial, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
 from reportlab.lib.utils import ImageReader
+from django.conf import settings
+from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404
+from .models import FichaInscripcion, FormularioToken
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -927,13 +927,9 @@ def configurar_fechas(request):
 locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
 
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
 
 def generar_pdf_practica(request, ficha_id):
     try:
@@ -1059,3 +1055,115 @@ def generar_pdf_practica(request, ficha_id):
     buffer.showPage()
     buffer.save()
     return response
+
+def enviar_formulario(request, ficha_id):
+    ficha = get_object_or_404(FichaInscripcion, id=ficha_id)
+    
+    # Crear o recuperar el token único
+    token, created = FormularioToken.objects.get_or_create(ficha_inscripcion=ficha)
+    
+    # Construir el enlace único con dominio válido
+    base_url = "http://localhost:8000"  # Cambia esto por tu dominio real para producción
+    enlace = f"{base_url}/coordinador/formulario/{token.token}/"
+    
+    # Enviar el correo al supervisor
+    subject = "Formulario de Evaluación de Práctica Profesional"
+    message = f"""
+    Estimado {ficha.jefe_directo},
+
+    Por favor, complete el formulario de evaluación de la práctica profesional del estudiante {ficha.estudiante.usuario.first_name} {ficha.estudiante.usuario.last_name}.
+    Puede acceder al formulario mediante el siguiente enlace:
+
+    {enlace}
+
+    Muchas gracias,
+    Equipo de Coordinación
+    """
+    recipient = ficha.correo_jefe
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient])
+    
+    # Marcar como enviado
+    token.enviado = True
+    token.save()
+
+
+def completar_formulario(request, token):
+    """
+    Maneja la visualización y envío del formulario confidencial asociado a una ficha.
+    
+    Args:
+        request: Objeto de solicitud HTTP.
+        token: Token único asociado al formulario.
+    
+    Returns:
+        Renderiza la plantilla 'coordinador/completar_formulario.html'.
+    """
+    # Obtener el token y la ficha asociada
+    formulario_token = get_object_or_404(FormularioToken, token=token)
+    ficha = formulario_token.ficha_inscripcion
+
+    # Control para mostrar el modal de éxito en la plantilla
+    form_success = False
+
+    if request.method == 'POST':
+        # Crear una instancia del formulario con los datos enviados
+        form = InformeConfidencialForm(request.POST, ficha_inscripcion=ficha)
+        if form.is_valid():
+            # Crear la instancia pero no guardarla aún en la base de datos
+            informe_confidencial = form.save(commit=False)
+
+            # Calcular la nota antes de guardar el informe
+            informe_confidencial.calcular_nota()
+
+            # Guardar el informe con la nota calculada
+            informe_confidencial.save()
+
+            # Marcar el formulario como exitosamente completado
+            form_success = True
+        else:
+            # Mostrar los errores en la consola para facilitar la depuración
+            print("Errores del formulario:", form.errors)
+    else:
+        # Si la solicitud es GET, renderizar el formulario vacío
+        form = InformeConfidencialForm(ficha_inscripcion=ficha)
+
+    # Renderizar la plantilla con el formulario y el estado de éxito
+    return render(
+        request,
+        'coordinador/completar_formulario.html',
+        {
+            'form': form,
+            'ficha': ficha,
+            'form_success': form_success,  # Indica si se debe mostrar el modal
+        }
+    )
+
+
+def listado_informes_confidenciales(request):
+    # Obtener todos los informes confidenciales
+    informes = InformeConfidencial.objects.all()
+
+    return render(request, 'coordinador/listado_informes_confidenciales.html', {'informes': informes})
+
+def editar_informe_confidencial(request, informe_id):
+    # Obtener el informe correspondiente
+    informe = get_object_or_404(InformeConfidencial, id=informe_id)
+
+    if request.method == 'POST':
+        # Obtener la nota manual desde el formulario (si se envía)
+        nota_manual = request.POST.get('nota_manual')
+        
+        # Si se ha proporcionado una nota manual, intentamos actualizarla
+        if nota_manual:
+            try:
+                informe.nota = float(nota_manual)  # Convertimos la nota a flotante
+                informe.save()  # Guardamos el cambio directamente en el registro
+                messages.success(request, 'Nota actualizada con éxito.')
+            except ValueError:
+                # Si no se puede convertir la nota a un número flotante, agregamos un error
+                messages.error(request, 'La nota manual debe ser un número válido.')
+        
+        return redirect('listado_informes_confidenciales')  # Redirigir al listado de informes
+
+    # Si el método es GET, simplemente mostramos la vista para editar
+    return render(request, 'coordinador/editar_informe_confidencial.html', {'informe': informe})

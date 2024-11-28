@@ -47,9 +47,10 @@ def inscripcion_practica_view(request):
     fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
 
     if request.method == 'POST':
-        # Recuperar los datos enviados por el formulario
-        practica1 = True if request.POST.get('practica1') else False  # checkbox
-        practica2 = True if request.POST.get('practica2') else False  # checkbox
+        # Recuperar el tipo de práctica seleccionado
+        tipo_practica = request.POST.get('tipo_practica')
+        practica1 = tipo_practica == '1'
+        practica2 = tipo_practica == '2'
         razon_social = request.POST.get('razon_social')
         direccion_empresa = request.POST.get('direccion_empresa')
         jefe_directo = request.POST.get('jefe_directo')

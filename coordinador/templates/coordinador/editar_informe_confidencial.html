@@ -1,0 +1,176 @@
+{% extends 'base_coordinador.html' %}
+
+{% block title %}Editar Informe Confidencial{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <!-- Botón de Volver -->
+        <a href="{% url 'listado_informes_confidenciales' %}" class="btn btn-secondary mb-4">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+        <h1 class="text-center mb-4">Editar Informe Confidencial</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Mostrar todos los campos en modo solo lectura -->
+            <div class="mb-3">
+                <label for="calidad_trabajo" class="form-label">Calidad del Trabajo</label>
+                <input type="text" class="form-control" value="{{ informe.calidad_trabajo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="calidad_observacion" class="form-label">Observaciones sobre la Calidad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.calidad_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="efectividad_trabajo" class="form-label">Efectividad en el Trabajo</label>
+                <input type="text" class="form-control" value="{{ informe.efectividad_trabajo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="efectividad_observacion" class="form-label">Observaciones sobre la Efectividad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.efectividad_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="conocimientos_profesionales" class="form-label">Conocimientos Profesionales</label>
+                <input type="text" class="form-control" value="{{ informe.conocimientos_profesionales }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="conocimientos_observacion" class="form-label">Observaciones sobre los Conocimientos Profesionales</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.conocimientos_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="adaptabilidad_cambios" class="form-label">Adaptabilidad a Cambios</label>
+                <input type="text" class="form-control" value="{{ informe.adaptabilidad_cambios }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="adaptabilidad_observacion" class="form-label">Observaciones sobre la Adaptabilidad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.adaptabilidad_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="organizacion_trabajo" class="form-label">Organización del Trabajo</label>
+                <input type="text" class="form-control" value="{{ informe.organizacion_trabajo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="organizacion_observacion" class="form-label">Observaciones sobre la Organización del Trabajo</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.organizacion_observacion }}</textarea>
+            </div>
+
+            <!-- Campos adicionales -->
+            <div class="mb-3">
+                <label for="interes_trabajo" class="form-label">Interés en el Trabajo</label>
+                <input type="text" class="form-control" value="{{ informe.interes_trabajo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="interes_observacion" class="form-label">Observaciones sobre el Interés</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.interes_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="responsabilidad" class="form-label">Responsabilidad</label>
+                <input type="text" class="form-control" value="{{ informe.responsabilidad }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="responsabilidad_observacion" class="form-label">Observaciones sobre la Responsabilidad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.responsabilidad_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="cooperacion_trabajo" class="form-label">Cooperación en el Trabajo</label>
+                <input type="text" class="form-control" value="{{ informe.cooperacion_trabajo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="cooperacion_observacion" class="form-label">Observaciones sobre la Cooperación</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.cooperacion_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="creatividad" class="form-label">Creatividad</label>
+                <input type="text" class="form-control" value="{{ informe.creatividad }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="creatividad_observacion" class="form-label">Observaciones sobre la Creatividad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.creatividad_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="iniciativa" class="form-label">Iniciativa</label>
+                <input type="text" class="form-control" value="{{ informe.iniciativa }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="iniciativa_observacion" class="form-label">Observaciones sobre la Iniciativa</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.iniciativa_observacion }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="integracion_grupo" class="form-label">Integración al Grupo</label>
+                <input type="text" class="form-control" value="{{ informe.integracion_grupo }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="integracion_observacion" class="form-label">Observaciones sobre la Integración</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.integracion_observacion }}</textarea>
+            </div>
+
+            <!-- Preguntas adicionales -->
+            <div class="mb-3">
+                <label for="positivo_recibir" class="form-label">¿Recibe de manera positiva el feedback?</label>
+                <input type="text" class="form-control" value="{{ informe.positivo_recibir }}" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipo_especialidad" class="form-label">Tipo de Especialidad</label>
+                <textarea class="form-control" rows="3" disabled>{{ informe.tipo_especialidad }}</textarea>
+            </div>
+
+            <!-- Nota calculada -->
+            <div class="mb-3">
+                <label for="nota_calculada" class="form-label">Nota Calculada</label>
+                <input type="text" class="form-control" value="{{ informe.nota }}" disabled>
+            </div>
+
+            <!-- Botón para editar la nota -->
+            <div class="mb-3">
+                <button type="button" id="editar_nota_btn" class="btn btn-warning">Editar Nota</button>
+            </div>
+
+            <!-- Formulario para actualizar la nota -->
+            <div id="nota_editable" style="display:none;">
+                <div class="mb-3">
+                    <label for="nota_manual" class="form-label">Nueva Nota:</label>
+                    <input type="number" name="nota_manual" id="nota_manual" class="form-control" 
+                           value="{{ informe.nota }}" min="1" max="7" step="0.1" required>
+                    <small class="form-text text-muted">Nota entre 1 y 7 </small>
+                </div>
+                <button type="submit" class="btn btn-primary">Actualizar Nota</button>
+            </div>
+
+            <!-- Botón "Confirmar Nota" que se muestra cuando no se está editando -->
+            <div id="confirmar_nota_div" style="display:block;">
+                <button type="submit" class="btn btn-success">Confirmar Nota</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Mostrar el campo para editar la nota
+        document.getElementById('editar_nota_btn').addEventListener('click', function() {
+            document.getElementById('nota_editable').style.display = 'block';
+            document.getElementById('confirmar_nota_div').style.display = 'none';
+            document.getElementById('editar_nota_btn').style.display = 'none';
+        });
+    </script>
+{% endblock %}
