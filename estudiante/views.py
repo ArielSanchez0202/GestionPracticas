@@ -119,7 +119,6 @@ def inscripcion_practica_view(request):
     }
     return render(request, 'inscripcion_practica.html', context)
 
-@estudiante_required
 def verificar_practica1(request):
     estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
     existe_practica1 = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, practica1=True).exists()

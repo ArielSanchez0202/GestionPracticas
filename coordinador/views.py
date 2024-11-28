@@ -670,10 +670,6 @@ def verificar_rut(request):
     return JsonResponse({'existe': existe})
 
 @coordinador_required
-def solicitudes_practica(request):
-    return render(request, 'coordinador/solicitudes_practicas.html')
-
-@coordinador_required
 def informes_avances(request):
     return render(request, 'coordinador/informes_avances.html')
 
@@ -788,16 +784,26 @@ def actualizar_estado(request, solicitud_id):
     if request.method == 'POST':
         # Obtén la solicitud específica
         solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
-        
-        
-        # Verifica el valor de estado_solicitud y actualiza el estado en el modelo
+
+        # Verifica el valor de estado_solicitud desde el formulario
         estado = request.POST.get('estado_solicitud')
-        
-        
+
         if estado in ['Aprobada', 'Rechazada']:
+            # Actualiza el estado de la solicitud
             solicitud.estado = estado
             solicitud.save()
-        
+
+            # Si el estado es "Aprobada", actualiza el estado de la práctica
+            if estado == 'Aprobada':
+                try:
+                    # Usa el nombre correcto del campo relacionado
+                    practica = Practica.objects.get(fichainscripcion=solicitud)
+                    practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
+                    practica.save()
+                except Practica.DoesNotExist:
+                    # Manejo de error en caso de que no exista una práctica asociada
+                    messages.error(request, "No se encontró una práctica asociada a esta solicitud.")
+
         # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
         return redirect('listar_practicas')  # Cambia a la vista adecuada
     

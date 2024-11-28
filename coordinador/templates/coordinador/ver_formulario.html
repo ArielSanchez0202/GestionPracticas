@@ -137,7 +137,8 @@
                     <th>Actividades por realizar</th>
                     <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required value="{{solicitud.actividades_realizar}}" readonly></td>
                 </tr>
-            </table>   
+            </table>
+            {% if solicitud.estado == "Pendiente" %}   
             <body style="margin: 0; padding: 0; padding-bottom: 20px;">
                 <div style="display: flex; justify-content: center; align-items: center; gap: 20px; width: 100%; margin-top: 20px;">
                     <button 
@@ -153,9 +154,12 @@
                         Rechazar
                     </button>
                 </div>
-                <div style="height: 20px;"></div>       
+                <div style="height: 20px;"></div>
+            </body>
+            {% endif %}  
                       
         </form>
+
         <script>
             function aprobar() {
                 document.getElementById('estado_solicitud').value = 'Aprobada';

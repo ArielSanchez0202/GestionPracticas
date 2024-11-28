@@ -181,6 +181,7 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
 table {
     width: 100%;
     max-width: 100%;
+    margin-bottom: 40px;
     border-collapse: collapse;
     overflow-x: auto;
 }
