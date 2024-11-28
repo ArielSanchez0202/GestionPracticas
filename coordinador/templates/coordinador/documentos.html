@@ -56,32 +56,25 @@
         </div>
     {% endfor %}
 
-    <!-- Módulo para configurar las fechas -->
+    
     <hr class="my-5">
     <h2>Configurar Fechas del Semestre</h2>
     <p>Establece las fechas límite de inicio y término para las prácticas.</p>
-    
-    <!-- Formulario para mostrar las fechas en modo solo lectura -->
-    <div class="form-group">
-        <label for="fecha_inicio_limite">Fecha de Inicio:</label>
-        <p>{{ practica_config.fecha_inicio_limite}}</p>
-    </div>
-    <div class="form-group">
-        <label for="fecha_termino_limite">Fecha de Término:</label>
-        <input type="date" id="fecha_termino_limite" name="fecha_termino_limite" class="form-control" 
-               value="{{ practica_config.fecha_termino_limite|date:'Y-m-d' }}" readonly>
-    </div>
+    <p>El periodo de la práctica debe estar entre: 
+        <strong>{{ fecha_inicio_limite|date:"d/m/Y" }}</strong> 
+        y <strong>{{ fecha_termino_limite|date:"d/m/Y" }}</strong>.
+    </p>
     <hr class="my-5">
     <div class="text-center">
         <a href="{% url 'configurar_fechas' %}" class="boton boton-primary">
             <i class="fas fa-calendar-alt"></i> Configurar Fechas de Prácticas
         </a>
-    </div>    
+    </div>
+</div>
 
 <script>
     function toggleFileInput(docTipo) {
         var form = document.getElementById('form-update-' + docTipo);
-        // Alterna la visibilidad del formulario (mostrar o esconder)
         if (form.style.display === 'none') {
             form.style.display = 'block';
         } else {

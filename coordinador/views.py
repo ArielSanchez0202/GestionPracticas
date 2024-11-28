@@ -4,6 +4,7 @@ import secrets
 import string
 from datetime import datetime
 from smtplib import SMTPException
+from django.forms import ValidationError
 import pandas as pd
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -802,9 +803,6 @@ def actualizar_estado(request, solicitud_id):
         return redirect('listar_practicas')  # Cambia a la vista adecuada
     
 
-def manage_documents_view(request):
-    documents = Document.objects.all()
-    return render(request, 'documentos.html', {'documents': documents})
 
 def update_document(request, document_id):
     document = get_object_or_404(Document, id=document_id)
@@ -836,6 +834,14 @@ def documentos(request):
             'descripcion': descripcion,
             'documento': documento
         })
+
+    # Obtener los límites de fecha de configuración
+    try:
+        configuracion = PracticaConfig.objects.first()
+        fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
+        fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
+    except PracticaConfig.DoesNotExist:
+        fecha_inicio_limite = fecha_termino_limite = None
 
     # Formulario inicial vacío
     form = DocumentForm()
@@ -869,7 +875,15 @@ def documentos(request):
                 for error in errors:
                     messages.error(request, f"Error en {field}: {error}")
 
-    return render(request, 'coordinador/documentos.html', {'documentos': documentos, 'form': form})
+    # Pasar las fechas al contexto
+    context = {
+        'documentos': documentos,
+        'form': form,
+        'fecha_inicio_limite': fecha_inicio_limite,
+        'fecha_termino_limite': fecha_termino_limite,
+    }
+
+    return render(request, 'coordinador/documentos.html', context)
 
 # Vista para ver documentos en el navegador (PDF y Word)
 def ver_documento(request, document_id):
@@ -892,28 +906,40 @@ def ver_documento(request, document_id):
         return HttpResponse("Formato no soportado", status=400)
     
 def configurar_fechas(request):
-    # Obtener la configuración de fechas de la práctica, o crear una nueva si no existe
-    practica_config = PracticaConfig.objects.first()
+    contexto = {}
+    try:
+        practica_config = PracticaConfig.objects.first()
 
-    # Si no existe una configuración de práctica, crear una nueva
-    if not practica_config:
-        practica_config = PracticaConfig.objects.create(
-            fecha_inicio_limite="2024-01-01",  # O las fechas predeterminadas que desees
-            fecha_termino_limite="2024-12-31"
-        )
+        if not practica_config:
+            practica_config = PracticaConfig.objects.create(
+                fecha_inicio_limite="2024-01-01",
+                fecha_termino_limite="2024-12-31"
+            )
 
-    if request.method == 'POST':
-        # Guardar las nuevas fechas (asegurarse de que los datos sean válidos)
-        practica_config.fecha_inicio_limite = request.POST.get('fecha_inicio_limite', practica_config.fecha_inicio_limite)
-        practica_config.fecha_termino_limite = request.POST.get('fecha_termino_limite', practica_config.fecha_termino_limite)
-        practica_config.save()
-        # Redirigir a la página de documentos u otra página de tu elección
-        return redirect('documentos')
+        if request.method == 'POST':
+            fecha_inicio_limite = request.POST.get('fecha_inicio_limite', practica_config.fecha_inicio_limite)
+            fecha_termino_limite = request.POST.get('fecha_termino_limite', practica_config.fecha_termino_limite)
 
-    return render(request, 'coordinador/configurar_fechas.html', {
-        'practica_config': practica_config
-    })
+            if fecha_inicio_limite > fecha_termino_limite:
+                raise ValidationError("La fecha de inicio no puede ser mayor que la fecha de término.")
 
+            practica_config.fecha_inicio_limite = fecha_inicio_limite
+            practica_config.fecha_termino_limite = fecha_termino_limite
+            practica_config.save()
+
+            # Agrega un mensaje de éxito al contexto
+            contexto['popup_success'] = "Las fechas de la práctica se han configurado correctamente."
+            return render(request, 'coordinador/configurar_fechas.html', {'practica_config': practica_config, **contexto})
+
+    except ValidationError as e:
+        # Agrega un mensaje de error al contexto
+        contexto['popup_error'] = str(e)
+
+    except Exception:
+        # Mensaje genérico en caso de errores inesperados
+        contexto['popup_error'] = "Ocurrió un error inesperado. Intenta nuevamente más tarde."
+
+    return render(request, 'coordinador/configurar_fechas.html', {'practica_config': practica_config, **contexto})
 
 
 
