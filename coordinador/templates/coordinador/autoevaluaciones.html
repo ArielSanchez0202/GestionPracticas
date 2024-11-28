@@ -20,7 +20,7 @@
                         <th>RUT</th>
                         <th>Carrera</th>
                         <th>Práctica</th>
-                        <th>Fecha de Entrega</th>
+                        <th>Nota</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -41,8 +41,30 @@
                                 {% endif %}
                             </td>
                             <td>
-
+                                {% with inscripcion.practica.id as practica_id %}
+                                    {% for autoevaluacion in autoevaluaciones %}
+                                        {% if autoevaluacion.practica.id == practica_id %}
+                                            <span class="nota-static" onclick="enableEditing(this)">
+                                                {% if autoevaluacion.nota %}
+                                                    {{ autoevaluacion.nota }}
+                                                {% else %}
+                                                    No hay nota
+                                                {% endif %}
+                                            </span>
+                                            <input
+                                                type="text"
+                                                class="nota-input"
+                                                value="{{ autoevaluacion.nota }}"
+                                                data-id="{{ autoevaluacion.id }}"
+                                                style="display: none;"
+                                                onblur="saveNota(this)"
+                                                placeholder="Ingresar Nota"
+                                            >
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
                             </td>
+                            
                             <td>
                                 <a href="{% url 'revisar_autoevaluacion' inscripcion.practica.id %}">
                                     <button class="action-button">Ver Autoevaluación</button>
@@ -59,4 +81,5 @@
         </div>
     </div>
 </div>
+<script src="{% static 'js/ingresar_nota.js' %}"></script>
 {% endblock %}

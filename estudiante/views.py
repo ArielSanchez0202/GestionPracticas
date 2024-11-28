@@ -130,6 +130,7 @@ def verificar_practica1(request):
 def detalle_practica(request, solicitud_id):
     practica = get_object_or_404(Practica, id=solicitud_id)
     ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()    
+    autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
     documento = Document.objects.filter(tipo='inscripcion').first()
 
     if request.method == "POST":
@@ -166,6 +167,8 @@ def detalle_practica(request, solicitud_id):
     # Verificar si hay un informe de avances asociado
     informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
     
+    # Nota de la autoevaluación (si existe)
+    nota_autoevaluacion = autoevaluacion.nota if autoevaluacion else None
     # Verificar si hay una autoevaluación asociada
     autoevaluacion_completada = Autoevaluacion.objects.filter(practica=practica).exists()
 
@@ -179,6 +182,7 @@ def detalle_practica(request, solicitud_id):
         'documento': documento,
         'intentos_restantes_avances': intentos_restantes_avances,
         'intentos_restantes_final': intentos_restantes_final,
+        'nota_autoevaluacion': nota_autoevaluacion,
         'autoevaluacion_completada': autoevaluacion_completada,
         'informe_avances_enviado': informe_avances_enviado,
     })
@@ -217,59 +221,56 @@ def descargar_plantilla(request, practica_id):
     
 @estudiante_required
 def autoevaluacion(request, solicitud_id):
-    # Obtener la práctica asociada
+    # Obtener la práctica y estudiante asociados
     practica = get_object_or_404(Practica, id=solicitud_id)
-    # Obtener el estudiante actual
     estudiante = get_object_or_404(Estudiante, usuario=request.user)
-    # Obtener la solicitud de práctica
     solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
 
     if request.method == 'POST':
-        # Obtener los datos del formulario desde request.POST
-        nota = request.POST.get('nota')
-        observaciones = request.POST.get('observaciones')
-        pregunta1 = request.POST.get('pregunta1')
-        pregunta2 = request.POST.get('pregunta2')
-        pregunta3 = request.POST.get('pregunta3')
-        pregunta4 = request.POST.get('pregunta4')
-        pregunta5 = request.POST.get('pregunta5')
-        pregunta6 = request.POST.get('pregunta6')
-        pregunta7 = request.POST.get('pregunta7')
-        pregunta8 = request.POST.get('pregunta8')
-        pregunta9 = request.POST.get('pregunta9')
-        pregunta10 = request.POST.get('pregunta10')
-        pregunta11 = request.POST.get('pregunta11')
-        comentarios1 = request.POST.get('comentarios1')
-        comentarios2 = request.POST.get('comentarios2')
-        pregunta12 = request.POST.get('pregunta12')
-        comentarios3 = request.POST.get('comentarios3')
+        # Define los puntajes por respuesta
+        puntajes = {'Siempre': 4, 'Frecuentemente': 3, 'A veces': 2, 'Nunca': 1}
+        total_preguntas = 11  # Número total de preguntas
+        puntaje_maximo = total_preguntas * 4
 
-        # Crear una instancia de Autoevaluacion y asignar los valores
-        autoevaluacion = Autoevaluacion(
-            practica=practica,  # Asociar la práctica
-            nota=nota,
+        # Obtener y procesar las respuestas del formulario
+        puntaje_obtenido = sum(
+            puntajes.get(request.POST.get(f'pregunta{i}', 'Nunca'), 0)
+            for i in range(1, total_preguntas + 1)
+        )
+
+        # Calcular la nota (escala de 1.0 a 7.0)
+        nota = 1.0 + (puntaje_obtenido / puntaje_maximo) * 6.0
+
+        # Obtener otros campos del formulario
+        observaciones = request.POST.get('observaciones', '')
+        comentarios1 = request.POST.get('comentarios1', '')
+        comentarios2 = request.POST.get('comentarios2', '')
+        comentarios3 = request.POST.get('comentarios3', '')
+        pregunta12 = request.POST.get('pregunta12', '')
+
+        # Crear y guardar la autoevaluación
+        autoevaluacion = Autoevaluacion.objects.create(
+            practica=practica,
+            nota=round(nota, 2),
             observaciones=observaciones,
-            pregunta1=pregunta1,
-            pregunta2=pregunta2,
-            pregunta3=pregunta3,
-            pregunta4=pregunta4,
-            pregunta5=pregunta5,
-            pregunta6=pregunta6,
-            pregunta7=pregunta7,
-            pregunta8=pregunta8,
-            pregunta9=pregunta9,
-            pregunta10=pregunta10,
-            pregunta11=pregunta11,
+            pregunta1=request.POST.get('pregunta1', ''),
+            pregunta2=request.POST.get('pregunta2', ''),
+            pregunta3=request.POST.get('pregunta3', ''),
+            pregunta4=request.POST.get('pregunta4', ''),
+            pregunta5=request.POST.get('pregunta5', ''),
+            pregunta6=request.POST.get('pregunta6', ''),
+            pregunta7=request.POST.get('pregunta7', ''),
+            pregunta8=request.POST.get('pregunta8', ''),
+            pregunta9=request.POST.get('pregunta9', ''),
+            pregunta10=request.POST.get('pregunta10', ''),
+            pregunta11=request.POST.get('pregunta11', ''),
             comentarios1=comentarios1,
             comentarios2=comentarios2,
             pregunta12=pregunta12,
             comentarios3=comentarios3
         )
 
-        # Guardar la autoevaluación
-        autoevaluacion.save()
-
-        # Redirigir al usuario a una página de éxito o confirmación
+        # Redirigir al usuario a una página de éxito o detalle
         return redirect('detalle_practica', solicitud_id=solicitud_id) 
 
     # Si no es un POST, renderiza el formulario vacío

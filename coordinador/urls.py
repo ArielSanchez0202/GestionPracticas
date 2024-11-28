@@ -16,6 +16,7 @@ urlpatterns = [
     path('solicitudes_practica/', views.solicitudes_practica, name='solicitudes_practica'),
     path('informes_avances/', views.informes_avances, name='informes_avances'),
     path('autoevaluaciones/', views.autoevaluaciones, name='autoevaluaciones'),
+    path('guardar-nota/<int:autoevaluacion_id>/', views.guardar_nota, name='guardar_nota'),
     path('revisar_autoevaluacion/<int:practica_id>/', views.revisar_autoevaluacion, name='revisar_autoevaluacion'),
     path('informes_finales/', views.informes_finales, name='informes_finales'),
     path('documentos/', views.documentos, name='documentos'),

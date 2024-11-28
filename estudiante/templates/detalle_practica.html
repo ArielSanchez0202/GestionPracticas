@@ -154,6 +154,7 @@
             </div>
             <div class="card-data">
                 <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+                <p>Nota: {{ nota_autoevaluacion }}</p>
                 <a href="{% url 'ver_autoevaluacion' solicitud_id=practica.id %}">
                     <button class="action-button">Ver autoevaluación</button>
                 </a>
