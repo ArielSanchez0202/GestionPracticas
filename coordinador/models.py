@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User  # Importa el modelo de usuario de Django
 from datetime import datetime, date
 import uuid
+from django.utils.crypto import get_random_string
 
 # Modelo Coordinador
 class Coordinador(models.Model):
@@ -134,13 +135,56 @@ class Autoevaluacion(models.Model):
         verbose_name_plural = 'Autoevaluaciones'
 
 # Modelo Informe Confidencial
+from django.db import models
+from .models import Practica
+
 class InformeConfidencial(models.Model):
-    practica = models.ForeignKey(Practica, on_delete=models.CASCADE)
-    rubrica = models.ForeignKey('Rubrica', on_delete=models.CASCADE)
-    comentario = models.TextField()
-    
+    ficha_inscripcion = models.OneToOneField(FichaInscripcion, on_delete=models.CASCADE, related_name='informe_confidencial')
+    nota=float()
+    # Aspectos técnicos
+    calidad_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    calidad_observacion = models.TextField(blank=True, null=True)
+
+    efectividad_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    efectividad_observacion = models.TextField(blank=True, null=True)
+
+    conocimientos_profesionales = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    conocimientos_observacion = models.TextField(blank=True, null=True)
+
+    adaptabilidad_cambios = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    adaptabilidad_observacion = models.TextField(blank=True, null=True)
+
+    organizacion_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    organizacion_observacion = models.TextField(blank=True, null=True)
+
+    # Aspectos personales
+    interes_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    interes_observacion = models.TextField(blank=True, null=True)
+
+    responsabilidad = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    responsabilidad_observacion = models.TextField(blank=True, null=True)
+
+    cooperacion_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    cooperacion_observacion = models.TextField(blank=True, null=True)
+
+    creatividad = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    creatividad_observacion = models.TextField(blank=True, null=True)
+
+    iniciativa = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    iniciativa_observacion = models.TextField(blank=True, null=True)
+
+    integracion_grupo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
+    integracion_observacion = models.TextField(blank=True, null=True)
+
+    # Preguntas adicionales
+    positivo_recibir = models.BooleanField()
+    tipo_especialidad = models.TextField(blank=True, null=True)
+
+    # Información adicional
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f'Informe Confidencial - Práctica {self.practica.pk}'
+        return f"Informe Confidencial - {self.ficha_inscripcion}"
 
 # Modelo Rubrica
 class Rubrica(models.Model):
@@ -204,4 +248,22 @@ class PracticaConfig(models.Model):
 
     def __str__(self):
         return f"Configuración Práctica: {self.fecha_inicio_limite} - {self.fecha_termino_limite}"
+
+
+from django.utils.crypto import get_random_string
+
+def generar_token():
+    return get_random_string(32)
+
+class FormularioToken(models.Model):
+    ficha_inscripcion = models.OneToOneField('FichaInscripcion', on_delete=models.CASCADE, related_name='formulario_token')
+    token = models.CharField(max_length=64, unique=True, default=generar_token)  # Usar la función generar_token
+    enviado = models.BooleanField(default=False)
+    creado = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Token para {self.ficha_inscripcion.estudiante}"
+
+
+############################################################
 

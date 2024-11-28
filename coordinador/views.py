@@ -15,17 +15,17 @@ from django.core.mail import send_mail
 from django.http import BadHeaderError, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
-from .forms import DocumentForm
-from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion, Autoevaluacion, Practica
+from .forms import DocumentForm, InformeConfidencialForm
+from .models import Coordinador, Document, Estudiante, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
 from reportlab.lib.utils import ImageReader
+from django.conf import settings
+from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404
+from .models import FichaInscripcion, FormularioToken
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -888,13 +888,9 @@ def configurar_fechas(request):
 locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
 
 from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
 
 def generar_pdf_practica(request, ficha_id):
     try:
@@ -1020,3 +1016,55 @@ def generar_pdf_practica(request, ficha_id):
     buffer.showPage()
     buffer.save()
     return response
+
+def enviar_formulario(request, ficha_id):
+    ficha = get_object_or_404(FichaInscripcion, id=ficha_id)
+    
+    # Crear o recuperar el token único
+    token, created = FormularioToken.objects.get_or_create(ficha_inscripcion=ficha)
+    
+    # Construir el enlace único con dominio válido
+    base_url = "http://localhost:8000"  # Cambia esto por tu dominio real para producción
+    enlace = f"{base_url}/coordinador/formulario/{token.token}/"
+    
+    # Enviar el correo al supervisor
+    subject = "Formulario de Evaluación de Práctica Profesional"
+    message = f"""
+    Estimado {ficha.jefe_directo},
+
+    Por favor, complete el formulario de evaluación de la práctica profesional del estudiante {ficha.estudiante.usuario.first_name} {ficha.estudiante.usuario.last_name}.
+    Puede acceder al formulario mediante el siguiente enlace:
+
+    {enlace}
+
+    Muchas gracias,
+    Equipo de Coordinación
+    """
+    recipient = ficha.correo_jefe
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient])
+    
+    # Marcar como enviado
+    token.enviado = True
+    token.save()
+
+
+def completar_formulario(request, token):
+    # Obtener el token y la ficha asociada
+    formulario_token = get_object_or_404(FormularioToken, token=token)
+    ficha = formulario_token.ficha_inscripcion
+
+    if request.method == 'POST':
+        # Asegúrate de pasar ficha_inscripcion al formulario
+        form = InformeConfidencialForm(request.POST, ficha_inscripcion=ficha)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'El formulario se completó correctamente.')
+        else:
+            # Imprimir los errores para depurar
+            print("Errores del formulario:", form.errors)  # Esto te ayudará a ver los problemas
+    else:
+        # En caso de GET, mostrar el formulario vacío con los datos de la ficha
+        form = InformeConfidencialForm(ficha_inscripcion=ficha)
+
+    return render(request, 'coordinador/completar_formulario.html', {'form': form, 'ficha': ficha})
+

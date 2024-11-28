@@ -1,0 +1,32 @@
+/* Establecer fondo color #CBCFD2 */
+.bg-custom {
+    background-color: #CBCFD2;
+}
+
+/* Mejorar la visualización de las tarjetas */
+.container {
+    margin-top: 30px;
+}
+
+/* Ajustar márgenes de los formularios */
+form {
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegurarse de que todo el formulario es responsive */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+/* Mejora estética para los radio buttons */
+.form-check {
+    margin-bottom: 10px;
+}
+
+.form-check-input {
+    margin-left: 10px;
+}
