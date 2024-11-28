@@ -29,6 +29,7 @@ class InformeConfidencialForm(forms.ModelForm):
     class Meta:
         model = InformeConfidencial
         fields = '__all__'  # Incluye todos los campos del modelo
+        exclude = ['nota']  # Excluir el campo que se calcula automáticamente
         widgets = {
             # Campos relacionados con observaciones (TextAreas)
             'calidad_observacion': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),

@@ -1086,6 +1086,8 @@ def completar_formulario(request, token):
     formulario_token = get_object_or_404(FormularioToken, token=token)
     ficha = formulario_token.ficha_inscripcion
 
+    form_success = False  # Control del popup en la plantilla
+
     if request.method == 'POST':
         # Asegúrate de pasar ficha_inscripcion al formulario
         form = InformeConfidencialForm(request.POST, ficha_inscripcion=ficha)
@@ -1095,17 +1097,21 @@ def completar_formulario(request, token):
             # Calcular la nota manualmente antes de guardar el informe
             informe_confidencial.calcular_nota()
 
-            # Ahora sí guardamos con la nota calculada
+            # Guardamos con la nota calculada
             informe_confidencial.save()
-            messages.success(request, 'El formulario se completó correctamente.')
+            form_success = True  # Indica que el formulario se guardó exitosamente
         else:
             # Imprimir los errores para depurar
-            print("Errores del formulario:", form.errors)  # Esto te ayudará a ver los problemas
+            print("Errores del formulario:", form.errors)  # Ayuda a depurar problemas del formulario
     else:
         # En caso de GET, mostrar el formulario vacío con los datos de la ficha
         form = InformeConfidencialForm(ficha_inscripcion=ficha)
 
-    return render(request, 'coordinador/completar_formulario.html', {'form': form, 'ficha': ficha})
+    return render(
+        request, 
+        'coordinador/completar_formulario.html', 
+        {'form': form, 'ficha': ficha, 'form_success': form_success}
+    )
 
 
 def listado_informes_confidenciales(request):
