@@ -1,4 +1,4 @@
-{% extends 'base_estudiante.html' %}
+{% extends 'base_coordinador.html' %}
 
 {% load static %}
 
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Inscripción de Práctica Profesional</title>
-        <link rel="stylesheet" href="{% static 'css/autoevaluacion.css' %}">
+        <link rel="stylesheet" href="{% static 'css/revisar_autoevaluacion.css' %}">
     </div>
 
     <div class="back-button">
@@ -17,166 +17,172 @@
         </a>
     </div>
 
-    <div class="container">
+    <div class="autoevaluacion-body">
 
-        <h1>Autoevaluación</h1>
-        {% if error %}
-            <div class="alert alert-danger">
-                {{ error }}
-            </div>
-        {% endif %}
+        <div class="container">
 
-        <form>
-            {% csrf_token %}
-        
-            <div class="input-container">
-            <div class="form-group">
-                <label for="nombre_completo">Nombre Alumno</label>
-                <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
-            </div>
+            <h1>Autoevaluación</h1>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
 
-            <div class="form-group">
-                <label for="carrera">Carrera</label>
-                <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="correo">Correo Electrónico</label>
-                <input type="email" id="correo" name="correo" value="{{ estudiante.usuario.email }}" readonly>
-            </div>
-        
-            <div class="form-group">
-                <label for="telefono">Número de Teléfono</label>
-                <input type="text" id="telefono" name="telefono" value="{{ estudiante.numero_telefono }}" readonly>
-            </div>            
-            
-            <div class="form-group">
-                <label for="razon_social">Lugar donde realizó la Práctica</label>
-                <input type="text" id="razon_social" name="razon_social" value="{{solicitud.razon_social}}" readonly>
-            </div>
-        
-            <div class="form-group">
-                <label for="depto_trabajar">Departamento</label>
-                <input type="text" id="depto_trabajar" name="depto_trabajar" value="{{solicitud.depto_trabajar}}" readonly>
-            </div>
-        
-            <div class="form-group">
-                <label for="cargo">Cargo desempeñado</label>
-                <input type="text" id="cargo" name="cargo" value="{{solicitud.cargo_desarrollar}}" readonly>
-            </div>
-            </div>
-
-            <h2>I. Gestión Profesional y aspectos técnicos</h2>
-        
-            <fieldset>
-                <legend>1.- Se desarrollaron labores orientándolas al perfeccionamiento continuo, a la calidad del proceso y resultado.</legend>
-                <label><input type="radio" name="pregunta1" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta1" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta1" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta1 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta1" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>2.- Se cumplieron las metas del cargo siendo eficiente durante todo el proceso.</legend>
-                <label><input type="radio" name="pregunta2" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta2" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta2" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta2 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta2" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>3.- Se aplicó el conocimiento adquirido en el proceso formativo, demostrando dominio en los temas y en el quehacer diario.</legend>
-                <label><input type="radio" name="pregunta3" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta3" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta3" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta3 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta3" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>4.- Se enfrentaron los cambios y/o dificultades que se presentaron durante el periodo de Práctica Profesional sin afectar el rendimiento del trabajo.</legend>
-                <label><input type="radio" name="pregunta4" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta4" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta4" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta4 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta4" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>5.- Se realizaron las tareas/actividades según un orden sistemático y claro. </legend>
-                <label><input type="radio" name="pregunta5" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta5" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta5" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta5 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta5" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <h2>II. Aspectos personales e interpersonales</h2>
-
-            <fieldset>
-                <legend>1.- Se tuvo una predisposición positiva en las actividades a realizar y en su etapa de aprendizaje.</legend>
-                <label><input type="radio" name="pregunta6" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta6" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta6" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta6 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta6" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>2.- Se cumplió con la puntualidad y los deberes/responsabilidades, tanto personales como del equipo de trabajo.</legend>
-                <label><input type="radio" name="pregunta7" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta7" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta7" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta7 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta7" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>3.- Se estuvo predispuesto a ayudar en actividades orientadas a su puesto y las que no lo estaban, con el fin de obtener mejores resultados como equipo.</legend>
-                <label><input type="radio" name="pregunta8" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta8" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta8" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta8 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta8" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>4.- Se aporto con ideas en la solución de problemas del cargo y del equipo de trabajo.</legend>
-                <label><input type="radio" name="pregunta9" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta9" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta9" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta9 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta9" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>5.- Se actuó con iniciativa en momentos claves, al ver problemas en sus actividades y/o con el desarrollo del trabajo en equipo.</legend>
-                <label><input type="radio" name="pregunta10" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta10" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta10" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta10 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta10" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <fieldset>
-                <legend>6.- Se integro al equipo de trabajo, generando un ambiente grato y productivo.</legend>
-                <label><input type="radio" name="pregunta11" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
-                <label><input type="radio" name="pregunta11" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
-                <label><input type="radio" name="pregunta11" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta11 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
-                <label><input type="radio" name="pregunta11" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
-            </fieldset>
-
-            <h2>III. Percepción y Sugerencias</h2>
-
-            <legend>1.- Sobre la base de la experiencia, mencione los aspectos más relevantes que la Escuela debiera potenciar en sus alumnos para un mejor desempeño durante su práctica profesional.</legend>
-            <textarea name="comentarios1" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios1 }}{% endif %}</textarea>
-
-            <legend>2.- Señale algún comentario u observación, que Ud. considere pertinente dejar constancia (opcional) </legend>
-            <textarea name="comentarios2" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios2 }}{% endif %}</textarea>
-
-            <fieldset>
-                <legend>3.- ¿Recomendaría el lugar donde realizó su práctica a otro estudiante de la Universidad?</legend>
-                <label><input type="radio" name="pregunta12" value="Si" {% if autoevaluacion and autoevaluacion.pregunta12 == 'Si' %}checked{% endif %} disabled>Sí</label><br>
-                <label><input type="radio" name="pregunta12" value="No" {% if autoevaluacion and autoevaluacion.pregunta12 == 'No' %}checked{% endif %} disabled>No</label><br>
-            </fieldset>
-
-            <legend>¿Por qué?</legend>
-            <textarea name="comentarios3" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios3 }}{% endif %}</textarea>
-        
-        </form>
+            <form>
+                {% csrf_token %}
                 
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="nombre_completo">Nombre Alumno</label>
+                        <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carrera</label>
+                        <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" value="{{ estudiante.usuario.email }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Número de Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" value="{{ estudiante.numero_telefono }}" readonly>
+                    </div>            
+                </div>
+
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="razon_social">Lugar donde realizó la Práctica</label>
+                        <input type="text" id="razon_social" name="razon_social" value="{{solicitud.razon_social}}" readonly>
+                    </div>             
+                    <div class="form-group">
+                        <label for="depto_trabajar">Departamento</label>
+                        <input type="text" id="depto_trabajar" name="depto_trabajar" value="{{solicitud.depto_trabajar}}" readonly>
+                    </div>
+                </div>
+            
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="cargo">Cargo desempeñado</label>
+                        <input type="text" id="cargo" name="cargo" value="{{solicitud.cargo_desarrollar}}" readonly>
+                    </div>
+                </div>
+
+                <h2>I. Gestión Profesional y aspectos técnicos</h2>
+            
+                <fieldset>
+                    <legend>1.- Se desarrollaron labores orientándolas al perfeccionamiento continuo, a la calidad del proceso y resultado.</legend>
+                    <label><input type="radio" name="pregunta1" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta1" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta1" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta1 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta1" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta1 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>2.- Se cumplieron las metas del cargo siendo eficiente durante todo el proceso.</legend>
+                    <label><input type="radio" name="pregunta2" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta2" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta2" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta2 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta2" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta2 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3.- Se aplicó el conocimiento adquirido en el proceso formativo, demostrando dominio en los temas y en el quehacer diario.</legend>
+                    <label><input type="radio" name="pregunta3" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta3" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta3" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta3 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta3" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta3 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>4.- Se enfrentaron los cambios y/o dificultades que se presentaron durante el periodo de Práctica Profesional sin afectar el rendimiento del trabajo.</legend>
+                    <label><input type="radio" name="pregunta4" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta4" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta4" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta4 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta4" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta4 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>5.- Se realizaron las tareas/actividades según un orden sistemático y claro. </legend>
+                    <label><input type="radio" name="pregunta5" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta5" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta5" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta5 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta5" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta5 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <h2>II. Aspectos personales e interpersonales</h2>
+
+                <fieldset>
+                    <legend>1.- Se tuvo una predisposición positiva en las actividades a realizar y en su etapa de aprendizaje.</legend>
+                    <label><input type="radio" name="pregunta6" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta6" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta6" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta6 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta6" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta6 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>2.- Se cumplió con la puntualidad y los deberes/responsabilidades, tanto personales como del equipo de trabajo.</legend>
+                    <label><input type="radio" name="pregunta7" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta7" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta7" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta7 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta7" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta7 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3.- Se estuvo predispuesto a ayudar en actividades orientadas a su puesto y las que no lo estaban, con el fin de obtener mejores resultados como equipo.</legend>
+                    <label><input type="radio" name="pregunta8" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta8" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta8" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta8 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta8" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta8 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>4.- Se aporto con ideas en la solución de problemas del cargo y del equipo de trabajo.</legend>
+                    <label><input type="radio" name="pregunta9" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta9" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta9" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta9 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta9" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta9 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>5.- Se actuó con iniciativa en momentos claves, al ver problemas en sus actividades y/o con el desarrollo del trabajo en equipo.</legend>
+                    <label><input type="radio" name="pregunta10" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta10" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta10" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta10 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta10" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta10 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>6.- Se integro al equipo de trabajo, generando un ambiente grato y productivo.</legend>
+                    <label><input type="radio" name="pregunta11" value="Siempre" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Siempre' %}checked{% endif %} disabled> Siempre</label><br>
+                    <label><input type="radio" name="pregunta11" value="Frecuentemente" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Frecuentemente' %}checked{% endif %} disabled> Frecuentemente</label><br>
+                    <label><input type="radio" name="pregunta11" value="A veces" {% if autoevaluacion and autoevaluacion.pregunta11 == 'A veces' %}checked{% endif %} disabled> A veces</label><br>
+                    <label><input type="radio" name="pregunta11" value="Nunca" {% if autoevaluacion and autoevaluacion.pregunta11 == 'Nunca' %}checked{% endif %} disabled> Nunca</label>
+                </fieldset>
+
+                <h2>III. Percepción y Sugerencias</h2>
+
+                <legend>1.- Sobre la base de la experiencia, mencione los aspectos más relevantes que la Escuela debiera potenciar en sus alumnos para un mejor desempeño durante su práctica profesional.</legend>
+                <textarea name="comentarios1" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios1 }}{% endif %}</textarea>
+
+                <legend>2.- Señale algún comentario u observación, que Ud. considere pertinente dejar constancia (opcional) </legend>
+                <textarea name="comentarios2" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios2 }}{% endif %}</textarea>
+
+                <fieldset>
+                    <legend>3.- ¿Recomendaría el lugar donde realizó su práctica a otro estudiante de la Universidad?</legend>
+                    <label><input type="radio" name="pregunta12" value="Si" {% if autoevaluacion and autoevaluacion.pregunta12 == 'Si' %}checked{% endif %} disabled>Sí</label><br>
+                    <label><input type="radio" name="pregunta12" value="No" {% if autoevaluacion and autoevaluacion.pregunta12 == 'No' %}checked{% endif %} disabled>No</label><br>
+                </fieldset>
+
+                <legend>¿Por qué?</legend>
+                <textarea name="comentarios3" rows="5" disabled>{% if autoevaluacion %}{{ autoevaluacion.comentarios3 }}{% endif %}</textarea>
+            
+            </form>
+                    
+        </div>
     </div>
 
 {% endblock %}

@@ -85,7 +85,7 @@ input[type="password"] {
 
 input[type="email"]:focus,
 input[type="password"]:focus {
-    border-color: #FF0000; /* Color de borde rojo */
+    border-color: #DD211C; /* Color de borde rojo */
     outline: none;
 }
 
@@ -95,7 +95,7 @@ button {
     font-size: 1rem;
     font-weight: bold;
     color: #ffffff;
-    background-color: #FF0000; /* Rojo del logo */
+    background-color: #DD211C; /* Rojo del logo */
     border: none;
     border-radius: 4px;
     cursor: pointer;

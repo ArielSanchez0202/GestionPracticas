@@ -29,41 +29,44 @@
         <form>
             {% csrf_token %}
         
-            <div class="input-container">
-            <div class="form-group">
-                <label for="nombre_completo">Nombre Alumno</label>
-                <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre Alumno</label>
+                    <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="carrera">Carrera</label>
+                    <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="carrera">Carrera</label>
-                <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" name="correo" value="{{ estudiante.usuario.email }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Número de Teléfono</label>
+                    <input type="text" id="telefono" name="telefono" value="{{ estudiante.numero_telefono }}" readonly>
+                </div>            
             </div>
 
-            <div class="form-group">
-                <label for="correo">Correo Electrónico</label>
-                <input type="email" id="correo" name="correo" value="{{ estudiante.usuario.email }}" readonly>
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="razon_social">Lugar donde realizó la Práctica</label>
+                    <input type="text" id="razon_social" name="razon_social" value="{{solicitud.razon_social}}" readonly>
+                </div>             
+                <div class="form-group">
+                    <label for="depto_trabajar">Departamento</label>
+                    <input type="text" id="depto_trabajar" name="depto_trabajar" value="{{solicitud.depto_trabajar}}" readonly>
+                </div>
             </div>
         
-            <div class="form-group">
-                <label for="telefono">Número de Teléfono</label>
-                <input type="text" id="telefono" name="telefono" value="{{ estudiante.numero_telefono }}" readonly>
-            </div>            
-            
-            <div class="form-group">
-                <label for="razon_social">Lugar donde realizó la Práctica</label>
-                <input type="text" id="razon_social" name="razon_social" value="{{solicitud.razon_social}}" readonly>
-            </div>
-        
-            <div class="form-group">
-                <label for="depto_trabajar">Departamento</label>
-                <input type="text" id="depto_trabajar" name="depto_trabajar" value="{{solicitud.depto_trabajar}}" readonly>
-            </div>
-        
-            <div class="form-group">
-                <label for="cargo">Cargo desempeñado</label>
-                <input type="text" id="cargo" name="cargo" value="{{solicitud.cargo_desarrollar}}" readonly>
-            </div>
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="cargo">Cargo desempeñado</label>
+                    <input type="text" id="cargo" name="cargo" value="{{solicitud.cargo_desarrollar}}" readonly>
+                </div>
             </div>
 
             <h2>I. Gestión Profesional y aspectos técnicos</h2>
