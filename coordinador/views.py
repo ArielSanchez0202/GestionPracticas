@@ -811,10 +811,10 @@ def update_document(request, document_id):
 def documentos(request):
     # Tipos de documentos permitidos
     tipo_documentos = {
-        'reglamento': 'Reglamento Práctica Profesional',
-        'ficha_inscripcion': 'Ficha de inscripción práctica profesional',
-        'informe_avances': 'Informe de avances',
-        'autoevaluacion': 'Autoevaluación',
+    'reglamento': 'Reglamento Práctica Profesional',
+    'inscripcion': 'Ficha de inscripción práctica profesional',
+    'avance': 'Informe de avances',
+    'autoevaluacion': 'Autoevaluación',
     }
 
     # Obtener los documentos existentes por tipo

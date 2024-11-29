@@ -23,8 +23,12 @@ h1 {
     font-size: 70px;
 }
 
+.card-data p {
+    color: white;
+}
 .card-data{
     margin-left: 40px;
+    
 }
 .back-arrow {
     display: inline-block;

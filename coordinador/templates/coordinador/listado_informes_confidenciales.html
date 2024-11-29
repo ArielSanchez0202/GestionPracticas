@@ -1,35 +1,70 @@
 {% extends 'base_coordinador.html' %}
-
+{%load static%}
 {% block title %}Listado de Informes Confidenciales{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Listado de Informes Confidenciales</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Estudiante</th>
-                    <th>Práctica</th>
-                    <th>Nota</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for informe in informes %}
-                    <tr>
-                        <td>{{ informe.ficha_inscripcion.estudiante.usuario.first_name }} {{ informe.ficha_inscripcion.estudiante.usuario.last_name }}</td>
-                        <td>{{ informe.ficha_inscripcion.practica }}</td>
-                        <td>{{ informe.nota }}</td>
-                        <td>
-                            <a href="{% url 'editar_informe_confidencial' informe.id %}" class="btn btn-primary">Ver / Confirmar Nota</a>
-                        </td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">No hay informes disponibles.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/listar_practicas.css' %}">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="table-responsive py-5">
+                <h1>Listado de Informes Confidenciales</h1>
+                <table class="table table-striped mt-5">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Estudiante</th>
+                            <th>Práctica</th>
+                            <th>Nota</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for informe in informes %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ informe.ficha_inscripcion.estudiante.usuario.first_name }} {{ informe.ficha_inscripcion.estudiante.usuario.last_name }}</td>
+                                <td>
+                                    {% if informe.ficha_inscripcion.practica %}
+                                        {{ informe.ficha_inscripcion.practica }}
+                                    {% else %}
+                                        No seleccionada
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="nota-static" onclick="enableEditing(this)">
+                                        {% if informe.nota %}
+                                            {{ informe.nota }}
+                                        {% else %}
+                                            No hay nota
+                                        {% endif %}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        class="nota-input"
+                                        value="{{ informe.nota }}"
+                                        data-id="{{ informe.id }}"
+                                        style="display: none;"
+                                        onblur="saveNota(this)"
+                                        placeholder="Ingresar Nota"
+                                    >
+                                </td>
+                                <td>
+                                    <a href="{% url 'editar_informe_confidencial' informe.id %}">
+                                        <button class="action-button">Ver / Confirmar Nota</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No hay informes disponibles.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    <script src="{% static 'js/ingresar_nota.js' %}"></script>
 {% endblock %}
