@@ -131,7 +131,8 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
     justify-content: center; /* Centra el botón horizontalmente */
     align-items: center;     /* Centra el botón verticalmente si es necesario */
     width: 100%;             /* Asegura que ocupe todo el ancho */
-    margin-top: 20px;        /* Ajusta el margen superior según tus necesidades */
+    margin-top: q0px; 
+    margin-bottom: 30px;       /* Ajusta el margen superior según tus necesidades */
     grid-column: span 2; /* Asegura que el botón ocupe todo el ancho */
 }
 

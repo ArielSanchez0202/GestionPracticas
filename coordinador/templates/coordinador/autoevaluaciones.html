@@ -7,7 +7,7 @@
 {% block content %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="{% static 'css/listar_practicas.css' %}">
+<link rel="stylesheet" href="{% static 'css/autoevaluaciones.css' %}">
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
         <div class="table-responsive py-5">
@@ -51,25 +51,36 @@
                                                     No hay nota
                                                 {% endif %}
                                             </span>
-                                            <input
-                                                type="text"
-                                                class="nota-input"
-                                                value="{{ autoevaluacion.nota }}"
-                                                data-id="{{ autoevaluacion.id }}"
-                                                style="display: none;"
-                                                onblur="saveNota(this)"
-                                                placeholder="Ingresar Nota"
-                                            >
                                         {% endif %}
                                     {% endfor %}
                                 {% endwith %}
                             </td>
                             
                             <td>
-                                <a href="{% url 'revisar_autoevaluacion' inscripcion.practica.id %}">
-                                    <button class="action-button">Ver Autoevaluación</button>
-                                </a>
-                            </td>
+                                <div class="action-buttons-container">
+                                    <a>
+                                        <button 
+                                            class="action-button" 
+                                            onclick="openEditModal(
+                                                {{ inscripcion.practica.id }},
+                                                '{{ inscripcion.estudiante.usuario.first_name }} {{ inscripcion.estudiante.usuario.last_name }}',
+                                                '{% if inscripcion.practica1 %}Práctica 1{% elif inscripcion.practica2 %}Práctica 2{% else %}No seleccionada{% endif %}',
+                                                {% with inscripcion.practica.id as practica_id %}
+                                                    {% for autoevaluacion in autoevaluaciones %}
+                                                        {% if autoevaluacion.practica.id == practica_id %}
+                                                            '{{ autoevaluacion.nota|default:'' }}'
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endwith %}
+                                            )">
+                                            Editar Nota
+                                        </button>
+                                    </a>
+                                    <a href="{% url 'revisar_autoevaluacion' inscripcion.practica.id %}">
+                                        <button class="action-button">Ver Autoevaluación</button>
+                                    </a>
+                                </div>
+                            </td>                            
                         </tr>
                     {% empty %}
                         <tr>
@@ -81,5 +92,26 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="editNoteModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Editar Nota</h2>
+        <p id="modal-student-name"></p>
+        <p id="modal-practice-info"></p>
+        <form id="editNoteForm" method="post" action="{% url 'actualizar_nota' %}">
+            {% csrf_token %}
+            <input type="hidden" name="practica_id" id="modal-practica-id">
+            <label for="nota">Nueva Nota:</label>
+            <!-- Cambiar de 'number' a 'text' para permitir la coma como separador -->
+            <input type="text" name="nota" id="modal-note-input" required 
+                   pattern="^\d+([,\.]\d+)?$"
+                   title="Por favor ingresa una nota válida, usa solo números y coma o punto como separador decimal (Ejemplo: 5,5 o 6.5)">
+            <button type="submit" class="button">Guardar Nota</button>
+        </form>
+    </div>
+</div>
+
 <script src="{% static 'js/ingresar_nota.js' %}"></script>
 {% endblock %}

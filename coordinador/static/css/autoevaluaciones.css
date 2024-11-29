@@ -1,0 +1,234 @@
+/* Estilos específicos para la página de agregar estudiante */
+body {
+    font-family: 'Helvetica', sans-serif;
+    background-color: #D4D5DB;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+    width: 100%;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.input-error {
+    border-color: red;
+}
+
+
+/* Estilos del título y la sección de carga masiva */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 5%;
+    padding: 20px;
+}
+.form-header h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.form-header1 h3{
+    display: flex;
+    font-weight: bold;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+/* Botón personalizado para "Ver Carta" */
+.custom-warning-btn {
+    background-color: #c4c4c4; /* Cambia el color de fondo */
+    color: black; /* Cambia el color del texto */
+    border: 1px solid white; /* Borde opcional */
+}
+
+/* Botón personalizado para "Ver Formulario" */
+.custom-info-btn {
+    background-color: #c4c4c4; /* Cambia el color de fondo */
+    color: black; /* Cambia el color del texto */
+    border: 1px solid white; /* Borde opcional */
+}
+
+/* Opcional: hover para mejorar la interacción */
+.custom-warning-btn:hover,
+.custom-info-btn:hover {
+    background-color: #c4c4c4;
+    border: 1px solid black;
+}
+
+/* Formulario en dos columnas */
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+.form-group1 {
+    display: flex;
+    justify-content: space-between; /* Asegura que los elementos dentro se distribuyan con espacio entre ellos */
+    margin-bottom: 20px;
+    width: 46%;
+}
+
+.input-column {
+    width: 46%;
+    display: flex;
+    flex-direction: column;
+}
+label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+input {
+    padding: 12px;
+    border: 1.5px solid #000;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+}
+.button{
+    display: block;
+    width: 40%;
+    padding: 10px;
+    margin: 20px auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #DD211C;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.action-button{
+    width: auto;
+    padding: 5px;
+    background-color: #c4c4c4; /* Cambia el color de fondo */
+    color: black; /* Cambia el color del texto */
+    border: 1px solid black; /* Borde opcional */
+    border-radius: 5px;
+    cursor: pointer;
+}
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 68%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+.btn-agregar {
+    display: block;
+    width: 20%;
+    padding: 10px;
+    margin: 20px auto;
+    margin-top: 70px;
+    background-color: #DD211C;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* Media Queries para Responsiveness */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 768px) {
+    .form-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .form-header h1 {
+        font-size: 2rem;
+    }
+    .btn-carga-masiva {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+    .form-group, .form-group1 {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .input-column {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .btn-agregar {
+        width: 60%;
+    }
+}
+
+/* Móviles y pantallas pequeñas */
+@media (max-width: 480px) {
+    .form-header h1 {
+        font-size: 1.8rem;
+    }
+    .btn-carga-masiva {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+    label {
+        font-size: 1rem;
+    }
+    .btn-agregar {
+        width: 80%;
+        font-size: 0.9rem;
+    }
+    input {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+/* Modal container */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semitransparente */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 30%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;  /* Posiciona el botón de forma absoluta */
+    top: 0;           /* Distancia desde la parte superior */
+    right: 10px;         /* Distancia desde la parte derecha */
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

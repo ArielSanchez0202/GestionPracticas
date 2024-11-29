@@ -678,17 +678,35 @@ def informes_avances(request):
 def autoevaluaciones(request):
     # Obtener los RUT de los estudiantes activos
     estudiantes_activos = Estudiante.objects.filter(usuario__is_active=True).values_list('rut', flat=True)
-    
-    # Filtrar inscripciones solo para estudiantes con esos RUT
-    inscripciones = FichaInscripcion.objects.filter(estudiante__rut__in=estudiantes_activos)
-    
-    # Obtener las autoevaluaciones relacionadas con las prácticas
-    autoevaluaciones = Autoevaluacion.objects.all()  # Asumimos que existe una relación entre 'Autoevaluacion' y 'FichaInscripcion'
-    
+
+    # Filtrar inscripciones de estudiantes activos con autoevaluaciones completadas
+    inscripciones = FichaInscripcion.objects.filter(
+        estudiante__rut__in=estudiantes_activos,
+        practica__autoevaluacion__isnull=False  # Solo inscripciones con autoevaluaciones asociadas
+    ).distinct()  # Aseguramos que no haya duplicados
+
+    # Filtrar autoevaluaciones asociadas a las inscripciones seleccionadas
+    autoevaluaciones = Autoevaluacion.objects.filter(
+        practica__fichainscripcion__in=inscripciones
+    )
+
     return render(request, 'coordinador/autoevaluaciones.html', {
         'inscripciones': inscripciones,
         'autoevaluaciones': autoevaluaciones,
     })
+
+@coordinador_required
+def actualizar_nota(request):
+    if request.method == 'POST':
+        practica_id = request.POST.get('practica_id')
+        nueva_nota = request.POST.get('nota')
+
+        autoevaluacion = Autoevaluacion.objects.get(practica_id=practica_id)
+        autoevaluacion.nota = nueva_nota
+        autoevaluacion.save()
+
+        return redirect('autoevaluaciones')  # Cambia esto por la vista correspondiente
+    return redirect('autoevaluaciones')  # Manejo de métodos no POST
 
 @coordinador_required
 def revisar_autoevaluacion(request, practica_id):
@@ -709,34 +727,6 @@ def revisar_autoevaluacion(request, practica_id):
     }
 
     return render(request, 'coordinador/revisar_autoevaluacion.html', context)
-
-@csrf_protect
-@require_POST
-def guardar_nota(request, autoevaluacion_id):
-    try:
-        # Parsear los datos JSON de la solicitud
-        data = json.loads(request.body)
-        nota = data.get('nota')
-
-        # Validar que la nota sea un número decimal válido
-        try:
-            nota = float(nota)
-        except (ValueError, TypeError):
-            return JsonResponse({'error': 'Nota inválida'}, status=400)
-
-        # Buscar la autoevaluación o devolver 404
-        autoevaluacion = get_object_or_404(Autoevaluacion, id=autoevaluacion_id)
-        
-        # Guardar la nueva nota
-        autoevaluacion.nota = nota
-        autoevaluacion.save()
-        
-        return JsonResponse({'nota': str(nota)})
-    
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Datos JSON inválidos'}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
 
 @coordinador_required
 def informes_finales(request):
