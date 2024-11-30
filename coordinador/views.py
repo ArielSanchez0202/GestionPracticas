@@ -657,9 +657,24 @@ def ver_coordinador(request, coordinador_id):
 
 @coordinador_required
 def detalle_estudiante(request, estudiante_id):
-    estudiante = get_object_or_404(Estudiante, usuario_id=estudiante_id)
+    estudiante = get_object_or_404(Estudiante, usuario__id=estudiante_id)
+    
+    practicas = estudiante.practicas.all()
+    fichas_inscripcion = []
 
-    return render(request, 'coordinador/detalle_estudiante.html', {'estudiante': estudiante})
+    for practica in practicas:
+        ficha = practica.fichainscripcion_set.first()  # Obtiene la primera ficha asociada a la práctica
+        fichas_inscripcion.append(ficha)
+    
+    # Combina las prácticas y las fichas en una lista de tuplas
+    practicas_fichas = zip(practicas, fichas_inscripcion)
+
+    context = {
+        'estudiante': estudiante,
+        'practicas_fichas': practicas_fichas,  # Pasa la lista de tuplas combinadas
+    }
+
+    return render(request, 'coordinador/detalle_estudiante.html', context)
 
 #view coordinadores prueba
 def coordinadores(request):

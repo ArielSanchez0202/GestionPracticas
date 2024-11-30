@@ -1,5 +1,7 @@
 {% extends 'base_coordinador.html' %}
+
 {% load static %}
+
 {% block content %}
 <head>
     <meta charset="UTF-8">
@@ -8,19 +10,101 @@
 </head>
 <body>
 <div class="container">
+    <!-- Detalle del estudiante -->
     <div class="form-header">
-        <h1>Detalle del Estudiante</h2>
+        <h1>Detalle del Estudiante</h1>
     </div>
-<div class="card">
-    <div class="card-body">
-        <h3 class="card-title">{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</h5>
-        <p class="card-text"><strong>Correo Electrónico:</strong> {{ estudiante.usuario.email }}</p>
-        <p class="card-text"><strong>RUT:</strong> {{ estudiante.rut }}</p>
-        <p class="card-text"><strong>Domicilio:</strong> {{ estudiante.domicilio }}</p>
-        <p class="card-text"><strong>Número de Teléfono:</strong> {{ estudiante.numero_telefono }}</p>
-        <p class="card-text"><strong>Carrera:</strong> {{ estudiante.carrera }}</p>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</h3>
+            <p class="card-text"><strong>Correo Electrónico:</strong> {{ estudiante.usuario.email }}</p>
+            <p class="card-text"><strong>RUT:</strong> {{ estudiante.rut }}</p>
+            <p class="card-text"><strong>Domicilio:</strong> {{ estudiante.domicilio }}</p>
+            <p class="card-text"><strong>Número de Teléfono:</strong> {{ estudiante.numero_telefono }}</p>
+            <p class="card-text"><strong>Carrera:</strong> {{ estudiante.carrera }}</p>
+        </div>
     </div>
-</div>
-<a href="{% url 'listar_estudiantes' %}" class="btn btn-secondary mt-3">Regresar</a>
+
+    <!-- Detalle de las prácticas -->
+    <div class="form-header">
+        <h2>Prácticas del Estudiante</h2>
+    </div>
+    {% for practica, ficha_inscripcion in practicas_fichas %}
+    <div class="card">
+        <div class="card-header">
+            <span>Ficha de Inscripción - {{ ficha_inscripcion.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</span>
+        </div>
+        <div class="card-body">
+            {% if ficha_inscripcion %}
+            <p><strong>Estado de la práctica:</strong> {{ ficha_inscripcion.practica.get_estado_display }}</p>
+            <p><strong>Razón Social:</strong> {{ ficha_inscripcion.razon_social }}</p>
+            <p><strong>Dirección Empresa:</strong> {{ ficha_inscripcion.direccion_empresa }}</p>
+            <p><strong>Jefe Directo:</strong> {{ ficha_inscripcion.jefe_directo }}</p>
+            <p><strong>Cargo:</strong> {{ ficha_inscripcion.cargo }}</p>
+            <p><strong>Fecha Inicio:</strong> {{ ficha_inscripcion.fecha_inicio }}</p>
+            <p><strong>Fecha Término:</strong> {{ ficha_inscripcion.fecha_termino }}</p>
+
+            <!-- Botones para acciones según el estado -->
+            {% if ficha_inscripcion.estado == 'Pendiente' %}
+                <a href="{% url 'ver_formulario' ficha_inscripcion.id %}">
+                    <button class="action-button">Ver Ficha Completa</button>
+                </a>
+            {% elif ficha_inscripcion.estado == 'Aprobada' %}
+                <a href="{% url 'generar_pdf_practica' ficha_inscripcion.id %}">
+                    <button class="action-button">Descargar Carta de Aprobación</button>
+                </a>
+                <a href="{% url 'ver_formulario' ficha_inscripcion.id %}">
+                    <button class="action-button">Ver Ficha Completa</button>
+                </a>
+            {% endif %}
+
+            <!-- Documentos subidos -->
+            <div class="documentos-subidos">
+                {% if ficha_inscripcion.informe_avances %}
+                <p><strong>Informe de Avances:</strong> 
+                    <a href="{% url 'revisar_informe_avances' ficha_inscripcion.id %}" target="_blank">Revisar Informe</a>
+                </p>
+                {% else %}
+                <p><strong>Informe de Avances:</strong> No subido.</p>
+                {% endif %}
+
+                {% if ficha_inscripcion.practica.autoevaluacion %}
+                    {% with ficha_inscripcion.practica.autoevaluacion as autoevaluacion %}
+                        <p><strong>Autoevaluación:</strong> 
+                            <a href="{% url 'revisar_autoevaluacion' autoevaluacion.id %}" target="_blank">Revisar Autoevaluación</a>
+                        </p>
+                    {% endwith %}
+                {% else %}
+                    <p><strong>Autoevaluación:</strong> No subido.</p>
+                {% endif %}
+
+                {% if ficha_inscripcion.informe_final %}
+                <p><strong>Informe Final:</strong> 
+                    <a href="{% url 'editar_informe_final' ficha_inscripcion.id %}" target="_blank">Editar Informe Final</a>
+                </p>
+                {% else %}
+                <p><strong>Informe Final:</strong> No subido.</p>
+                {% endif %}
+
+                {% if ficha_inscripcion.informe_confidencial %}
+                <p><strong>Informe Confidencial:</strong> 
+                    <a href="{% url 'editar_informe_confidencial' ficha_inscripcion.id %}" target="_blank">Editar Informe Confidencial</a>
+                </p>
+                {% else %}
+                <p><strong>Informe Confidencial:</strong> No subido.</p>
+                {% endif %}
+
+            </div>
+
+            {% else %}
+            <p>No hay ficha asociada a esta práctica.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay prácticas asociadas a este estudiante.</p>
+    {% endfor %}
+
+    <a href="{% url 'listar_estudiantes' %}" class="btn btn-secondary mt-3">Regresar</a>
 </div>
 {% endblock %}
