@@ -1,7 +1,78 @@
 {% extends 'base_coordinador.html' %}
 
+{% load static %}
+
+{% block title %} Lista de Informes de Avances {% endblock %}
+
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">{{ "Informe de avances" }}</h1>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/informes_avances.css' %}">
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive py-5">
+            <h1>Revisión Informes de Avances</h1>
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>RUT</th>
+                        <th>Carrera</th>
+                        <th>Práctica</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ficha_data in fichas_info %}
+                        <tr>
+                            <!-- Número de fila -->
+                            <td>{{ forloop.counter }}</td>
+
+                            <!-- Nombre del estudiante -->
+                            <td>{{ ficha_data.ficha.estudiante.usuario.first_name }} {{ ficha_data.ficha.estudiante.usuario.last_name }}</td>
+
+                            <!-- RUT del estudiante -->
+                            <td>{{ ficha_data.ficha.estudiante.rut }}</td>
+
+                            <!-- Carrera del estudiante -->
+                            <td>{{ ficha_data.ficha.estudiante.carrera }}</td>
+
+                            <!-- Práctica asociada (1 o 2) -->
+                            <td>
+                                {% if ficha_data.ficha.practica1 %}
+                                    Práctica 1
+                                {% elif ficha_data.ficha.practica2 %}
+                                    Práctica 2
+                                {% else %}
+                                    No asignada
+                                {% endif %}
+                            </td>
+
+                            <!-- Estado calculado de la ficha -->
+                            <td>{{ ficha_data.estado }}</td>
+
+                            <!-- Acciones -->
+                            <td>
+                                <!-- Botón para descargar el informe -->
+                                <a href="{% url 'descargar_informe' ficha_data.ficha.practica.pk %}" class="btn btn-primary">Descargar Informe</a>
+
+                                <!-- Si el estado es 'Entregado', botón para ver rubrica -->
+                                {% if ficha_data.estado == 'Entregado' %}
+                                    <a href="{% url 'ver_rubrica' ficha_data.ficha.practica.pk %}" class="btn btn-secondary">Ver Rubrica</a>
+                                {% endif %}
+
+                                <!-- Si el estado es 'Pendiente de entrega', botón para evaluar el informe -->
+                                {% if ficha_data.estado == 'Pendiente de entrega' %}
+                                    <a href="#">Evaluar Informe</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>                       
+        </div>
     </div>
+</div>
 {% endblock %}

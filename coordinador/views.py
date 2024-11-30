@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.messages import get_messages
 from django.core.mail import send_mail
-from django.http import BadHeaderError, HttpResponse, JsonResponse
+from django.http import BadHeaderError, HttpResponse, HttpResponseNotFound, JsonResponse, FileResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import json
@@ -32,6 +32,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
 from .models import FichaInscripcion, FormularioToken
 from decimal import Decimal, InvalidOperation
+from django.utils.timezone import now
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -673,7 +674,24 @@ def verificar_rut(request):
 
 @coordinador_required
 def informes_avances(request):
-    return render(request, 'coordinador/informes_avances.html')
+    # Filtrar solo las fichas aprobadas y que tienen un informe de avance asociado
+    fichas_aprobadas = FichaInscripcion.objects.filter(estado="Aprobada").select_related('estudiante__usuario', 'practica')
+
+    # Filtramos para solo incluir las que tienen informe de avances subido
+    fichas_info = []
+    for ficha in fichas_aprobadas:
+        if ficha.practica and ficha.practica.informeavances_set.exists():
+            # Calcular el estado basado en el informe de avance
+            estado = "Entregado" if ficha.practica.informeavances_set.last().nota_avance else "Pendiente de entrega"
+
+            # Agregar la ficha con el estado calculado
+            fichas_info.append({
+                "ficha": ficha,
+                "estado": estado,
+            })
+
+    return render(request, 'coordinador/informes_avances.html', {"fichas_info": fichas_info})
+
 
 @coordinador_required
 def autoevaluaciones(request):
@@ -1190,3 +1208,12 @@ def editar_informe_confidencial(request, informe_id):
 
     # Si el método es GET, simplemente mostramos la vista para editar
     return render(request, 'coordinador/editar_informe_confidencial.html', {'informe': informe})
+
+@coordinador_required
+def descargar_informe(request, practica_id):
+    practica = Practica.objects.get(pk=practica_id)
+    informe = practica.informeavances_set.last()
+    if informe and informe.archivo_informe_avances:
+        return FileResponse(informe.archivo_informe_avances)
+    else:
+        return HttpResponseNotFound("Informe no encontrado")
