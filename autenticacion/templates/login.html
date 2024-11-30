@@ -54,14 +54,13 @@
 
             {% if messages %}
             {% for message in messages %}
+                {% if 'login_error' in message.tags %} <!-- Filtrar solo mensajes de error -->
                 <div class="alert alert-{{ message.tags }}">
-                    {% if message.level == 40 %}
-                        <strong>Error:</strong>
-                    {% endif %}
-                    {{ message }}
+                    <strong>Error:</strong> {{ message }}
                 </div>
+                {% endif %}
             {% endfor %}
-        {% endif %}
+            {% endif %}
 
         <form method="post">
             {% csrf_token %}

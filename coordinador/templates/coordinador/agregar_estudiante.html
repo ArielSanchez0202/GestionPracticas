@@ -54,7 +54,14 @@
                 </div>
                 <div class="input-column">
                     <label for="carrera">Carrera</label>
-                    <input type="text" name="carrera" id="carrera" placeholder="Ej: Ingeniería Civil Informática" value="{{ carrera|default_if_none:'' }}" required>
+                    <select name="carrera" id="carrera" required>
+                        <option value="" disabled selected>Seleccione una carrera</option>
+                        <option value="Ingeniería Civil en Informática"
+                            {% if carrera == "Ingeniería Civil en Informática" %}selected{% endif %}>
+                            Ingeniería Civil en Informática
+                        </option>
+                        <!-- Puedes agregar más opciones aquí -->
+                    </select>
                 </div>
             </div>
             <button type="submit" class="btn-agregar">Agregar Estudiante</button>

@@ -31,6 +31,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
 from .models import FichaInscripcion, FormularioToken
+from decimal import Decimal, InvalidOperation
 
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
@@ -699,13 +700,23 @@ def autoevaluaciones(request):
 def actualizar_nota(request):
     if request.method == 'POST':
         practica_id = request.POST.get('practica_id')
-        nueva_nota = request.POST.get('nota')
+        nueva_nota = request.POST.get('nota', '').replace(',', '.')  # Cambiar coma a punto
 
-        autoevaluacion = Autoevaluacion.objects.get(practica_id=practica_id)
-        autoevaluacion.nota = nueva_nota
-        autoevaluacion.save()
+        try:
+            nota_decimal = Decimal(nueva_nota)  # Convertir a Decimal
+        except InvalidOperation:
+            messages.error(request, "La nota ingresada no es válida. Por favor, usa un número válido.")
+            return redirect('autoevaluaciones')  # Redirige en caso de error
 
-        return redirect('autoevaluaciones')  # Cambia esto por la vista correspondiente
+        try:
+            autoevaluacion = Autoevaluacion.objects.get(practica_id=practica_id)
+            autoevaluacion.nota = nota_decimal
+            autoevaluacion.save()
+            messages.success(request, "Nota actualizada con éxito.")
+        except Autoevaluacion.DoesNotExist:
+            messages.error(request, "Error: No se encontró la autoevaluación.")
+
+        return redirect('autoevaluaciones')  # Redirige tras actualizar
     return redirect('autoevaluaciones')  # Manejo de métodos no POST
 
 @coordinador_required

@@ -34,7 +34,7 @@ def user_login(request):
         try:
             user = User.objects.get(email=email)
             if not user.is_active:
-                messages.error(request, "Tu cuenta ha sido bloqueada. Comuníquese con un administrador.")
+                messages.error(request, "Tu cuenta ha sido bloqueada. Comuníquese con un administrador.", extra_tags='login_error')
                 return render(request, 'login.html')
 
             user = authenticate(request, username=user.username, password=password)
@@ -54,10 +54,10 @@ def user_login(request):
                 elif user.groups.filter(name='Estudiante').exists():
                     return redirect('estudiantes_main')
             else:
-                messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+                messages.error(request, "Correo o contraseña incorrectos.", extra_tags='login_error')
                 
         except User.DoesNotExist:
-            messages.error(request, "No existe un usuario activo con ese correo electrónico.")
+            messages.error(request, "No existe un usuario activo con ese correo electrónico.", extra_tags='login_error')
 
     return render(request, 'login.html')
 
@@ -107,10 +107,9 @@ def custom_password_reset_request(request):
                 'token': token,  # token generado
             })
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
-            messages.success(request, "Se ha enviado un correo para restablecer tu contraseña.")
             return redirect("custom_password_reset_done")
         except User.DoesNotExist:
-            messages.error(request, "No se encontró una cuenta con ese correo.")
+            messages.error(request, "No se encontró una cuenta con ese correo.", extra_tags='reset_error')
     return render(request, "password_reset_form.html")
 
 # Vista para mostrar mensaje de éxito al enviar el correo
