@@ -31,14 +31,36 @@ def estudiante_view(request):
 def inscripcion_practica_view(request):
     estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
 
-    # Verificar si el estudiante ya tiene ambas prácticas (I y II)
-    practica1_inscrita = FichaInscripcion.objects.filter(estudiante=estudiante, practica1=True).exists()
-    practica2_inscrita = FichaInscripcion.objects.filter(estudiante=estudiante, practica2=True).exists()
+    # Verificar si el estudiante ya tiene ambas prácticas inscritas (sin contar rechazadas)
+    practica1_inscrita = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica1=True
+    ).exclude(estado='Rechazada').exists()
+    practica2_inscrita = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica2=True
+    ).exclude(estado='Rechazada').exists()
 
-    # Si ya tiene ambas prácticas, mostramos un mensaje y no permitimos más inscripciones
-    if practica1_inscrita and practica2_inscrita:
+    # Verificar si la práctica 1 está aprobada
+    practica1_aprobada = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica1=True, estado='Aprobada'
+    ).exists()
+
+    # Verificar si la práctica 1 está aprobada
+    practica2_aprobada = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica2=True, estado='Aprobada'
+    ).exists()
+
+    # Obtener fichas con estado "Pendiente" o "Jefe Carrera" para prácticas 1 y 2
+    practica1_pendiente_o_jefe_carrera = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica1=True, estado__in=['Pendiente', 'Jefe Carrera']
+    ).exists()
+    practica2_pendiente_o_jefe_carrera = FichaInscripcion.objects.filter(
+        estudiante=estudiante, practica2=True, estado__in=['Pendiente', 'Jefe Carrera']
+    ).exists()
+
+    # Si ya tiene ambas prácticas inscritas (sin contar rechazadas), mostramos un mensaje
+    if practica1_aprobada and practica2_aprobada:
         return render(request, 'inscripcion_practica.html', {
-            'error': 'Ya tienes ambas prácticas (I y II) inscritas. No puedes agregar más.'
+            'error': 'Ya tienes ambas prácticas (I y II) inscritas y aprobadas. No puedes agregar más.'
         })
 
     # Obtener límites de fecha configurados por el coordinador
@@ -51,6 +73,34 @@ def inscripcion_practica_view(request):
         tipo_practica = request.POST.get('tipo_practica')
         practica1 = tipo_practica == '1'
         practica2 = tipo_practica == '2'
+
+        # Validar si el estudiante puede inscribir la práctica 2
+        if practica2:
+            if not practica1_aprobada:
+                return render(request, 'inscripcion_practica.html', {
+                    'error': 'No puedes inscribir la Práctica II hasta que la Práctica I esté aprobada.',
+                    'estudiante': estudiante,
+                })
+
+        # Mostrar mensaje si intenta inscribir práctica 1 ya aprobada
+        if practica1 and practica1_aprobada:
+            return render(request, 'inscripcion_practica.html', {
+                'error': 'Ya tienes inscrita y aprobada la Práctica I.',
+                'estudiante': estudiante,
+            })
+
+        # Validar si la práctica seleccionada está en estado "Pendiente" o "Jefe Carrera"
+        if practica1 and practica1_pendiente_o_jefe_carrera:
+            return render(request, 'inscripcion_practica.html', {
+                'error': 'No puedes inscribir nuevamente en la Práctica I mientras esté en estado "Pendiente".',
+                'estudiante': estudiante,
+            })
+        if practica2 and practica2_pendiente_o_jefe_carrera:
+            return render(request, 'inscripcion_practica.html', {
+                'error': 'No puedes inscribirte nuevamente en la Práctica II mientras esté en estado "Pendiente".',
+                'estudiante': estudiante,
+            })
+
         razon_social = request.POST.get('razon_social')
         direccion_empresa = request.POST.get('direccion_empresa')
         jefe_directo = request.POST.get('jefe_directo')
@@ -63,7 +113,6 @@ def inscripcion_practica_view(request):
         fecha_termino = request.POST.get('fecha_termino')
 
         try:
-            # Asegurarse de que las fechas estén en el formato YYYY-MM-DD
             fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
             fecha_termino = datetime.strptime(fecha_termino, '%Y-%m-%d').date()
 
@@ -74,7 +123,6 @@ def inscripcion_practica_view(request):
                 raise ValueError(f'La fecha de término no puede ser posterior a {fecha_termino_limite}.')
 
         except ValueError as e:
-            # Manejar el error si las fechas no están en el formato correcto o no cumplen con los límites
             return render(request, 'inscripcion_practica.html', {
                 'error': str(e),
                 'estudiante': estudiante,
@@ -88,7 +136,7 @@ def inscripcion_practica_view(request):
 
         # Crear una nueva instancia del modelo FichaInscripcion
         inscripcion = FichaInscripcion(
-            estudiante=estudiante,  # Relacionar con el estudiante logueado
+            estudiante=estudiante,
             practica1=practica1,
             practica2=practica2,
             razon_social=razon_social,
@@ -106,7 +154,6 @@ def inscripcion_practica_view(request):
             actividades_realizar=actividades_realizar
         )
 
-        # Guardar la inscripción en la base de datos
         try:
             inscripcion.save()
             return redirect('estudiantes_main')
@@ -117,7 +164,9 @@ def inscripcion_practica_view(request):
         'estudiante': estudiante,
         'fecha_inicio_limite': fecha_inicio_limite,
         'fecha_termino_limite': fecha_termino_limite,
+        'practica1_aprobada': practica1_aprobada,
     }
+
     return render(request, 'inscripcion_practica.html', context)
 
 def verificar_practica1(request):

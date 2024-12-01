@@ -829,6 +829,13 @@ def actualizar_estado(request, solicitud_id):
                 practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
                 practica.save()
 
+            # Si el estado es "Rechzada", actualiza el estado de la práctica
+            if estado == 'Rechazada':
+                # Usa el nombre correcto del campo relacionado
+                practica = Practica.objects.get(fichainscripcion=solicitud)
+                practica.estado = 'rechazada'  # Cambia el estado a "en_progreso"
+                practica.save()
+
         # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
         return redirect('listar_practicas')  # Cambia a la vista adecuada
     

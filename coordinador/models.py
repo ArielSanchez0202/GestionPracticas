@@ -33,6 +33,7 @@ class Practica(models.Model):
     ESTADO_CHOICES = [
         ('pendiente', 'Pendiente'),
         ('en_progreso', 'En Progreso'),
+        ('rechazada', 'Rechazada'),
         ('finalizada', 'Finalizada'),
     ]
 
@@ -49,6 +50,7 @@ class FichaInscripcion(models.Model):
             ('Pendiente', 'Pendiente'),
             ('Aprobada', 'Aprobada'),
             ('Rechazada', 'Rechazada'),
+            ('Jefe Carrera', 'Jefe Carrera'),
             ]
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Pendiente')
     estudiante = models.ForeignKey('Estudiante', on_delete=models.CASCADE)
