@@ -2,7 +2,7 @@ import locale
 import re
 import secrets
 import string
-from datetime import datetime
+from datetime import datetime, timezone
 from smtplib import SMTPException
 from django.forms import ValidationError
 import pandas as pd
@@ -21,7 +21,7 @@ import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm, InformeConfidencialForm
-from .models import Coordinador, Document, Estudiante, InformeConfidencial, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken, Practica
+from .models import Coordinador, Document, Estudiante, InformeConfidencial, Notificacion, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken, Practica
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
@@ -30,7 +30,7 @@ from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
-from .models import FichaInscripcion, FormularioToken
+from .models import *
 from decimal import Decimal, InvalidOperation
 from django.utils.timezone import now
 
@@ -658,20 +658,14 @@ def ver_coordinador(request, coordinador_id):
 @coordinador_required
 def detalle_estudiante(request, estudiante_id):
     estudiante = get_object_or_404(Estudiante, usuario__id=estudiante_id)
-    
-    practicas = estudiante.practicas.all()
-    fichas_inscripcion = []
 
-    for practica in practicas:
-        ficha = practica.fichainscripcion_set.first()  # Obtiene la primera ficha asociada a la práctica
-        fichas_inscripcion.append(ficha)
-    
-    # Combina las prácticas y las fichas en una lista de tuplas
-    practicas_fichas = zip(practicas, fichas_inscripcion)
+    # Obtener las prácticas y sus fichas asociadas
+    practicas = estudiante.practicas.all()
+    fichas_inscripcion = FichaInscripcion.objects.filter(practica__in=practicas)
 
     context = {
         'estudiante': estudiante,
-        'practicas_fichas': practicas_fichas,  # Pasa la lista de tuplas combinadas
+        'fichas_inscripcion': fichas_inscripcion,  # Lista de fichas para usarlas en el template
     }
 
     return render(request, 'coordinador/detalle_estudiante.html', context)
@@ -1232,3 +1226,85 @@ def descargar_informe(request, practica_id):
         return FileResponse(informe.archivo_informe_avances)
     else:
         return HttpResponseNotFound("Informe no encontrado")
+    
+    from django.utils import timezone
+
+def crear_notificacion(usuario, mensaje, tipo='info'):
+    notificacion = Notificacion.objects.create(
+        usuario=usuario,
+        mensaje=mensaje,
+        tipo=tipo,
+        fecha_creacion=timezone.now()
+    )
+    notificacion.save()
+
+def detalle_practica_coordinador(request, practica_id):
+    practica = get_object_or_404(Practica, id=practica_id)
+    
+    # Obtener la FichaInscripcion asociada a la práctica
+    ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
+    
+    # Obtener el autoevaluación asociada a la práctica
+    autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
+    
+    # Obtener documento de inscripción (puedes modificarlo si es necesario)
+    documento = Document.objects.filter(tipo='inscripcion').first()
+
+    if request.method == "POST":
+        # Manejo de archivos subidos para informe de avances
+        if "archivo_informe_avances" in request.FILES:
+            archivo = request.FILES.get("archivo_informe_avances")
+            if archivo:
+                informe_avances = InformeAvances.objects.filter(practica=practica).first()
+                if not informe_avances:
+                    informe_avances = InformeAvances(practica=practica, intentos_subida=0)
+                if informe_avances.archivo_informe_avances:
+                    informe_avances.archivo_informe_avances.delete()  # Eliminar archivo anterior
+                informe_avances.archivo_informe_avances = archivo
+                informe_avances.intentos_subida += 1
+                informe_avances.save()
+
+        # Manejo de archivos subidos para informe final
+        if "archivo_informe_final" in request.FILES:
+            archivo_final = request.FILES.get("archivo_informe_final")
+            if archivo_final:
+                informe_final = InformeFinal.objects.filter(practica=practica).first()
+                if not informe_final:
+                    informe_final = InformeFinal(practica=practica, intentos_subida_final=0)
+                if informe_final.archivo_informe_final:
+                    informe_final.archivo_informe_final.delete()  # Eliminar archivo anterior
+                informe_final.archivo_informe_final = archivo_final
+                informe_final.intentos_subida_final += 1
+                informe_final.save()
+
+        return redirect('detalle_practica_coordinador', practica_id=practica.id)
+
+    # Obtener informes de avances y final asociados a la práctica
+    informe_avances = InformeAvances.objects.filter(practica=practica).first()
+    informe_final = InformeFinal.objects.filter(practica=practica).first()
+
+    # Verificar si el informe de avances ha sido enviado
+    informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
+
+    # Obtener nota de la autoevaluación, si existe
+    nota_autoevaluacion = autoevaluacion.nota if autoevaluacion else None
+
+    # Verificar si la autoevaluación está completada
+    autoevaluacion_completada = Autoevaluacion.objects.filter(practica=practica).exists()
+
+    # Calcular intentos restantes para informes
+    intentos_restantes_avances = max(informe_avances.MAX_INTENTOS - informe_avances.intentos_subida, 0) if informe_avances else 2
+    intentos_restantes_final = max(informe_final.MAX_INTENTOS - informe_final.intentos_subida_final, 0) if informe_final else 2
+
+    return render(request, 'coordinador/detalle_practica.html', {
+        'practica': practica,
+        'ficha_inscripcion': ficha_inscripcion,
+        'estado_ficha': ficha_inscripcion.estado if ficha_inscripcion else None,
+        'documento': documento,
+        'intentos_restantes_avances': intentos_restantes_avances,
+        'intentos_restantes_final': intentos_restantes_final,
+        'nota_autoevaluacion': nota_autoevaluacion,
+        'autoevaluacion_completada': autoevaluacion_completada,
+        'informe_avances_enviado': informe_avances_enviado,
+    })
+

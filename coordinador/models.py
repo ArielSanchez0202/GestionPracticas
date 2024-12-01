@@ -293,3 +293,18 @@ class FormularioToken(models.Model):
 
 ############################################################
 
+class Notificacion(models.Model):
+    TIPO_CHOICES = [
+        ('info', 'Información'),
+        ('alerta', 'Alerta'),
+        ('exito', 'Éxito'),
+        ('error', 'Error'),
+    ]
+    mensaje = models.TextField()
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='info')
+    leida = models.BooleanField(default=False)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notificación para {self.usuario.username}: {self.mensaje[:20]}"

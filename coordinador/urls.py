@@ -40,4 +40,6 @@ urlpatterns = [
     path('formulario/<str:token>/', views.completar_formulario, name='completar_formulario'),
     path('listado_informes_confidenciales/', views.listado_informes_confidenciales, name='listado_informes_confidenciales'),
     path('editar_informe_confidencial/<int:informe_id>/', views.editar_informe_confidencial, name='editar_informe_confidencial'),
+    ####################################################################
+    path('detalle_practica_coordinador/<int:practica_id>/', views.detalle_practica_coordinador, name='detalle_practica_coordinador'),
 ]

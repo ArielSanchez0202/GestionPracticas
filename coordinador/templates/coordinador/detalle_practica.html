@@ -1,0 +1,251 @@
+{% extends 'base_coordinador.html' %}
+
+{% load static %}  
+
+{% block title %}Detalle de Práctica Profesional{% endblock %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/detalle_practica.css' %}">
+<link rel="stylesheet" href="{% static 'css/informe_de_avance.css' %}">
+
+<div class="main-content">
+    <a href="javascript:history.back()">
+        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+    </a>
+    
+    <h1>{{ ficha_inscripcion.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            {% if ficha_inscripcion.estado == 'Pendiente' %}
+                <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% elif ficha_inscripcion.estado == 'Rechazada' %}
+                <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% elif ficha_inscripcion.estado == 'Aprobada' %}
+                <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            {% endif %}
+            <span>Ficha de Inscripción Práctica Profesional</span>
+        </div>
+        <div class="card-data">
+        <p>Estado: {{ ficha_inscripcion.get_estado_display }}</p>
+        {% if ficha_inscripcion.estado == 'Pendiente' %}
+            <a href="{% url 'ver_ficha' practica.id %}">
+                <button class="action-button">Ver ficha</button>
+            </a>
+        {% elif ficha_inscripcion.estado == 'Rechazada' %}
+            <a href="{% url 'ver_ficha' practica.id %}">
+                <button class="action-button">Ver ficha</button>
+            </a>
+        {% elif ficha_inscripcion.estado == 'Aprobada' %}           
+            <a href="{% url 'generar_pdf_practica' ficha_inscripcion.pk %}">
+                <button class="action-button">Descargar carta de aprobación</button>
+            </a>
+            <a href="{% url 'ver_ficha' practica.id %}">
+                <button class="action-button">Ver ficha</button>
+            </a>
+        {% endif %}
+        </div>
+    </div>
+    
+    {% if ficha_inscripcion.estado == "Pendiente" %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+            <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if ficha_inscripcion.estado == 'Aprobada' %}
+    {% if intentos_restantes_avances == 2 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Loader.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+                <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+                <p>Intentos restantes: {{ intentos_restantes_avances }}</p>
+                <div class="form-container">
+                    <form method="POST" enctype="multipart/form-data" class="custom-form">
+                        {% csrf_token %}
+                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
+                        <button type="submit" class="submit-button">Subir Archivo</button>
+                    </form>
+                    <a href="{% url 'descargar_plantilla' practica.id %}">
+                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                    </a>
+                </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if intentos_restantes_avances == 1 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+            <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+            <p>Intentos restantes: {{ intentos_restantes_avances }}</p>
+            <p>Archivo subido: {{ archivo_nombre }}</p>
+            <div class="form-container">
+                <form method="POST" enctype="multipart/form-data" class="custom-form">
+                    {% csrf_token %}
+                    <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
+                    <button type="submit" class="submit-button">Subir Archivo</button>
+                </form>
+                <a href="{% url 'descargar_plantilla' practica.id %}">
+                    <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+    {% endif %}
+    {% if intentos_restantes_avances == 0 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe de avances</span>
+        </div>
+        <div class="card-data">
+                <p>Archivo subido: {{ archivo_nombre }}</p>
+                <p>Limite de intentos excedido.</p>
+                <div class="form-container">
+                    <form method="POST" enctype="multipart/form-data" class="custom-form">
+                        {% csrf_token %}
+                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  disabled>
+                        <button type="submit" class="submit-button" disabled>Subir Archivo</button>
+                    </form>
+                    <a href="{% url 'descargar_plantilla' practica.id %}">
+                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                    </a>
+                </div>  
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    {% if ficha_inscripcion.estado == 'Pendiente' %}
+    <div class="card">
+        <div class="card-header">
+                <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Autoevaluación</span>
+        </div>
+        <div class="card-data">
+        <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+    </div>
+    </div>
+    {% endif %}
+    
+    {% if ficha_inscripcion.estado == 'Aprobada' %}
+    {% if autoevaluacion_completada %}
+        <!-- Tarjeta cuando la autoevaluación ya está completada -->
+        <div class="card">
+            <div class="card-header">
+                <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+                <span>Autoevaluación</span>
+            </div>
+            <div class="card-data">
+                <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+                <p>Nota: {{ nota_autoevaluacion }}</p>
+                <a href="{% url 'ver_autoevaluacion' solicitud_id=practica.id %}">
+                    <button class="action-button">Ver autoevaluación</button>
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <!-- Tarjeta cuando la autoevaluación aún no está completada -->
+        <div class="card">
+            <div class="card-header">
+                <img src="{% static 'icons/In_Process.svg' %}" style="width: 25px; margin-right: 10px;">
+                <span>Autoevaluación</span>
+            </div>
+            <div class="card-data">
+                <p>La Autoevaluación es un documento que el estudiante completa al final de su práctica profesional. En este informe, el estudiante reflexiona sobre su desempeño, habilidades adquiridas y aprendizajes. Es fundamental para la evaluación final y se debe enviar junto con el informe final de la práctica.</p>
+                <a href="{% url 'autoevaluacion' solicitud_id=practica.id %}">
+                    <button class="action-button">Llenar autoevaluación</button>
+                </a>
+            </div>
+        </div>
+    {% endif %}
+    {% endif %}
+
+    {% if ficha_inscripcion.estado == 'Aprobada' %}
+    {% if informe_avances_enviado %}
+    {% if intentos_restantes_final == 2 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/In_Process.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe Final</span>
+        </div>
+        <div class="card-data">
+        <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
+        <p>Intentos restantes: {{ intentos_restantes_final }}</p>
+        <button class="action-button">Subir informe final</button>
+        </div>
+    </div>
+    </div>
+    {% endif %}
+    {% if intentos_restantes_final == 1 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe Final</span>
+        </div>
+        <div class="card-data">
+        <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
+        <p>Intentos restantes: {{ intentos_restantes_final }}</p>
+        <p>Archivo subido: {{ archivo_nombre }}</p>
+        <button class="action-button">Subir informe final</button>
+        </div>
+    </div>
+    </div>
+    {% endif %}
+    {% if intentos_restantes_final == 0 %}
+    <div class="card">
+        <div class="card-header">
+            <img src="{% static 'icons/Check_circle_white.svg' %}" style="width: 25px; margin-right: 10px;">
+            <span>Informe Final</span>
+        </div>
+        <div class="card-data">
+        <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
+        <p>Archivo subido: {{ archivo_nombre }}</p>
+        <p>Limite de intentos excedido.</p>
+        <button class="action-button" disabled>Subir informe final</button>
+        </div>
+    </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+
+<!-- Modal para subir archivo -->
+<div id="modalSubirArchivo" class="modal">
+    <div class="modal-content">
+        <form method="POST" enctype="multipart/form-data" id="formSubirArchivo" class="form-upload">
+            {% csrf_token %}
+            <label class="file-upload" for="archivo" id="uploadLabel">
+                <h2>Subir Informe de Avances</h2>
+                <img src="{% static 'Subir_png.svg' %}" alt="Icono de subir archivo">
+                <p>Busca un archivo o arrástralo aquí</p>
+                <input type="file" id="archivo" name="archivo_informe_avances" accept=".docx,.pdf">
+                <div id="fileDetails" class="file-details" style="display: none;">
+                    <p id="fileName"></p>
+                    <img src="{% static 'Delete.svg' %}" id="deleteFile" alt="Eliminar archivo">
+                </div>
+            </label>
+            <button class="close-btn" type="submit">Subir Archivo</button>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/informe_de_avance.js' %}"></script>
+
+{% endblock %}
