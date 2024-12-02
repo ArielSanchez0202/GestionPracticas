@@ -1,0 +1,210 @@
+{% extends 'base_coordinador.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <div>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inscripción de Práctica Profesional</title>
+        <link rel="stylesheet" href="{% static 'css/autoevaluacion.css' %}">
+    </div>
+
+    <div class="back-button">
+        <a href="javascript:history.back()" class="back-arrow">
+            <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+        </a>
+    </div>
+
+    <div class="container">
+
+        <h1>Rúbrica de evaluación Informe de avances</h1>
+        {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form action="{% url 'evaluar_informe' practica.id %}" method="post">
+            {% csrf_token %}
+            <legend>Datos del alumno:</legend>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre Completo:</label>
+                    <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="rut">Rut:</label>
+                    <input type="text" id="rut" name="rut" value="{{ estudiante.rut }}" readonly>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="carrera">Carrera:</label>
+                    <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
+                </div>            
+            </div>
+            <legend>Datos de la empresa donde se desarrolla la práctica:</legend>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="razon_social">Nombre o giro de la Empresa:</label>
+                    <input type="text" id="razon_socialnombre" name="razon_socialnombre" value="{{ ficha_inscripcion.razon_social }}" readonly>
+                </div>
+            </div>
+            <legend>Datos del supervisor de la práctica:</legend>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="jefe_directo">Nombre Completo:</label>
+                    <input type="text" id="jefe_directo" name="jefe_directo" value="{{ficha_inscripcion.jefe_directo}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="telefono_jefe">Teléfono:</label>
+                    <input type="text" id="telefono_jefe" name="telefono_jefe" value="{{ficha_inscripcion.telefono_jefe}}" readonly>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="correo_jefe">Correo:</label>
+                    <input type="text" id="correo_jefe" name="correo_jefe" value="{{ficha_inscripcion.correo_jefe}}" readonly>
+                </div>
+            </div>
+
+            <legend>Datos del coordinador de prácticas:</legend>
+
+            <div class="input-group">
+                <div class="form-group">
+                    <label for="nombre_coordinador">Nombre Completo:</label>
+                    <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ coordinador.get_full_name }}" readonly>
+                </div>
+            </div>
+
+
+
+
+
+
+            <h2>I. Contenido del documento</h2>
+            
+            <h3>Portada e índice de contenidos:</h3>
+            <label><input type="radio" name="portada" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="portada" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="portada" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="portada" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Introducción:</h3>
+            <label><input type="radio" name="introduccion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="introduccion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="introduccion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="introduccion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Objetivo general:</h3>
+            <label><input type="radio" name="objetivo_general" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="objetivo_general" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="objetivo_general" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="objetivo_general" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Objetivos específicos:</h3>
+            <label><input type="radio" name="objetivos_especificos" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="objetivos_especificos" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="objetivos_especificos" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="objetivos_especificos" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Caracterización de la empresa:</h3>
+            <label><input type="radio" name="caracterizacion_empresa" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="caracterizacion_empresa" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="caracterizacion_empresa" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="caracterizacion_empresa" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Datos del supervisor y organigrama:</h3>
+            <label><input type="radio" name="datos_supervisor" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="datos_supervisor" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="datos_supervisor" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="datos_supervisor" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Desarrollo de la práctica:</h3>
+            <label><input type="radio" name="desarrollo_practica" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="desarrollo_practica" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="desarrollo_practica" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="desarrollo_practica" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h2>II. Forma del documento</h2>
+
+
+            <h3>Formato establecido:</h3>
+            <label><input type="radio" name="redaccion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="redaccion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="redaccion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="redaccion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Uso de la tercera persona:</h3>
+            <label><input type="radio" name="ortografia" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="ortografia" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="ortografia" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="ortografia" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Citas y fuentes:</h3>
+            <label><input type="radio" name="presentacion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="presentacion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="presentacion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="presentacion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Extensión:</h3>
+            <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="formato" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Identificación de tablas y gráficos:</h3>
+            <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="formato" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Ortografía:</h3>
+            <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="formato" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h2>III. Pertinencia del documento</h2>
+
+            <h3>Cohesión y coherencia:</h3>
+            <label><input type="radio" name="investigacion_empresa" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="investigacion_empresa" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="investigacion_empresa" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="investigacion_empresa" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Desarrollo de ideas/profundización:</h3>
+            <label><input type="radio" name="desarrollo_proyectos" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="desarrollo_proyectos" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="desarrollo_proyectos" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="desarrollo_proyectos" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Identificación de roles e impacto:</h3>
+            <label><input type="radio" name="analisis_conclusiones" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="analisis_conclusiones" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="analisis_conclusiones" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="analisis_conclusiones" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+            <h3>Riqueza lingüística:</h3>
+            <label><input type="radio" name="coherencia" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+            <label><input type="radio" name="coherencia" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+            <label><input type="radio" name="coherencia" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+            <label><input type="radio" name="coherencia" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+
+            <div class="button-container">
+                <button type="submit" class="send-button">Enviar</button>
+            </div>
+        
+        </form>
+                
+    </div>
+
+{% endblock %}

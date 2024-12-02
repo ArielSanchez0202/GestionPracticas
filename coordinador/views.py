@@ -24,7 +24,7 @@ import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from autenticacion.decorators import coordinador_required
 from .forms import DocumentForm, InformeConfidencialForm
-from .models import Coordinador, Document, Estudiante, InformeConfidencial, Notificacion, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken, Practica
+from .models import Coordinador, Document, Estudiante, InformeConfidencial, Notificacion, PracticaConfig, FichaInscripcion, Autoevaluacion, FormularioToken, Practica, InformeAvances, Rubrica
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph
@@ -1400,3 +1400,72 @@ def detalle_practica_coordinador(request, practica_id):
         'informe_avances_enviado': informe_avances_enviado,
         'informe_confidencial': informe_confidencial,
     })
+
+@coordinador_required
+def evaluar_informe(request, practica_id):
+    practica = get_object_or_404(Practica, pk=practica_id)
+    informe = practica.informeavances_set.last()  # Obtener el último informe de avances
+
+    # Obtener estudiante relacionado con la práctica
+    estudiante = practica.estudiante
+
+    # Obtener la FichaInscripcion asociada con la práctica
+    ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
+
+    coordinador = request.user
+
+    # Criterios de evaluación para mostrar en la plantilla
+    contenido_criterios = {
+        "portada_indice": "Portada e índice de contenidos",
+        "introduccion": "Introducción",
+        "objetivo_general": "Objetivo general",
+        "objetivos_especificos": "Objetivos específicos",
+        "caracterizacion_empresa": "Caracterización de la empresa",
+        "datos_supervisor": "Datos del supervisor y organigrama",
+        "desarrollo_practica": "Desarrollo de la práctica"
+    }
+
+    forma_criterios = {
+        "formato_establecido": "Formato establecido",
+        "uso_tercera_persona": "Uso de la tercera persona",
+        "citas_fuentes": "Citas y fuentes",
+        "extencion": "Extensión",
+        "identificacion_tablas": "Identificación de tablas y gráficos",
+        "ortografia": "Ortografía"
+    }
+
+    pertenencia_criterios = {
+        "cohesion_coherencia": "Cohesión y coherencia",
+        "desarrollo_ideas": "Desarrollo de ideas/profundización",
+        "roles_impacto": "Identificación de roles e impacto",
+        "riqueza_linguistica": "Riqueza lingüística"
+    }
+
+    # Contexto para pasar a la plantilla
+    context = {
+        "practica": practica,
+        "informe": informe,
+        "contenido_criterios": contenido_criterios,
+        "forma_criterios": forma_criterios,
+        "pertenencia_criterios": pertenencia_criterios,
+        "nota_final": informe.nota_avance if informe else "",
+        "estudiante": estudiante,
+        "ficha_inscripcion": ficha_inscripcion,  # Pasar la ficha de inscripción
+        "coordinador": coordinador,  # Pasar datos del coordinador
+}
+
+    if request.method == "POST":
+        # Procesar los datos enviados por el formulario
+        nota_avance = request.POST.get("nota_avance")
+        comentarios = request.POST.get("comentarios")
+
+        if informe:
+            informe.nota_avance = nota_avance
+            informe.comentarios = comentarios
+            informe.save()
+            messages.success(request, "El informe ha sido evaluado exitosamente.")
+            return redirect('informes_avances')
+        else:
+            messages.error(request, "No se encontró un informe asociado a esta práctica.")
+
+    return render(request, 'coordinador/evaluar_informe.html', context)

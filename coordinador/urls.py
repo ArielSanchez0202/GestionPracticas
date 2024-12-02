@@ -22,6 +22,7 @@ urlpatterns = [
     path('documentos/', views.documentos, name='documentos'),
     path('ver_documento/<int:document_id>/', views.ver_documento, name='ver_documento'),
     path('descargar_informe/<int:practica_id>/', descargar_informe, name='descargar_informe'),
+    path('evaluar_informe/<int:practica_id>/', views.evaluar_informe, name='evaluar_informe'),
     #Lista Coordinadores
     path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador'),
     path('crear_coordinador/',views.crear_coordinador,name='crear_coordinador'),
