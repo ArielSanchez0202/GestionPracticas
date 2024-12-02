@@ -60,7 +60,7 @@
 
                                 <!-- Si el estado es 'Entregado', botón para ver rubrica -->
                                 {% if ficha_data.estado == 'Entregado' %}
-                                    <a href="{% url 'ver_rubrica' ficha_data.ficha.practica.pk %}" class="btn btn-secondary">Ver Rubrica</a>
+                                <a href="#    {% comment %} {% url 'ver_rubrica' ficha_data.ficha.practica.pk %} {% endcomment %}" class="btn btn-secondary">Ver Rubrica</a>
                                 {% endif %}
 
                                 <!-- Si el estado es 'Pendiente de entrega', botón para evaluar el informe -->

@@ -16,7 +16,7 @@
             <!-- Mostrar todos los campos en modo solo lectura -->
             <div class="mb-3">
                 <label for="calidad_trabajo" class="form-label">Calidad del Trabajo</label>
-                <input type="text" class="form-control" value="{{ informe.calidad_trabajo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.calidad_trabajo == 'S' %}Siempre{% elif informe.calidad_trabajo == 'F' %}Frecuentemente{% elif informe.calidad_trabajo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -26,7 +26,7 @@
 
             <div class="mb-3">
                 <label for="efectividad_trabajo" class="form-label">Efectividad en el Trabajo</label>
-                <input type="text" class="form-control" value="{{ informe.efectividad_trabajo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.efectividad_trabajo == 'S' %}Siempre{% elif informe.efectividad_trabajo == 'F' %}Frecuentemente{% elif informe.efectividad_trabajo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -36,7 +36,7 @@
 
             <div class="mb-3">
                 <label for="conocimientos_profesionales" class="form-label">Conocimientos Profesionales</label>
-                <input type="text" class="form-control" value="{{ informe.conocimientos_profesionales }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.conocimientos_profesionales == 'S' %}Siempre{% elif informe.conocimientos_profesionales == 'F' %}Frecuentemente{% elif informe.conocimientos_profesionales == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -46,7 +46,7 @@
 
             <div class="mb-3">
                 <label for="adaptabilidad_cambios" class="form-label">Adaptabilidad a Cambios</label>
-                <input type="text" class="form-control" value="{{ informe.adaptabilidad_cambios }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.adaptabilidad_cambios == 'S' %}Siempre{% elif informe.adaptabilidad_cambios == 'F' %}Frecuentemente{% elif informe.adaptabilidad_cambios == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -56,7 +56,7 @@
 
             <div class="mb-3">
                 <label for="organizacion_trabajo" class="form-label">Organización del Trabajo</label>
-                <input type="text" class="form-control" value="{{ informe.organizacion_trabajo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.organizacion_trabajo == 'S' %}Siempre{% elif informe.organizacion_trabajo == 'F' %}Frecuentemente{% elif informe.organizacion_trabajo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -67,7 +67,7 @@
             <!-- Campos adicionales -->
             <div class="mb-3">
                 <label for="interes_trabajo" class="form-label">Interés en el Trabajo</label>
-                <input type="text" class="form-control" value="{{ informe.interes_trabajo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.interes_trabajo == 'S' %}Siempre{% elif informe.interes_trabajo == 'F' %}Frecuentemente{% elif informe.interes_trabajo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -77,7 +77,7 @@
 
             <div class="mb-3">
                 <label for="responsabilidad" class="form-label">Responsabilidad</label>
-                <input type="text" class="form-control" value="{{ informe.responsabilidad }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.responsabilidad == 'S' %}Siempre{% elif informe.responsabilidad == 'F' %}Frecuentemente{% elif informe.responsabilidad == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -87,7 +87,7 @@
 
             <div class="mb-3">
                 <label for="cooperacion_trabajo" class="form-label">Cooperación en el Trabajo</label>
-                <input type="text" class="form-control" value="{{ informe.cooperacion_trabajo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.cooperacion_trabajo == 'S' %}Siempre{% elif informe.cooperacion_trabajo == 'F' %}Frecuentemente{% elif informe.cooperacion_trabajo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -97,7 +97,7 @@
 
             <div class="mb-3">
                 <label for="creatividad" class="form-label">Creatividad</label>
-                <input type="text" class="form-control" value="{{ informe.creatividad }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.creatividad == 'S' %}Siempre{% elif informe.creatividad == 'F' %}Frecuentemente{% elif informe.creatividad == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -107,7 +107,7 @@
 
             <div class="mb-3">
                 <label for="iniciativa" class="form-label">Iniciativa</label>
-                <input type="text" class="form-control" value="{{ informe.iniciativa }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.iniciativa == 'S' %}Siempre{% elif informe.iniciativa == 'F' %}Frecuentemente{% elif informe.iniciativa == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
@@ -117,23 +117,17 @@
 
             <div class="mb-3">
                 <label for="integracion_grupo" class="form-label">Integración al Grupo</label>
-                <input type="text" class="form-control" value="{{ informe.integracion_grupo }}" disabled>
+                <input type="text" class="form-control" value="{% if informe.integracion_grupo == 'S' %}Siempre{% elif informe.integracion_grupo == 'F' %}Frecuentemente{% elif informe.integracion_grupo == 'A' %}A veces{% else %}Nunca{% endif %}" disabled>
             </div>
 
             <div class="mb-3">
-                <label for="integracion_observacion" class="form-label">Observaciones sobre la Integración</label>
+                <label for="integracion_observacion" class="form-label">Observaciones sobre la Integración al Grupo</label>
                 <textarea class="form-control" rows="3" disabled>{{ informe.integracion_observacion }}</textarea>
             </div>
 
-            <!-- Preguntas adicionales -->
             <div class="mb-3">
-                <label for="positivo_recibir" class="form-label">¿Recibe de manera positiva el feedback?</label>
-                <input type="text" class="form-control" value="{{ informe.positivo_recibir }}" disabled>
-            </div>
-
-            <div class="mb-3">
-                <label for="tipo_especialidad" class="form-label">Tipo de Especialidad</label>
-                <textarea class="form-control" rows="3" disabled>{{ informe.tipo_especialidad }}</textarea>
+                <label for="tipo_especialidad" class="form-label">¿Qué tipo de especialidad o área sugiere que se pueda incluir?</label>
+                <input type="text" class="form-control" value="{{ informe.tipo_especialidad }}" disabled>
             </div>
 
             <!-- Nota calculada -->

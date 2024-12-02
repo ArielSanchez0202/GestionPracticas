@@ -1436,41 +1436,10 @@ def evaluar_informe_avances(request, practica_id):
 
     coordinador = request.user
 
-    # Criterios de evaluación para mostrar en la plantilla
-    contenido_criterios = {
-        "portada_indice": "Portada e índice de contenidos",
-        "introduccion": "Introducción",
-        "objetivo_general": "Objetivo general",
-        "objetivos_especificos": "Objetivos específicos",
-        "caracterizacion_empresa": "Caracterización de la empresa",
-        "datos_supervisor": "Datos del supervisor y organigrama",
-        "desarrollo_practica": "Desarrollo de la práctica"
-    }
-
-    forma_criterios = {
-        "formato_establecido": "Formato establecido",
-        "uso_tercera_persona": "Uso de la tercera persona",
-        "citas_fuentes": "Citas y fuentes",
-        "extencion": "Extensión",
-        "identificacion_tablas": "Identificación de tablas y gráficos",
-        "ortografia": "Ortografía"
-    }
-
-    pertenencia_criterios = {
-        "cohesion_coherencia": "Cohesión y coherencia",
-        "desarrollo_ideas": "Desarrollo de ideas/profundización",
-        "roles_impacto": "Identificación de roles e impacto",
-        "riqueza_linguistica": "Riqueza lingüística"
-    }
-
-    # Contexto para pasar a la plantilla
+    # Contexto para la plantilla
     context = {
         "practica": practica,
         "informe": informe,
-        "contenido_criterios": contenido_criterios,
-        "forma_criterios": forma_criterios,
-        "pertenencia_criterios": pertenencia_criterios,
-        "nota_final": informe.nota_avance if informe else "",
         "estudiante": estudiante,
         "ficha_inscripcion": ficha_inscripcion,  # Pasar la ficha de inscripción
         "coordinador": coordinador,  # Pasar datos del coordinador
@@ -1478,15 +1447,46 @@ def evaluar_informe_avances(request, practica_id):
 }
 
     if request.method == "POST":
-        # Procesar los datos enviados por el formulario
-        nota_avance = request.POST.get("nota_avance")
-        comentarios = request.POST.get("comentarios")
+        # Obtener criterios desde el formulario
+        criterios = [
+            request.POST.get("portada"),
+            request.POST.get("introduccion"),
+            request.POST.get("objetivo_general"),
+            request.POST.get("objetivos_especificos"),
+            request.POST.get("caracterizacion_empresa"),
+            request.POST.get("datos_supervisor"),
+            request.POST.get("desarrollo_practica"),
+            request.POST.get("formato_establecido"),
+        ]
+
+        # Asignar puntajes según el criterio
+        puntajes = {
+            "Desempeño de excelencia": 4,
+            "Desempeño efectivo": 3,
+            "Desempeño que se debe mejorar": 2,
+            "Desempeño insatisfactorio": 1,
+        }
+
+        # Calcular el total de puntajes obtenidos
+        total_puntaje_obtenido = sum(puntajes.get(criterio, 0) for criterio in criterios if criterio)
+
+        # Determinar el puntaje máximo y mínimo posibles
+        max_puntaje = len(criterios) * 4  # Todos con "Desempeño de excelencia"
+        min_puntaje = len(criterios) * 1  # Todos con "Desempeño insatisfactorio"
+
+        if max_puntaje > min_puntaje:
+            # Escalar la nota final al rango de 1.0 a 7.0
+            nota_final = 1.0 + ((total_puntaje_obtenido - min_puntaje) * 6.0 / (max_puntaje - min_puntaje))
+        else:
+            nota_final = 1.0
+
+        nota_final = round(nota_final, 1)  # Redondear a un decimal
 
         if informe:
-            informe.nota_avance = nota_avance
-            informe.comentarios = comentarios
+            informe.nota_avance = nota_final
+            informe.retroalimentacion = request.POST.get("comentarios", "")
             informe.save()
-            messages.success(request, "El informe ha sido evaluado exitosamente.")
+            messages.success(request, f"El informe ha sido evaluado exitosamente. Nota: {nota_final}")
             return redirect('informes_avances')
         else:
             messages.error(request, "No se encontró un informe asociado a esta práctica.")
