@@ -26,7 +26,7 @@
             </div>
         {% endif %}
 
-        <form action="{% url 'evaluar_informe' practica.id %}" method="post">
+        <form action="{% url 'evaluar_informe_avances' practica.id %}" method="post">
             {% csrf_token %}
             <legend>Datos del alumno:</legend>
 
@@ -80,7 +80,7 @@
             <div class="input-group">
                 <div class="form-group">
                     <label for="nombre_coordinador">Nombre Completo:</label>
-                    <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ usuario.get_full_name }}" readonly>
+                    <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ usuario_sesion }}" readonly>
                 </div>
             </div>
 

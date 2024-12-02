@@ -987,8 +987,9 @@ def update_document(request, document_id):
 def documentos(request):
     # Tipos de documentos permitidos
     tipo_documentos = {
-        'reglamento': 'Reglamento Práctica Profesional',
-        'avance': 'Plantilla de informe',
+    'reglamento': 'Reglamento Práctica Profesional',
+    'avance': 'Plantilla de informe ',
+
     }
 
     # Obtener los documentos existentes por tipo
@@ -998,17 +999,17 @@ def documentos(request):
         documentos.append({
             'tipo': tipo,
             'descripcion': descripcion,
-            'documento': documento,
+            'documento': documento
         })
 
-    # Obtener la configuración o valores predeterminados
-    configuracion = PracticaConfig.objects.first()
-    if not configuracion:
-        configuracion = PracticaConfig.objects.create()  # Crear configuración predeterminada si no existe
-
-    fecha_inicio_limite = configuracion.fecha_inicio_limite
-    fecha_termino_limite = configuracion.fecha_termino_limite
-    correo_director = configuracion.correo_director
+    # Obtener los límites de fecha de configuración
+    try:
+        configuracion = PracticaConfig.objects.first()
+        fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
+        fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
+        correo_director = configuracion.correo_director
+    except PracticaConfig.DoesNotExist:
+        fecha_inicio_limite = fecha_termino_limite = None
 
     # Formulario inicial vacío
     form = DocumentForm()
@@ -1016,28 +1017,33 @@ def documentos(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            # Procesar documento
+            # Determinar el tipo de documento
             tipo_documento = form.cleaned_data.get('tipo')
             archivo_nuevo = form.cleaned_data.get('archivo')
 
+            # Buscar documento existente por tipo
             documento = Document.objects.filter(tipo=tipo_documento).first()
+
             if documento:
+                # Si existe, sobrescribir archivo
                 documento.archivo = archivo_nuevo
                 documento.save()
             else:
+                # Si no existe, crear uno nuevo
                 nuevo_documento = form.save(commit=False)
                 nuevo_documento.tipo = tipo_documento
                 nuevo_documento.save()
 
-            messages.success(request, "Documento guardado correctamente.")
+            # Redirigir tras guardar
             return redirect('documentos')
-        else:
-            # Manejo simplificado de errores
-            for error in form.errors.as_data().values():
-                for e in error:
-                    messages.error(request, e.message)
 
-    # Pasar el contexto
+        else:
+            # Mostrar errores en los mensajes
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error en {field}: {error}")
+
+    # Pasar las fechas al contexto
     context = {
         'documentos': documentos,
         'form': form,
@@ -1047,7 +1053,6 @@ def documentos(request):
     }
 
     return render(request, 'coordinador/documentos.html', context)
-
 
 # Vista para ver documentos en el navegador (PDF y Word)
 def ver_documento(request, document_id):
@@ -1419,7 +1424,7 @@ def detalle_practica_coordinador(request, practica_id):
     })
 
 @coordinador_required
-def evaluar_informe(request, practica_id):
+def evaluar_informe_avances(request, practica_id):
     practica = get_object_or_404(Practica, pk=practica_id)
     informe = practica.informeavances_set.last()  # Obtener el último informe de avances
 
@@ -1469,6 +1474,7 @@ def evaluar_informe(request, practica_id):
         "estudiante": estudiante,
         "ficha_inscripcion": ficha_inscripcion,  # Pasar la ficha de inscripción
         "coordinador": coordinador,  # Pasar datos del coordinador
+        "usuario_sesion": request.user.get_full_name()  # Nombre completo del usuario autenticado
 }
 
     if request.method == "POST":
@@ -1485,4 +1491,4 @@ def evaluar_informe(request, practica_id):
         else:
             messages.error(request, "No se encontró un informe asociado a esta práctica.")
 
-    return render(request, 'coordinador/evaluar_informe.html', context)
+    return render(request, 'coordinador/evaluar_informe_avances.html', context)

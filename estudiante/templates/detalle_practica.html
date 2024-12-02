@@ -77,15 +77,14 @@
         </div>
         <div class="card-data">
                 <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-                <p>Intentos restantes: {{ intentos_restantes_avances }}</p>
+                <p>Intentos restantes: {{ intentos_restantes_avances}}</p>
                 <div class="form-container">
                     <form method="POST" enctype="multipart/form-data" class="custom-form">
                         {% csrf_token %}
-                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
-                        <button type="submit" class="submit-button">Subir Archivo</button>
+                        <button type="button" class="submit-button"  id="btnSubirInformeAvance" >Subir informe de avances</button>
                     </form>
                     <a href="{% url 'descargar_plantilla' practica.id %}">
-                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                        <button class="action-button" >Descargar plantilla</button>
                     </a>
                 </div>
         </div>
@@ -99,16 +98,15 @@
         </div>
         <div class="card-data">
             <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
-            <p>Intentos restantes: {{ intentos_restantes_avances }}</p>
-            <p>Archivo subido: {{ archivo_nombre }}</p>
+            <p>Intentos restantes: {{ intentos_restantes_avances}}</p>
+            <p>Archivo subido: {{ archivo_informe_avances }}</p>
             <div class="form-container">
                 <form method="POST" enctype="multipart/form-data" class="custom-form">
                     {% csrf_token %}
-                    <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  required>
-                    <button type="submit" class="submit-button">Subir Archivo</button>
+                    <button type="button" class="submit-button"  id="btnSubirInformeAvance" >Subir informe de avances</button>
                 </form>
                 <a href="{% url 'descargar_plantilla' practica.id %}">
-                    <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
+                    <button class="action-button" >Descargar plantilla</button>
                 </a>
             </div>
         </div>
@@ -122,18 +120,18 @@
             <span>Informe de avances</span>
         </div>
         <div class="card-data">
-                <p>Archivo subido: {{ archivo_nombre }}</p>
+                <p>El Informe de Avance es un documento que el estudiante presenta a la mitad de su práctica profesional. En este informe, el estudiante detalla las actividades realizadas hasta el momento, los logros alcanzados y los desafíos enfrentados. Este documento es crucial para que el supervisor y el director de carrera evalúen el progreso del estudiante y proporcionen orientación adicional si es necesario. Asegúrate de seguir las pautas establecidas y de enviarlo antes de la fecha límite para garantizar una revisión efectiva.</p>
+                <p>Archivo subido: {{ archivo_informe_avances }}</p>
                 <p>Limite de intentos excedido.</p>
-                <div class="form-container">
+                <div class="form-container2">
+                    <a href="{% url 'descargar_plantilla' practica.id %}">
+                        <button class="action-button" >Descargar plantilla</button>
+                    </a>
                     <form method="POST" enctype="multipart/form-data" class="custom-form">
                         {% csrf_token %}
-                        <input type="file" name="archivo_informe_avances" id="archivo_informe_avances" class="file-input"  disabled>
-                        <button type="submit" class="submit-button" disabled>Subir Archivo</button>
+                        <button type="button" class="submit-button" id="btnSubirInformeAvance" style="opacity: 0.5;" disabled >Subir informe de avances</button>
                     </form>
-                    <a href="{% url 'descargar_plantilla' practica.id %}">
-                        <button class="action-button" style="margin-left: 20px;">Descargar plantilla</button>
-                    </a>
-                </div>  
+                </div>
         </div>
     </div>
     {% endif %}
@@ -195,7 +193,11 @@
         <div class="card-data">
         <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
         <p>Intentos restantes: {{ intentos_restantes_final }}</p>
-        <button class="action-button">Subir informe final</button>
+        <div class="form-container">
+            <form method="POST" enctype="multipart/form-data" id="formSubirInformeFinal" class="custom-form">
+                {% csrf_token %}
+                <button type="button" class="action-button" id="btnSubirInformeFinal">Subir informe final</button>
+            </div>       
         </div>
     </div>
     </div>
@@ -209,8 +211,16 @@
         <div class="card-data">
         <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
         <p>Intentos restantes: {{ intentos_restantes_final }}</p>
-        <p>Archivo subido: {{ archivo_nombre }}</p>
-        <button class="action-button">Subir informe final</button>
+        <p>Archivo subido: {{ archivo_informe_final }}</p>
+        <div class="form-container">
+            <a href="{{ practica.archivo_informe_final.url }}" download class="action-button">
+                Descargar Informe Final
+            </a>
+            <form method="POST" enctype="multipart/form-data" id="formSubirInformeFinal" class="custom-form">
+                {% csrf_token %}
+                <button type="button" class="action-button" id="btnSubirInformeFinal">Subir informe final</button>
+            </div> 
+        </div>
         </div>
     </div>
     </div>
@@ -223,9 +233,17 @@
         </div>
         <div class="card-data">
         <p>El Informe Final es un documento que el estudiante presenta al concluir su práctica profesional, resumiendo las actividades realizadas y los aprendizajes adquiridos. Es esencial para la evaluación final y debe enviarse junto con la autoevaluación.</p>
-        <p>Archivo subido: {{ archivo_nombre }}</p>
+        <p>Archivo subido: {{ archivo_informe_final }}</p>
         <p>Limite de intentos excedido.</p>
-        <button class="action-button" disabled>Subir informe final</button>
+            <div class="form-container">
+                <a href="{{ practica.archivo_informe_final.url }}" download class="action-button">
+                    Descargar Informe Final
+                </a>
+                <form method="POST" enctype="multipart/form-data" class="custom-form">
+                    {% csrf_token %}
+                    <button type="button" class="submit-button" id="btnSubirInformeFinal" style="opacity: 0.5;" disabled >Subir informe final</button>
+                </form>
+            </div>
         </div>
     </div>
     </div>
@@ -249,6 +267,26 @@
                 </div>
             </label>
             <button class="close-btn" type="submit">Subir Archivo</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para subir archivo de informe final -->
+<div id="modalSubirArchivoFinal" class="modal">
+    <div class="modal-content">
+        <form method="POST" enctype="multipart/form-data" id="formSubirArchivoFinal" style="width: 100%;" class="form-upload">
+            {% csrf_token %}
+            <label class="file-upload" for="archivoFinal" id="uploadLabelFinal">
+                <h2>Subir Informe Final</h2>
+                <img src="{% static 'Subir_png.svg' %}" alt="Icono de subir archivo">
+                <p>Busca un archivo o arrástralo aquí</p>
+                <input type="file" id="archivoFinal" name="archivo_informe_final" accept=".docx,.pdf">
+                <div id="fileDetailsFinal" class="file-details" style="display: none;">
+                    <p id="fileNameFinal"></p>
+                    <img src="{% static 'Delete.svg' %}" id="deleteFileFinal" alt="Eliminar archivo">
+                </div>
+            </label>
+            <button type="submit" class="close-btn">Subir Archivo</button>
         </form>
     </div>
 </div>

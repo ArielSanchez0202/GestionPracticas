@@ -65,7 +65,7 @@
 
                                 <!-- Si el estado es 'Pendiente de entrega', botón para evaluar el informe -->
                                 {% if ficha_data.estado == 'Pendiente de entrega' %}
-                                    <a href="{% url 'evaluar_informe' ficha_data.ficha.practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
+                                    <a href="{% url 'evaluar_informe_avances' ficha_data.ficha.practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
                                 {% endif %}
                             </td>
                         </tr>

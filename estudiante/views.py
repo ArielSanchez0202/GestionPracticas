@@ -211,6 +211,10 @@ def detalle_practica(request, solicitud_id):
     informe_avances = InformeAvances.objects.filter(practica=practica).first()
     informe_final = InformeFinal.objects.filter(practica=practica).first()
 
+    # Obtener nombres de los archivos subidos
+    archivo_informe_avances = informe_avances.archivo_informe_avances.name if informe_avances and informe_avances.archivo_informe_avances else None
+    archivo_informe_final = informe_final.archivo_informe_final.name if informe_final and informe_final.archivo_informe_final else None
+
     # Verificar si hay un informe de avances asociado
     informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
     
@@ -229,6 +233,8 @@ def detalle_practica(request, solicitud_id):
         'documento': documento,
         'intentos_restantes_avances': intentos_restantes_avances,
         'intentos_restantes_final': intentos_restantes_final,
+        'archivo_informe_avances': archivo_informe_avances,
+        'archivo_informe_final': archivo_informe_final,
         'nota_autoevaluacion': nota_autoevaluacion,
         'autoevaluacion_completada': autoevaluacion_completada,
         'informe_avances_enviado': informe_avances_enviado,
