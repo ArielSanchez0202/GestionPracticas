@@ -26,8 +26,10 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ informe.ficha_inscripcion.estudiante.usuario.first_name }} {{ informe.ficha_inscripcion.estudiante.usuario.last_name }}</td>
                                 <td>
-                                    {% if informe.ficha_inscripcion.practica %}
-                                        {{ informe.ficha_inscripcion.practica }}
+                                    {% if informe.ficha_inscripcion.practica1 %}
+                                        Práctica 1
+                                    {% elif informe.ficha_inscripcion.practica2 %}
+                                        Práctica 2
                                     {% else %}
                                         No seleccionada
                                     {% endif %}

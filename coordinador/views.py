@@ -749,6 +749,28 @@ def actualizar_nota(request):
         return redirect('autoevaluaciones')  # Redirige tras actualizar
     return redirect('autoevaluaciones')  # Manejo de métodos no POST
 
+def actualizar_nota_informe_confidencial(request):
+    if request.method == 'POST':
+        practica_id = request.POST.get('practica_id')
+        nueva_nota = request.POST.get('nota', '').replace(',', '.')  # Cambiar coma a punto
+
+        try:
+            nota_decimal = Decimal(nueva_nota)  # Convertir a Decimal
+        except InvalidOperation:
+            messages.error(request, "La nota ingresada no es válida. Por favor, usa un número válido.")
+            return redirect('informes_confidenciales')  # Redirige en caso de error
+
+        try:
+            informe = InformeConfidencial.objects.get(practica_id=practica_id)
+            informe.nota = nota_decimal
+            informe.save()
+            messages.success(request, "Nota del informe confidencial actualizada con éxito.")
+        except InformeConfidencial.DoesNotExist:
+            messages.error(request, "Error: No se encontró el informe confidencial.")
+
+        return redirect('listado_informes_confidenciales')  # Redirige tras actualizar
+  # Manejo de métodos no POST
+
 @coordinador_required
 def revisar_autoevaluacion(request, practica_id):
     # Recuperar la FichaInscripcion asociada
@@ -1335,73 +1357,48 @@ def crear_notificacion(usuario, mensaje, tipo='info'):
     )
     notificacion.save()
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Practica, FichaInscripcion, Autoevaluacion, InformeAvances, InformeFinal, InformeConfidencial
+
 def detalle_practica_coordinador(request, practica_id):
     practica = get_object_or_404(Practica, id=practica_id)
-    
-    # Obtener la FichaInscripcion asociada a la práctica
     ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
-    
-    # Obtener el autoevaluación asociada a la práctica
     autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
-    
-    # Obtener documento de inscripción (puedes modificarlo si es necesario)
-    documento = Document.objects.filter(tipo='inscripcion').first()
 
     if request.method == "POST":
-        # Manejo de archivos subidos para informe de avances
         if "archivo_informe_avances" in request.FILES:
             archivo = request.FILES.get("archivo_informe_avances")
-            if archivo:
-                informe_avances = InformeAvances.objects.filter(practica=practica).first()
-                if not informe_avances:
-                    informe_avances = InformeAvances(practica=practica, intentos_subida=0)
-                if informe_avances.archivo_informe_avances:
-                    informe_avances.archivo_informe_avances.delete()  # Eliminar archivo anterior
-                informe_avances.archivo_informe_avances = archivo
-                informe_avances.intentos_subida += 1
-                informe_avances.save()
+            informe_avances, created = InformeAvances.objects.get_or_create(practica=practica)
+            if informe_avances.archivo_informe_avances:
+                informe_avances.archivo_informe_avances.delete()  # Eliminar archivo anterior
+            informe_avances.archivo_informe_avances = archivo
+            informe_avances.intentos_subida += 1
+            informe_avances.save()
 
-        # Manejo de archivos subidos para informe final
         if "archivo_informe_final" in request.FILES:
             archivo_final = request.FILES.get("archivo_informe_final")
-            if archivo_final:
-                informe_final = InformeFinal.objects.filter(practica=practica).first()
-                if not informe_final:
-                    informe_final = InformeFinal(practica=practica, intentos_subida_final=0)
-                if informe_final.archivo_informe_final:
-                    informe_final.archivo_informe_final.delete()  # Eliminar archivo anterior
-                informe_final.archivo_informe_final = archivo_final
-                informe_final.intentos_subida_final += 1
-                informe_final.save()
+            informe_final, created = InformeFinal.objects.get_or_create(practica=practica)
+            if informe_final.archivo_informe_final:
+                informe_final.archivo_informe_final.delete()  # Eliminar archivo anterior
+            informe_final.archivo_informe_final = archivo_final
+            informe_final.intentos_subida_final += 1
+            informe_final.save()
 
         return redirect('detalle_practica_coordinador', practica_id=practica.id)
 
-    # Obtener informes de avances y final asociados a la práctica
     informe_avances = InformeAvances.objects.filter(practica=practica).first()
     informe_final = InformeFinal.objects.filter(practica=practica).first()
+    informe_confidencial = InformeConfidencial.objects.filter(practica=practica).first()
 
-    # Verificar si el informe de avances ha sido enviado
-    informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
-
-    # Obtener nota de la autoevaluación, si existe
     nota_autoevaluacion = autoevaluacion.nota if autoevaluacion else None
-
-    # Verificar si la autoevaluación está completada
-    autoevaluacion_completada = Autoevaluacion.objects.filter(practica=practica).exists()
-
-    # Calcular intentos restantes para informes
-    intentos_restantes_avances = max(informe_avances.MAX_INTENTOS - informe_avances.intentos_subida, 0) if informe_avances else 2
-    intentos_restantes_final = max(informe_final.MAX_INTENTOS - informe_final.intentos_subida_final, 0) if informe_final else 2
+    informe_avances_enviado = InformeAvances.objects.filter(practica=practica).exists()
 
     return render(request, 'coordinador/detalle_practica.html', {
         'practica': practica,
         'ficha_inscripcion': ficha_inscripcion,
         'estado_ficha': ficha_inscripcion.estado if ficha_inscripcion else None,
-        'documento': documento,
-        'intentos_restantes_avances': intentos_restantes_avances,
-        'intentos_restantes_final': intentos_restantes_final,
         'nota_autoevaluacion': nota_autoevaluacion,
-        'autoevaluacion_completada': autoevaluacion_completada,
+        'autoevaluacion': autoevaluacion,
         'informe_avances_enviado': informe_avances_enviado,
+        'informe_confidencial': informe_confidencial,
     })
-

@@ -1,12 +1,12 @@
 {% extends 'base_coordinador.html' %}
 
 {% block title %}Editar Informe Confidencial{% endblock %}
-
+{%load static%}
 {% block content %}
     <div class="container mt-5">
         <!-- Botón de Volver -->
-        <a href="{% url 'listado_informes_confidenciales' %}" class="btn btn-secondary mb-4">
-            <i class="bi bi-arrow-left"></i> Volver
+        <a href="javascript:history.back()">
+            <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
         </a>
         <h1 class="text-center mb-4">Editar Informe Confidencial</h1>
 
