@@ -44,6 +44,8 @@
                         </span><br>
                         Estado: {% if ficha.practica.estado == 'finalizada' %}
                             Finalizada
+                        {% elif ficha.estado == 'Jefe Carrera' %}
+                            Pendiente
                         {% else %}
                             {{ ficha.practica.get_estado_display }}
                         {% endif %}<br>

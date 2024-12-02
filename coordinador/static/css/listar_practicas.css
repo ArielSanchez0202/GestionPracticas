@@ -43,25 +43,20 @@ body {
     padding: 20px;
 }
 
-/* Botón personalizado para "Ver Carta" */
-.custom-warning-btn {
+.action-button{
+    width: auto;
+    text-decoration: none;
+    padding: 5px;
     background-color: #c4c4c4; /* Cambia el color de fondo */
     color: black; /* Cambia el color del texto */
-    border: 1px solid white; /* Borde opcional */
+    border: 1px solid black; /* Borde opcional */
+    border-radius: 5px;
+    cursor: pointer;
 }
-
-/* Botón personalizado para "Ver Formulario" */
-.custom-info-btn {
-    background-color: #c4c4c4; /* Cambia el color de fondo */
-    color: black; /* Cambia el color del texto */
-    border: 1px solid white; /* Borde opcional */
-}
-
-/* Opcional: hover para mejorar la interacción */
-.custom-warning-btn:hover,
-.custom-info-btn:hover {
-    background-color: #c4c4c4;
-    border: 1px solid black;
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 68%; /* Asegura que ocupe todo el ancho disponible */
 }
 
 /* Formulario en dos columnas */

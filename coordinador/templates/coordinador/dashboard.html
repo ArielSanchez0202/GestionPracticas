@@ -59,12 +59,20 @@
         <tbody>
             {% for solicitud in solicitudes_recientes %}
             <tr>
-                <td>{{ solicitud.numero_practica }}</td>
+                <td>{% if solicitud.practica1 %}
+                    Práctica 1
+                {% elif solicitud.practica2 %}
+                    Práctica 2
+                {% else %}
+                    No seleccionada
+                {% endif %}</td>
                 <td>{{ solicitud.estudiante }}</td>
                 <td>{{ solicitud.estado }}</td>
                 <td>
-                    <a href="{% url 'ver_formulario' solicitud.id %}" class="btn btn-info btn-sm">Ver Formulario</a>
-                    <a href="#" class="btn btn-secondary btn-sm">Ver Carta</a>
+                    <a href="{% url 'ver_formulario' solicitud.id %}" class="btn btn-secondary btn-sm">Ver Formulario</a>
+                    <a href="{% url 'generar_pdf_practica' solicitud.pk %}">
+                        <button class="btn btn-secondary btn-sm">Ver Carta</button>
+                    </a>
                 </td>
             </tr>
             {% empty %}

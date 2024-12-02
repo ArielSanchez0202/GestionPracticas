@@ -52,12 +52,14 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if inscripcion.estado == "Aprobada" %}
-                                <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="btn btn-warning custom-warning-btn" target="_blank">Ver Carta</a>
-                                {% elif inscripcion.estado == "Rechazada" %}
-                                <a class="btn btn-warning custom-warning-btn" target="_blank">Ver Comentario</a>
-                                {% endif %}
-                                <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
+                                <div class="action-buttons-container">
+                                    {% if inscripcion.estado == "Aprobada" %}
+                                    <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="action-button" target="_blank">Ver Carta</a>
+                                    {% elif inscripcion.estado == "Rechazada" %}
+                                    <a class="action-button" target="_blank">Ver Comentario</a>
+                                    {% endif %}
+                                    <a href="{% url 'ver_formulario' inscripcion.pk %}" class="action-button">Ver Formulario</a>
+                                </div>
                             </td>
                         </tr>
                     {% empty %}

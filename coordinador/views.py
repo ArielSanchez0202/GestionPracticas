@@ -873,11 +873,9 @@ def correo_jefe_exito(request, solicitud_id):
     })
 
 def actualizar_estado(request, solicitud_id):
-    if request.method == 'POST':
-        # Obtén la solicitud específica
-        solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
 
-        # Verifica el valor de estado_solicitud desde el formulario
+    if request.method == 'POST':
         estado = request.POST.get('estado_solicitud')
 
         if estado in ['Jefe Carrera', 'Rechazada']:
@@ -885,12 +883,10 @@ def actualizar_estado(request, solicitud_id):
             solicitud.estado = estado
             solicitud.save()
 
-            # Si el estado es "Rechzada", actualiza el estado de la práctica
-            if estado == 'Rechazada':
-                # Usa el nombre correcto del campo relacionado
-                practica = Practica.objects.get(fichainscripcion=solicitud)
-                practica.estado = 'rechazada'  # Cambia el estado a "rechazada"
-                practica.save()
+            # Puedes actualizar otros modelos relacionados si es necesario
+            practica = Practica.objects.get(fichainscripcion=solicitud)
+            practica.estado = 'rechazada'
+            practica.save()
 
             # Cuando el Coordinador apruebe una Solicitud, se le enviará un correo al jefe de carrera
             if estado == 'Jefe Carrera':
@@ -914,7 +910,7 @@ def actualizar_estado(request, solicitud_id):
                         f"Gracias."
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=['nicox202@gmail.com'],
+                    recipient_list=['vicentexd1199@gmail.com'],
                     fail_silently=False,
                 )
 

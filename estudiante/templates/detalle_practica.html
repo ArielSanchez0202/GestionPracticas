@@ -19,7 +19,7 @@
     
     <div class="card">
         <div class="card-header">
-            {% if ficha_inscripcion.estado == 'Pendiente' %}
+            {% if ficha_inscripcion.estado == "Pendiente" or ficha_inscripcion.estado == "Jefe Carrera" %}
                 <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
             {% elif ficha_inscripcion.estado == 'Rechazada' %}
                 <img src="{% static 'icons/icon_info.svg' %}" style="width: 25px; margin-right: 10px;">
@@ -29,8 +29,12 @@
             <span>Ficha de Inscripción Práctica Profesional</span>
         </div>
         <div class="card-data">
+        {% if ficha_inscripcion.estado == "Pendiente" or ficha_inscripcion.estado == "Jefe Carrera" %}
+        <p>Estado: Pendiente</p>
+        {% else %}
         <p>Estado: {{ ficha_inscripcion.get_estado_display }}</p>
-        {% if ficha_inscripcion.estado == 'Pendiente' %}
+        {% endif %}
+        {% if ficha_inscripcion.estado == "Pendiente" or ficha_inscripcion.estado == "Jefe Carrera" %}
             <a href="{% url 'ver_ficha' practica.id %}">
                 <button class="action-button">Ver ficha</button>
             </a>
@@ -49,7 +53,7 @@
         </div>
     </div>
     
-    {% if ficha_inscripcion.estado == "Pendiente" %}
+    {% if ficha_inscripcion.estado == "Pendiente" or ficha_inscripcion.estado == "Jefe Carrera" %}
     <div class="card">
         <div class="card-header">
             <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
@@ -132,7 +136,7 @@
     {% endif %}
     {% endif %}
 
-    {% if ficha_inscripcion.estado == 'Pendiente' %}
+    {% if ficha_inscripcion.estado == "Pendiente" or ficha_inscripcion.estado == "Jefe Carrera" %}
     <div class="card">
         <div class="card-header">
                 <img src="{% static 'icons/icon_candado.svg' %}" style="width: 25px; margin-right: 10px;">
