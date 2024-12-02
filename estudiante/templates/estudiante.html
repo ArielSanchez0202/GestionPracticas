@@ -42,7 +42,11 @@
                                 {% endif %}
                             </strong>
                         </span><br>
-                        Estado: {{ ficha.practica.get_estado_display }}<br>
+                        Estado: {% if ficha.practica.estado == 'finalizada' %}
+                            Finalizada
+                        {% else %}
+                            {{ ficha.practica.get_estado_display }}
+                        {% endif %}<br>
                         Fecha de Inscripción: {{ ficha.practica.fecha_inscripcion }} <br>
                         Nota: {{ ficha.practica.nota }}<br>
                         <a href="{% url 'detalle_practica' ficha.id %}">

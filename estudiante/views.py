@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from autenticacion.decorators import estudiante_required
 from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document, Autoevaluacion
 from django.http import HttpResponse, JsonResponse, FileResponse
-from datetime import datetime
+from datetime import datetime, date
 from django.conf import settings
 import os
 from coordinador.models import Document, PracticaConfig
@@ -14,15 +14,19 @@ def estudiante_view(request):
     # Obtener el estudiante asociado al usuario en sesión
     estudiante = get_object_or_404(Estudiante, usuario=request.user)
 
-    # Filtrar las prácticas de este estudiante (usando el modelo Practica)
-    practicas = Practica.objects.filter(estudiante=estudiante)
-
     # Filtrar las fichas de inscripción asociadas al estudiante
     fichas_inscripcion = FichaInscripcion.objects.filter(estudiante=estudiante)
 
+    # Verificar y actualizar el estado de las prácticas si la fecha de término coincide con la fecha actual
+    for ficha in fichas_inscripcion:
+        if ficha.fecha_termino <= date.today():
+            # Si la fecha de término es hoy o anterior, actualizamos el estado de la práctica
+            if ficha.practica:
+                ficha.practica.estado = 'finalizada'
+                ficha.practica.save()
+
     context = {
-        'practicas': practicas,
-        'fichas_inscripcion': fichas_inscripcion
+        'fichas_inscripcion': fichas_inscripcion,
     }
 
     return render(request, 'estudiante.html', context)
