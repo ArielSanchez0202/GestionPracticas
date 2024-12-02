@@ -169,12 +169,6 @@ def inscripcion_practica_view(request):
 
     return render(request, 'inscripcion_practica.html', context)
 
-def verificar_practica1(request):
-    estudiante = Estudiante.objects.get(usuario=request.user)  # Obtener el estudiante logueado
-    existe_practica1 = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, practica1=True).exists()
-    existe_practica2 = FichaInscripcion.objects.filter(estudiante__rut=estudiante.rut, practica2=True).exists()
-    return JsonResponse({'existe_practica1': existe_practica1, 'existe_practica2': existe_practica2})
-
 @estudiante_required
 def detalle_practica(request, solicitud_id):
     practica = get_object_or_404(Practica, id=solicitud_id)

@@ -23,7 +23,7 @@
 
         <h1>Inscripción de Práctica Profesional</h1>
         
-        <form method="post" action="{% url 'correo_jefe_exito' solicitud.id %}">
+        <form method="post" action="{% url 'actualizar_estado_jefe' solicitud.id %}">
             {% csrf_token %}
             <input type="hidden" id="estado_solicitud" name="estado_solicitud" value="">
             <legend>Datos del estudiante:</legend>

@@ -842,10 +842,10 @@ def correo_jefe_carrera(request, solicitud_id):
     token = request.GET.get('token')
 
     # Validar si el token es válido
-    if not solicitud.token or solicitud.token != token:
-        return render(request, "coordinador/correo_jefe_exito.html", {
-        'solicitud': solicitud
-    })
+    #if not solicitud.token or solicitud.token != token:
+        #return render(request, "coordinador/correo_jefe_exito.html", {
+        #'solicitud': solicitud
+    #})
 
     # Renderizar el formulario si es un GET
     estudiante = solicitud.estudiante
@@ -871,17 +871,10 @@ def actualizar_estado(request, solicitud_id):
         # Verifica el valor de estado_solicitud desde el formulario
         estado = request.POST.get('estado_solicitud')
 
-        if estado in ['Aprobada', 'Rechazada', 'Jefe Carrera']:
+        if estado in ['Jefe Carrera', 'Rechazada']:
             # Actualiza el estado de la solicitud
             solicitud.estado = estado
             solicitud.save()
-
-            # Si el estado es "Aprobada", actualiza el estado de la práctica
-            if estado == 'Aprobada':
-                # Usa el nombre correcto del campo relacionado
-                practica = Practica.objects.get(fichainscripcion=solicitud)
-                practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
-                practica.save()
 
             # Si el estado es "Rechzada", actualiza el estado de la práctica
             if estado == 'Rechazada':
@@ -892,7 +885,7 @@ def actualizar_estado(request, solicitud_id):
 
             # Cuando el Coordinador apruebe una Solicitud, se le enviará un correo al jefe de carrera
             if estado == 'Jefe Carrera':
-                # Generar token y asignar el número de usos
+                # Generar token
                 token = str(uuid.uuid4())
                 solicitud.token = token
                 solicitud.save()
