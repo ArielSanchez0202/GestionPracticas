@@ -839,20 +839,29 @@ def correo_jefe_carrera(request, solicitud_id):
     solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
     
     # Obtener el token de la URL
-    token = request.GET.get('token')
-
+    token_str = request.GET.get('token')
+    
+    # Verificar que el token proporcionado sea válido (convertirlo a UUID)
+    try:
+        token = uuid.UUID(token_str)  # Convertir la cadena a un objeto UUID
+    except ValueError:
+        # Si no se puede convertir el token, significa que es inválido
+        return render(request, "coordinador/correo_jefe_exito.html", {
+            'solicitud': solicitud
+        })
+    
     # Validar si el token es válido
-    #if not solicitud.token or solicitud.token != token:
-        #return render(request, "coordinador/correo_jefe_exito.html", {
-        #'solicitud': solicitud
-    #})
+    if solicitud.token != token:
+        return render(request, "coordinador/correo_jefe_exito.html", {
+            'solicitud': solicitud
+        })
 
-    # Renderizar el formulario si es un GET
+    # Renderizar el formulario si el token es válido
     estudiante = solicitud.estudiante
 
     return render(request, 'coordinador/correo_jefe.html', {
         'solicitud': solicitud,
-        'token': token,
+        'token': token_str,  # Usar el token original en la plantilla
         'estudiante': estudiante
     })
 
@@ -905,7 +914,7 @@ def actualizar_estado(request, solicitud_id):
                         f"Gracias."
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=['vicentexd1199@gmail.com'],
+                    recipient_list=['nicox202@gmail.com'],
                     fail_silently=False,
                 )
 
