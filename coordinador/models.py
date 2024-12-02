@@ -140,6 +140,7 @@ class Autoevaluacion(models.Model):
 class InformeConfidencial(models.Model):
     ficha_inscripcion = models.OneToOneField(FichaInscripcion, on_delete=models.CASCADE, related_name='informe_confidencial')
     nota = models.FloatField(default=0)  # Cambié esto a FloatField
+    practica = models.ForeignKey('Practica', on_delete=models.CASCADE, null=True, blank=True)  # Permite nulo
 
     # Aspectos técnicos
     calidad_trabajo = models.CharField(max_length=50, choices=[('S', 'Siempre'), ('F', 'Frecuentemente'), ('A', 'A veces'), ('N', 'Nunca')])
