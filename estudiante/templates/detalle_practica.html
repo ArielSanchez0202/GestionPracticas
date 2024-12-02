@@ -11,9 +11,12 @@
 <link rel="stylesheet" href="{% static 'css/informe_de_avance.css' %}">
 
 <div class="main-content">
-    <a href="{% url 'estudiantes_main' %}">
-        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
-    </a>
+
+    <div class="back-button">
+        <a href="{% url 'estudiantes_main' %}">
+            <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+        </a>
+    </div>
     
     <h1>{{ ficha_inscripcion.practica1|yesno:"PRÁCTICA I,PRÁCTICA II" }}</h1>
     

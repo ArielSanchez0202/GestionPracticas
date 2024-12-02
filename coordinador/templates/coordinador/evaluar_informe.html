@@ -7,8 +7,8 @@
     <div>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inscripción de Práctica Profesional</title>
-        <link rel="stylesheet" href="{% static 'css/autoevaluacion.css' %}">
+        <title>Rúbrica de Evaluación Informe de Avances</title>
+        <link rel="stylesheet" href="{% static 'css/evaluar_informe.css' %}">
     </div>
 
     <div class="back-button">
@@ -19,7 +19,7 @@
 
     <div class="container">
 
-        <h1>Rúbrica de evaluación Informe de avances</h1>
+        <h1>Rúbrica de Evaluación Informe de Avances</h1>
         {% if error %}
             <div class="alert alert-danger">
                 {{ error }}
@@ -80,54 +80,49 @@
             <div class="input-group">
                 <div class="form-group">
                     <label for="nombre_coordinador">Nombre Completo:</label>
-                    <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ coordinador.get_full_name }}" readonly>
+                    <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ usuario.get_full_name }}" readonly>
                 </div>
             </div>
 
-
-
-
-
-
             <h2>I. Contenido del documento</h2>
             
-            <h3>Portada e índice de contenidos:</h3>
+            <h3>1.- Portada e índice de contenidos:</h3>
             <label><input type="radio" name="portada" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="portada" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="portada" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="portada" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Introducción:</h3>
+            <h3>2.- Introducción:</h3>
             <label><input type="radio" name="introduccion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="introduccion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="introduccion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="introduccion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Objetivo general:</h3>
+            <h3>3.- Objetivo general:</h3>
             <label><input type="radio" name="objetivo_general" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="objetivo_general" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="objetivo_general" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="objetivo_general" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Objetivos específicos:</h3>
+            <h3>4.- Objetivos específicos:</h3>
             <label><input type="radio" name="objetivos_especificos" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="objetivos_especificos" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="objetivos_especificos" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="objetivos_especificos" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Caracterización de la empresa:</h3>
+            <h3>5.- Caracterización de la empresa:</h3>
             <label><input type="radio" name="caracterizacion_empresa" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="caracterizacion_empresa" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="caracterizacion_empresa" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="caracterizacion_empresa" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Datos del supervisor y organigrama:</h3>
+            <h3>6.- Datos del supervisor y organigrama:</h3>
             <label><input type="radio" name="datos_supervisor" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="datos_supervisor" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="datos_supervisor" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="datos_supervisor" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Desarrollo de la práctica:</h3>
+            <h3>7.- Desarrollo de la práctica:</h3>
             <label><input type="radio" name="desarrollo_practica" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="desarrollo_practica" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="desarrollo_practica" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
@@ -136,37 +131,37 @@
             <h2>II. Forma del documento</h2>
 
 
-            <h3>Formato establecido:</h3>
+            <h3>8.- Formato establecido:</h3>
             <label><input type="radio" name="redaccion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="redaccion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="redaccion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="redaccion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Uso de la tercera persona:</h3>
+            <h3>9.- Uso de la tercera persona:</h3>
             <label><input type="radio" name="ortografia" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="ortografia" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="ortografia" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="ortografia" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Citas y fuentes:</h3>
+            <h3>10.- Citas y fuentes:</h3>
             <label><input type="radio" name="presentacion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="presentacion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="presentacion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="presentacion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Extensión:</h3>
+            <h3>11.- Extensión:</h3>
             <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="formato" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Identificación de tablas y gráficos:</h3>
+            <h3>12.- Identificación de tablas y gráficos:</h3>
             <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="formato" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Ortografía:</h3>
+            <h3>13.- Ortografía:</h3>
             <label><input type="radio" name="formato" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="formato" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="formato" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
@@ -174,25 +169,25 @@
 
             <h2>III. Pertinencia del documento</h2>
 
-            <h3>Cohesión y coherencia:</h3>
+            <h3>14.- Cohesión y coherencia:</h3>
             <label><input type="radio" name="investigacion_empresa" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="investigacion_empresa" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="investigacion_empresa" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="investigacion_empresa" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Desarrollo de ideas/profundización:</h3>
+            <h3>15.- Desarrollo de ideas/profundización:</h3>
             <label><input type="radio" name="desarrollo_proyectos" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="desarrollo_proyectos" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="desarrollo_proyectos" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="desarrollo_proyectos" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Identificación de roles e impacto:</h3>
+            <h3>16.- Identificación de roles e impacto:</h3>
             <label><input type="radio" name="analisis_conclusiones" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="analisis_conclusiones" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="analisis_conclusiones" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
             <label><input type="radio" name="analisis_conclusiones" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
 
-            <h3>Riqueza lingüística:</h3>
+            <h3>17.-Riqueza lingüística:</h3>
             <label><input type="radio" name="coherencia" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
             <label><input type="radio" name="coherencia" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
             <label><input type="radio" name="coherencia" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>

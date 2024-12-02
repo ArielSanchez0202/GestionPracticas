@@ -15,6 +15,10 @@ body {
     padding: 20px;
 }
 
+.back-button{
+    margin-left: -30px;
+}
+
 h1 {
     color: black;
     text-align: left;
