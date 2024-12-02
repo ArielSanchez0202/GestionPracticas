@@ -32,7 +32,10 @@ urlpatterns = [
     #asd
     path('listar_practicas/', views.listar_practicas, name='listar_practicas'),
     path('ver_formulario/<int:solicitud_id>/', views.ver_formulario, name='ver_formulario'),
+    path('correo_jefe/<int:solicitud_id>/', views.correo_jefe_carrera, name='correo_jefe'),
+    path('correo_jefe_exitoso/<int:solicitud_id>/', views.correo_jefe_exito, name='correo_jefe_exito'),
     path('actualizar_estado/<int:solicitud_id>/', views.actualizar_estado, name='actualizar_estado'),
+    path('actualizar_estado_jefe/<int:solicitud_id>/', views.actualizar_estado_jefe, name='actualizar_estado_jefe'),
     path('configurar_fechas/', views.configurar_fechas, name='configurar_fechas'),
     path('generar-pdf-practica/<int:ficha_id>/', views.generar_pdf_practica, name='generar_pdf_practica'),
     ############INFORMES CONFIDENCIALES###############################

@@ -126,19 +126,12 @@
         <img src="{% static 'img/logoUA.png' %}" alt="Logo" class="img-fluid">
         <div class="estudiante-section">
             <img src="{% static 'img/Group 2.svg' %}" alt="usuario Icono">
-            <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+            <span>Director de Carrera</span>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <!-- Clase active aplicada para que esté en rojo de manera estática -->
-                <a class="nav-link active" aria-current="page">Mis prácticas</a>
-            </li>
-
-            <li class="nav-item">
-                <form action="{% url 'logout' %}" method="post" style="margin-top: 200%;">
-                    {% csrf_token %}
-                    <a onclick="this.closest('form').submit()" class="nav-link btn btn-danger" style="border-radius: 5px;">Cerrar Sesión</a>
-                </form>
+                <a class="nav-link active" aria-current="page">Solicitud</a>
             </li>
         </ul>
     </nav>

@@ -53,6 +53,7 @@ class FichaInscripcion(models.Model):
             ('Jefe Carrera', 'Jefe Carrera'),
             ]
     estado = models.CharField(max_length=20, choices=ESTADOS, default='Pendiente')
+    token = models.UUIDField(default=uuid.uuid4, null=True, blank=True)
     estudiante = models.ForeignKey('Estudiante', on_delete=models.CASCADE)
     practica = models.ForeignKey('Practica', on_delete=models.CASCADE, null=True, blank=True)  # Permite nulo
     practica1 = models.BooleanField(default=False)

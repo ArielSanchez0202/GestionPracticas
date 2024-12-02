@@ -1,4 +1,4 @@
-{% extends 'base_coordinador.html' %}
+{% extends 'base_director.html' %}
 
 {% load static %}
 
@@ -23,7 +23,7 @@
 
         <h1>Inscripción de Práctica Profesional</h1>
         
-        <form method="post" action="{% url 'actualizar_estado' solicitud.id %}">
+        <form method="post" action="{% url 'correo_jefe_exito' solicitud.id %}">
             {% csrf_token %}
             <input type="hidden" id="estado_solicitud" name="estado_solicitud" value="">
             <legend>Datos del estudiante:</legend>
@@ -139,7 +139,7 @@
                     <td colspan="2"><input type="text" id="actividades_realizar" name="actividades_realizar" required value="{{solicitud.actividades_realizar}}" readonly></td>
                 </tr>
             </table>
-            {% if solicitud.estado == "Pendiente" %}   
+            
             <body style="margin: 0; padding: 0; padding-bottom: 20px;">
                 <div style="display: flex; justify-content: center; align-items: center; gap: 20px; width: 100%; margin-top: 20px;">
                     <button 
@@ -157,18 +157,18 @@
                 </div>
                 <div style="height: 20px;"></div>
             </body>
-            {% endif %}  
                       
         </form>
 
         <script>
             function aprobar() {
-                document.getElementById('estado_solicitud').value = 'Jefe Carrera';
-                alert("Práctica Aprobada");  // Deberías ver este mensaje si el evento funciona
+                document.getElementById('estado_solicitud').value = 'Aprobada';
+                alert("Práctica Aprobada");  // Mensaje de alerta
             }
+        
             function rechazar() {
                 document.getElementById('estado_solicitud').value = 'Rechazada';
-                alert("Práctica Rechazada");  // Deberías ver este mensaje si el evento funciona
+                alert("Práctica Rechazada");  // Mensaje de alerta
             }
         </script>
                 

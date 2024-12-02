@@ -45,6 +45,8 @@
                                     <span class="badge bg-success">Aprobada</span>
                                 {% elif inscripcion.estado == "Rechazada" %}
                                     <span class="badge bg-danger">Rechazada</span>
+                                {% elif inscripcion.estado == "Jefe Carrera" %}
+                                    <span class="badge bg-warning">Jefe Carrera</span>
                                 {% else %}
                                     <span class="badge bg-warning">Pendiente</span>
                                 {% endif %}
@@ -52,6 +54,8 @@
                             <td>
                                 {% if inscripcion.estado == "Aprobada" %}
                                 <a href="{% url 'generar_pdf_practica' inscripcion.pk %}" class="btn btn-warning custom-warning-btn" target="_blank">Ver Carta</a>
+                                {% elif inscripcion.estado == "Rechazada" %}
+                                <a class="btn btn-warning custom-warning-btn" target="_blank">Ver Comentario</a>
                                 {% endif %}
                                 <a href="{% url 'ver_formulario' inscripcion.pk %}" class="btn btn-info custom-info-btn">Ver Formulario</a>
                             </td>

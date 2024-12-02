@@ -13,9 +13,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from django.contrib.messages import get_messages
 from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
 from django.http import BadHeaderError, HttpResponse, HttpResponseNotFound, JsonResponse, FileResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.urls import reverse
+from django.utils.http import urlencode
 import json
 import logging
 from django.shortcuts import get_object_or_404, render, redirect
@@ -809,7 +812,92 @@ def ver_formulario(request, solicitud_id):
         'estudiante': estudiante
     })
 
+def correo_jefe_carrera(request, solicitud_id):
+    # Recuperar la solicitud con el ID proporcionado
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+    
+    # Obtener el token de la URL
+    token = request.GET.get('token')
+
+    # Validar si el token es válido
+    if not solicitud.token or solicitud.token != token:
+        return render(request, "coordinador/correo_jefe_exito.html", {
+        'solicitud': solicitud
+    })
+
+    # Renderizar el formulario si es un GET
+    estudiante = solicitud.estudiante
+
+    return render(request, 'coordinador/correo_jefe.html', {
+        'solicitud': solicitud,
+        'token': token,
+        'estudiante': estudiante
+    })
+
+def correo_jefe_exito(request, solicitud_id):
+    solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+
+    return render(request, "coordinador/correo_jefe_exito.html", {
+        'solicitud': solicitud
+    })
+
 def actualizar_estado(request, solicitud_id):
+    if request.method == 'POST':
+        # Obtén la solicitud específica
+        solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
+
+        # Verifica el valor de estado_solicitud desde el formulario
+        estado = request.POST.get('estado_solicitud')
+
+        if estado in ['Aprobada', 'Rechazada', 'Jefe Carrera']:
+            # Actualiza el estado de la solicitud
+            solicitud.estado = estado
+            solicitud.save()
+
+            # Si el estado es "Aprobada", actualiza el estado de la práctica
+            if estado == 'Aprobada':
+                # Usa el nombre correcto del campo relacionado
+                practica = Practica.objects.get(fichainscripcion=solicitud)
+                practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
+                practica.save()
+
+            # Si el estado es "Rechzada", actualiza el estado de la práctica
+            if estado == 'Rechazada':
+                # Usa el nombre correcto del campo relacionado
+                practica = Practica.objects.get(fichainscripcion=solicitud)
+                practica.estado = 'rechazada'  # Cambia el estado a "rechazada"
+                practica.save()
+
+            # Cuando el Coordinador apruebe una Solicitud, se le enviará un correo al jefe de carrera
+            if estado == 'Jefe Carrera':
+                # Generar token y asignar el número de usos
+                token = str(uuid.uuid4())
+                solicitud.token = token
+                solicitud.save()
+
+                # Construir URL con token
+                url_token = request.build_absolute_uri(
+                    reverse('correo_jefe', kwargs={'solicitud_id': solicitud.id}) + f"?{urlencode({'token': token})}"
+                )
+
+                # Enviar el correo electrónico
+                send_mail(
+                    subject="Revisión de Práctica Profesional",
+                    message=(
+                        f"Estimado Jefe de Carrera:\n\n"
+                        f"Se le ha asignado la revisión de una práctica profesional.\n\n"
+                        f"Por favor, revise los detalles y tome una decisión: {url_token}\n\n"
+                        f"Gracias."
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=['vicentexd1199@gmail.com'],
+                    fail_silently=False,
+                )
+
+        # Redirige a una página, como la lista de solicitudes
+        return redirect('listar_practicas') 
+
+def actualizar_estado_jefe(request, solicitud_id):
     if request.method == 'POST':
         # Obtén la solicitud específica
         solicitud = get_object_or_404(FichaInscripcion, id=solicitud_id)
@@ -829,17 +917,19 @@ def actualizar_estado(request, solicitud_id):
                 practica.estado = 'en_progreso'  # Cambia el estado a "en_progreso"
                 practica.save()
 
-            # Si el estado es "Rechzada", actualiza el estado de la práctica
+            # Si el estado es "Rechazada", actualiza el estado de la práctica
             if estado == 'Rechazada':
                 # Usa el nombre correcto del campo relacionado
                 practica = Practica.objects.get(fichainscripcion=solicitud)
-                practica.estado = 'rechazada'  # Cambia el estado a "en_progreso"
+                practica.estado = 'rechazada'  # Cambia el estado a "rechazada"
                 practica.save()
 
-        # Redirige a una página, como la lista de solicitudes o el detalle de la solicitud
-        return redirect('listar_practicas')  # Cambia a la vista adecuada
-    
+            # Invalida el token eliminándolo o marcándolo como nulo
+            solicitud.token = None
+            solicitud.save()
 
+        # Redirige a la página de éxito
+        return redirect('correo_jefe_exito', solicitud_id=solicitud.id)
 
 def update_document(request, document_id):
     document = get_object_or_404(Document, id=document_id)
