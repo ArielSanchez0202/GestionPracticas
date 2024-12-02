@@ -987,9 +987,8 @@ def update_document(request, document_id):
 def documentos(request):
     # Tipos de documentos permitidos
     tipo_documentos = {
-    'reglamento': 'Reglamento Práctica Profesional',
-    'avance': 'Plantilla de informe ',
-
+        'reglamento': 'Reglamento Práctica Profesional',
+        'avance': 'Plantilla de informe',
     }
 
     # Obtener los documentos existentes por tipo
@@ -999,17 +998,17 @@ def documentos(request):
         documentos.append({
             'tipo': tipo,
             'descripcion': descripcion,
-            'documento': documento
+            'documento': documento,
         })
 
-    # Obtener los límites de fecha de configuración
-    try:
-        configuracion = PracticaConfig.objects.first()
-        fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
-        fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
-        correo_director = configuracion.correo_director
-    except PracticaConfig.DoesNotExist:
-        fecha_inicio_limite = fecha_termino_limite = None
+    # Obtener la configuración o valores predeterminados
+    configuracion = PracticaConfig.objects.first()
+    if not configuracion:
+        configuracion = PracticaConfig.objects.create()  # Crear configuración predeterminada si no existe
+
+    fecha_inicio_limite = configuracion.fecha_inicio_limite
+    fecha_termino_limite = configuracion.fecha_termino_limite
+    correo_director = configuracion.correo_director
 
     # Formulario inicial vacío
     form = DocumentForm()
@@ -1017,33 +1016,28 @@ def documentos(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            # Determinar el tipo de documento
+            # Procesar documento
             tipo_documento = form.cleaned_data.get('tipo')
             archivo_nuevo = form.cleaned_data.get('archivo')
 
-            # Buscar documento existente por tipo
             documento = Document.objects.filter(tipo=tipo_documento).first()
-
             if documento:
-                # Si existe, sobrescribir archivo
                 documento.archivo = archivo_nuevo
                 documento.save()
             else:
-                # Si no existe, crear uno nuevo
                 nuevo_documento = form.save(commit=False)
                 nuevo_documento.tipo = tipo_documento
                 nuevo_documento.save()
 
-            # Redirigir tras guardar
+            messages.success(request, "Documento guardado correctamente.")
             return redirect('documentos')
-
         else:
-            # Mostrar errores en los mensajes
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"Error en {field}: {error}")
+            # Manejo simplificado de errores
+            for error in form.errors.as_data().values():
+                for e in error:
+                    messages.error(request, e.message)
 
-    # Pasar las fechas al contexto
+    # Pasar el contexto
     context = {
         'documentos': documentos,
         'form': form,
@@ -1053,6 +1047,7 @@ def documentos(request):
     }
 
     return render(request, 'coordinador/documentos.html', context)
+
 
 # Vista para ver documentos en el navegador (PDF y Word)
 def ver_documento(request, document_id):
