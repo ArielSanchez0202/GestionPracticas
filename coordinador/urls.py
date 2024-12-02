@@ -47,4 +47,6 @@ urlpatterns = [
     path('editar_informe_confidencial/<int:informe_id>/', views.editar_informe_confidencial, name='editar_informe_confidencial'),
     ####################################################################
     path('detalle_practica_coordinador/<int:practica_id>/', views.detalle_practica_coordinador, name='detalle_practica_coordinador'),
+    path('configurar-correo-director/', views.configurar_correo_director, name='configurar_correo_director'),
+
 ]

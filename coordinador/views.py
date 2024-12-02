@@ -36,7 +36,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from decimal import Decimal, InvalidOperation
 from django.utils.timezone import now
-
+from django.core.exceptions import ObjectDoesNotExist
 def generar_contrasena(length=8):
     """Genera una contraseña aleatoria."""
     caracteres = string.ascii_letters + string.digits + string.punctuation
@@ -883,13 +883,20 @@ def actualizar_estado(request, solicitud_id):
             solicitud.estado = estado
             solicitud.save()
 
-            # Puedes actualizar otros modelos relacionados si es necesario
+            # Actualizar estado de la práctica relacionada
             practica = Practica.objects.get(fichainscripcion=solicitud)
             practica.estado = 'rechazada'
             practica.save()
 
-            # Cuando el Coordinador apruebe una Solicitud, se le enviará un correo al jefe de carrera
+            # Cuando el Coordinador apruebe una Solicitud, se enviará un correo al director
             if estado == 'Jefe Carrera':
+                # Obtener el correo del director desde PracticaConfig
+                try:
+                    practica_config = PracticaConfig.objects.get()
+                    correo_director = practica_config.correo_director
+                except ObjectDoesNotExist:
+                    correo_director = "fallback_director@example.com"  # Fallback en caso de no encontrar configuración
+
                 # Generar token
                 token = str(uuid.uuid4())
                 solicitud.token = token
@@ -910,12 +917,12 @@ def actualizar_estado(request, solicitud_id):
                         f"Gracias."
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=['vicentexd1199@gmail.com'],
+                    recipient_list=[correo_director],  # Usar correo del director
                     fail_silently=False,
                 )
 
         # Redirige a una página, como la lista de solicitudes
-        return redirect('listar_practicas') 
+        return redirect('listar_practicas')
 
 def actualizar_estado_jefe(request, solicitud_id):
     if request.method == 'POST':
@@ -950,6 +957,20 @@ def actualizar_estado_jefe(request, solicitud_id):
 
         # Redirige a la página de éxito
         return redirect('correo_jefe_exito', solicitud_id=solicitud.id)
+def configurar_correo_director(request):
+    if request.method == 'POST':
+        nuevo_correo = request.POST.get('correo_director')
+        try:
+            config = PracticaConfig.objects.get()
+            config.correo_director = nuevo_correo
+            config.save()
+            messages.success(request, "El correo del director se ha actualizado correctamente.")
+        except PracticaConfig.DoesNotExist:
+            messages.error(request, "No se pudo encontrar la configuración para actualizar.")
+        return redirect('documentos')
+
+    # Renderizar la página si es necesario (para pruebas)
+    return render(request, 'documentos.html')
 
 def update_document(request, document_id):
     document = get_object_or_404(Document, id=document_id)
@@ -967,9 +988,8 @@ def documentos(request):
     # Tipos de documentos permitidos
     tipo_documentos = {
     'reglamento': 'Reglamento Práctica Profesional',
-    'inscripcion': 'Ficha de inscripción práctica profesional',
-    'avance': 'Informe de avances',
-    'autoevaluacion': 'Autoevaluación',
+    'avance': 'Plantilla de informe ',
+
     }
 
     # Obtener los documentos existentes por tipo
@@ -987,6 +1007,7 @@ def documentos(request):
         configuracion = PracticaConfig.objects.first()
         fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
         fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
+        correo_director = configuracion.correo_director
     except PracticaConfig.DoesNotExist:
         fecha_inicio_limite = fecha_termino_limite = None
 
@@ -1028,6 +1049,7 @@ def documentos(request):
         'form': form,
         'fecha_inicio_limite': fecha_inicio_limite,
         'fecha_termino_limite': fecha_termino_limite,
+        'correo_director': correo_director,
     }
 
     return render(request, 'coordinador/documentos.html', context)

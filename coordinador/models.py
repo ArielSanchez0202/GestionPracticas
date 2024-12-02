@@ -276,6 +276,7 @@ class Document(models.Model):
 class PracticaConfig(models.Model):
     fecha_inicio_limite = models.DateField(default="2024-01-01")  # Fecha predeterminada
     fecha_termino_limite = models.DateField(default="2024-12-31")  # Fecha predeterminada
+    correo_director = models.EmailField(max_length=254, default="director@example.com")  # Correo predeterminado
 
     def __str__(self):
         return f"Configuración Práctica: {self.fecha_inicio_limite} - {self.fecha_termino_limite}"

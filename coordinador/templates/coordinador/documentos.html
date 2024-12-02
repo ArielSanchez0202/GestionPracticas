@@ -62,12 +62,36 @@
         <strong>{{ fecha_inicio_limite|date:"d/m/Y" }}</strong> 
         y <strong>{{ fecha_termino_limite|date:"d/m/Y" }}</strong>.
     </p>
-    <hr class="my-5">
-    <div class="text-center">
+
         <a href="{% url 'configurar_fechas' %}" class="boton boton-primary">
             <i class="fas fa-calendar-alt"></i> Configurar Fechas de Prácticas
         </a>
+    
+    <hr class="my-5">
+<h2>Configurar Correo del Director</h2>
+<p>El correo actual del director es: <strong>{{ correo_director }}</strong></p>
+<p>Modifica el correo electrónico para recibir las notificaciones relacionadas con las prácticas.</p>
+
+<!-- Formulario para actualizar el correo del director -->
+<form method="post" action="{% url 'configurar_correo_director' %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="correo_director">Nuevo Correo del Director:</label>
+        <input 
+            type="email" 
+            name="correo_director" 
+            id="correo_director" 
+            class="form-control" 
+            placeholder="Ingrese el nuevo correo electrónico"
+            value="{{ correo_director }}" 
+            required
+        >
     </div>
+    <button type="submit" class="boton boton-primary mt-3">
+        <i class="fas fa-save"></i> Guardar
+    </button>
+</form>
+
 </div>
 
 <script>
