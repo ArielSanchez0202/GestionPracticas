@@ -1,51 +1,145 @@
 {% extends 'base_coordinador.html' %}
 
+{% load static %}
+
 {% block content %}
-<h2>Evaluar Informe Final</h2>
-<p><strong>Estudiante:</strong> {{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</p>
-<p><strong>Carrera:</strong> {{ estudiante.carrera }}</p>
-<p><strong>Práctica ID:</strong> {{ practica.pk }}</p>
 
-<form method="post">
-    {% csrf_token %}
-    <h3>Criterios de Evaluación</h3>
-    <div>
-        <label for="portada">Portada</label>
-        <select name="portada" required>
-            <option value="Desempeño de excelencia">Desempeño de excelencia</option>
-            <option value="Desempeño efectivo">Desempeño efectivo</option>
-            <option value="Desempeño que se debe mejorar">Desempeño que se debe mejorar</option>
-            <option value="Desempeño insatisfactorio">Desempeño insatisfactorio</option>
-        </select>
-    </div>
+<div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rúbrica de Evaluación Informe Final</title>
+    <link rel="stylesheet" href="{% static 'css/evaluar_informe.css' %}">
+</div>
 
-    <!-- Repite este bloque para cada criterio -->
-    <div>
-        <label for="introduccion">Introducción</label>
-        <select name="introduccion" required>
-            <option value="Desempeño de excelencia">Desempeño de excelencia</option>
-            <option value="Desempeño efectivo">Desempeño efectivo</option>
-            <option value="Desempeño que se debe mejorar">Desempeño que se debe mejorar</option>
-            <option value="Desempeño insatisfactorio">Desempeño insatisfactorio</option>
-        </select>
-    </div>
+<div class="back-button">
+    <a href="javascript:history.back()" class="back-arrow">
+        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+    </a>
+</div>
 
-    <!-- Otros criterios aquí -->
+<div class="container">
+    <h1>Rúbrica de Evaluación Informe Final</h1>
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
 
-    <div>
-        <label for="comentarios">Comentarios</label>
-        <textarea name="comentarios" rows="4" cols="50"></textarea>
-    </div>
+    <form action="{% url 'evaluar_informe_final' practica.id %}" method="post">
+        {% csrf_token %}
+        <legend>Datos del alumno:</legend>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="nombre_completo">Nombre Completo:</label>
+                <input type="text" id="nombre_completo" name="nombre_completo" value="{{ estudiante.usuario.get_full_name }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="rut">Rut:</label>
+                <input type="text" id="rut" name="rut" value="{{ estudiante.rut }}" readonly>
+            </div>
+        </div>
 
-    <button type="submit">Evaluar</button>
-</form>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="carrera">Carrera:</label>
+                <input type="text" id="carrera" name="carrera" value="{{ estudiante.carrera }}" readonly>
+            </div>
+        </div>
+        
+        <legend>Datos de la empresa donde se desarrolla la práctica:</legend>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="razon_social">Nombre o giro de la Empresa:</label>
+                <input type="text" id="razon_social" name="razon_social" value="{{ ficha_inscripcion.razon_social }}" readonly>
+            </div>
+        </div>
 
-{% if informe_final %}
-<p><strong>Archivo del Informe Final:</strong></p>
-<a href="{{ informe_final.archivo_informe_final.url }}" target="_blank">Descargar Informe Final</a>
-{% else %}
-<p>No se encontró un informe final asociado.</p>
-{% endif %}
+        <legend>Datos del supervisor de la práctica:</legend>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="jefe_directo">Nombre Completo:</label>
+                <input type="text" id="jefe_directo" name="jefe_directo" value="{{ ficha_inscripcion.jefe_directo }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="telefono_jefe">Teléfono:</label>
+                <input type="text" id="telefono_jefe" name="telefono_jefe" value="{{ ficha_inscripcion.telefono_jefe }}" readonly>
+            </div>
+        </div>
 
-<a href="{% url 'informes_finales' %}">Volver</a>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="correo_jefe">Correo:</label>
+                <input type="text" id="correo_jefe" name="correo_jefe" value="{{ ficha_inscripcion.correo_jefe }}" readonly>
+            </div>
+        </div>
+
+        <legend>Datos del coordinador de prácticas:</legend>
+        <div class="input-group">
+            <div class="form-group">
+                <label for="nombre_coordinador">Nombre Completo:</label>
+                <input type="text" id="nombre_coordinador" name="nombre_coordinador" value="{{ coordinador.get_full_name }}" readonly>
+            </div>
+        </div>
+
+        <!-- Sección I: Contenido del Documento -->
+        <h2>I. Contenido del Documento</h2>
+
+        <!-- Portada e Índice de Contenidos -->
+        <h3>Portada e Índice de Contenidos:</h3>
+        <label><input type="radio" name="portada" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="portada" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="portada" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="portada" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Introducción -->
+        <h3>Introducción:</h3>
+        <label><input type="radio" name="introduccion" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="introduccion" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="introduccion" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="introduccion" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Objetivos Generales -->
+        <h3>Objetivo General:</h3>
+        <label><input type="radio" name="objetivo_general" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="objetivo_general" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="objetivo_general" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="objetivo_general" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Objetivos Específicos -->
+        <h3>Objetivos Específicos:</h3>
+        <label><input type="radio" name="objetivos_especificos" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="objetivos_especificos" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="objetivos_especificos" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="objetivos_especificos" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Caracterización de la Empresa -->
+        <h3>Caracterización de la Empresa:</h3>
+        <label><input type="radio" name="caracterizacion_empresa" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="caracterizacion_empresa" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="caracterizacion_empresa" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="caracterizacion_empresa" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Datos del Supervisor -->
+        <h3>Datos del Supervisor:</h3>
+        <label><input type="radio" name="datos_supervisor" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="datos_supervisor" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="datos_supervisor" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="datos_supervisor" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Sección II: Formato -->
+        <h2>II. Formato del Documento</h2>
+        <h3>Uso del Formato Establecido:</h3>
+        <label><input type="radio" name="formato_establecido" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
+        <label><input type="radio" name="formato_establecido" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
+        <label><input type="radio" name="formato_establecido" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
+        <label><input type="radio" name="formato_establecido" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
+
+        <!-- Sección III: Contenido Específico -->
+        <h2>III. Contenido Específico del Informe</h2>
+        <!-- Agregar similar estructura de evaluación para contenido específico -->
+        
+        <button type="submit" class="btn btn-primary">Enviar Evaluación</button>
+    </form>
+</div>
+
 {% endblock %}

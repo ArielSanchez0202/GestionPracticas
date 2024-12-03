@@ -1,53 +1,77 @@
 {% extends 'base_coordinador.html' %}
 
+{% load static %}
+
+{% block title %} Lista de Informes Finales {% endblock %}
+
 {% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'css/informes_finales.css' %}">
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div class="table-responsive py-5">
+            <h1>Revisión Informes Finales</h1>
+            <table class="table table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>RUT</th>
+                        <th>Carrera</th>
+                        <th>Práctica</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for practica in practicas %}
+                        <tr>
+                            <!-- Número de fila -->
+                            <td>{{ forloop.counter }}</td>
 
-<h2>Informes Finales</h2>
+                            <!-- Nombre del estudiante -->
+                            <td>{{ practica.estudiante.usuario.first_name }} {{ practica.estudiante.usuario.last_name }}</td>
 
-<table>
-    <thead>
-        <tr>
-            <th>Estudiante</th>
-            <th>Carrera</th>
-            <th>Práctica</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for practica in practicas %}
-        <tr>
-            <td>{{ practica.estudiante.usuario.first_name }} {{ practica.estudiante.usuario.last_name }}</td>
-            <td>{{ practica.estudiante.carrera }}</td>
-            <td>{{ practica.pk }}</td>
-            <td>
-                {% if practica.informefinal_set.last %}
-                    Evaluado: {{ practica.informefinal_set.last.nota|default:"Pendiente" }}
-                {% else %}
-                    Sin Informe Final
-                {% endif %}
-            </td>
-            <td>
-                {% if practica.informefinal_set.last %}
-                <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" target="_blank">
-                    Descargar Informe Final
-                </a>
-                |
-                <a href="{% url 'evaluar_informe_final' practica.pk %}">
-                    Evaluar
-                </a>
-                {% else %}
-                <span>No disponible</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No hay informes finales registrados.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                            <!-- RUT del estudiante -->
+                            <td>{{ practica.estudiante.rut }}</td>
 
-<a href="{% url 'dashboard' %}">Volver al Dashboard</a>
+                            <!-- Carrera del estudiante -->
+                            <td>{{ practica.estudiante.carrera }}</td>
+
+                            <!-- Práctica asociada -->
+                            <td>Práctica {{ practica.pk }}</td>
+
+                            <!-- Estado calculado -->
+                            <td>
+                                {% if practica.informefinal_set.last %}
+                                    Evaluado: {{ practica.informefinal_set.last.nota|default:"Pendiente" }}
+                                {% else %}
+                                    Sin Informe Final
+                                {% endif %}
+                            </td>
+
+                            <!-- Acciones -->
+                            <td>
+                                {% if practica.informefinal_set.last %}
+                                    <!-- Botón para descargar el informe final -->
+                                    <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" class="btn btn-primary" target="_blank">Descargar Informe</a>
+
+                                    <!-- Botón para evaluar el informe -->
+                                    <a href="{% url 'evaluar_informe_final' practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
+                                {% else %}
+                                    <span class="text-muted">No disponible</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No hay informes finales registrados.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>                       
+        </div>
+    </div>
+</div>
 {% endblock %}
