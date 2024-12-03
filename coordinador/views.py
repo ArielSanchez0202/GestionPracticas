@@ -1505,7 +1505,8 @@ def detalle_practica_coordinador(request, practica_id):
         'estado_ficha': ficha_inscripcion.estado if ficha_inscripcion else None,
         'nota_autoevaluacion': nota_autoevaluacion,
         'autoevaluacion': autoevaluacion,
-        'informe_avances_enviado': informe_avances_enviado,
+        'informe_avances': informe_avances,
+        'informe_final' : informe_final,
         'informe_confidencial': informe_confidencial,
     })
 
@@ -1540,7 +1541,7 @@ def evaluar_informe_avances(request, practica_id):
         # Obtener otros campos del formulario
         comentarios = request.POST.get('comentarios', '')
 
-        # Crear y guardar la autoevaluación
+        # Crear y guardar la rúbrica
         rubrica = Rubrica.objects.create(
             tipo_informe="Avances",
             portada=request.POST.get('pregunta1', ''),
@@ -1563,7 +1564,8 @@ def evaluar_informe_avances(request, practica_id):
             comentarios=comentarios
         )
 
-        # Actualizar la nota y retroalimentación directamente
+        # Asociar la rúbrica al informe y guardar
+        informe.rubrica = rubrica
         informe.nota_avance = round(nota, 2)  # Actualizamos la nota
         informe.retroalimentacion = comentarios  # Actualizamos la retroalimentación
         informe.save()  # Guardamos los cambios
@@ -1583,11 +1585,11 @@ def evaluar_informe_avances(request, practica_id):
 
     return render(request, 'coordinador/evaluar_informe_avances.html', context)
 
+
 @coordinador_required
 def evaluar_informe_final(request, practica_id):
     practica = get_object_or_404(Practica, pk=practica_id)
     informe_final = practica.informefinal_set.last()  # Obtener el último informe final
-
     estudiante = practica.estudiante
     ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
     coordinador = request.user
@@ -1633,6 +1635,7 @@ def evaluar_informe_final(request, practica_id):
         )
 
         # Actualizar la nota y retroalimentación directamente
+        informe_final.rubrica = rubrica
         informe_final.nota = round(nota, 2)  # Actualizamos la nota
         informe_final.save()  # Guardamos los cambios
 
@@ -1659,22 +1662,56 @@ def listar_informes_finales(request):
     }
     return render(request, 'coordinador/informes_finales.html', context)
 
+from django.shortcuts import render, get_object_or_404
+from .models import InformeAvances, FichaInscripcion
+
 def rubrica_info_avances(request, informe_id):
     informe = get_object_or_404(InformeAvances, id=informe_id)
     practica = informe.practica
-    # Recuperamos la Rubrica asociada a este InformeAvances
+    estudiante = practica.estudiante  # Obtener el estudiante relacionado
+    ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
     rubrica = informe.rubrica
-
-
     coordinador = request.user
+
+    # Verifica que los datos esenciales estén presentes
+    if not estudiante or not ficha_inscripcion:
+        return render(request, 'coordinador/error.html', {'mensaje': 'Faltan datos necesarios para mostrar la rúbrica.'})
+
+    # Extraemos los campos específicos de la rúbrica
+    rubrica_campos = {
+        'portada': rubrica.portada,
+        'introduccion': rubrica.introduccion,
+        'objetivo_general': rubrica.objetivo_general,
+        'objetivos_especificos': rubrica.objetivos_especificos,
+        'caracterizacion_empresa': rubrica.caracterizacion_empresa,
+        'datos_supervisor': rubrica.datos_supervisor,
+        'desarrollo_practica': rubrica.desarrollo_practica,
+        'recomendaciones': rubrica.recomendaciones,
+        'conclusiones': rubrica.conclusiones,
+        'anexos': rubrica.anexos,
+        'formato_establecido': rubrica.formato_establecido,
+        'tercera_persona': rubrica.tercera_persona,
+        'cita_fuente': rubrica.cita_fuente,
+        'extension': rubrica.extension,
+        'tabla_grafico': rubrica.tabla_grafico,
+        'ortografia': rubrica.ortografia,
+        'cohesion_coherencia': rubrica.cohesion_coherencia,
+        'ideas_profundizacion': rubrica.ideas_profundizacion,
+        'roles_impacto': rubrica.roles_impacto,
+        'riqueza_linguistica': rubrica.riqueza_linguistica,
+        'comentarios': rubrica.comentarios
+    }
 
     # Contexto para la plantilla
     context = {
-        'rubrica': rubrica,
-        'practica': practica,
-        'informe': informe,
-      
-        "coordinador": coordinador,  # Pasar datos del coordinador
-        "usuario_sesion": request.user.get_full_name()  # Nombre completo del usuario autenticado
+        'rubrica': rubrica_campos,       # Campos desglosados de la rúbrica
+        'practica': practica,            # Información de la práctica
+        'informe': informe,              # Información del informe
+        'estudiante': estudiante,        # Información del estudiante
+        'ficha_inscripcion': ficha_inscripcion,  # Información de la ficha de inscripción
+        'coordinador': coordinador,      # Datos del coordinador
+        'usuario_sesion': request.user.get_full_name()  # Nombre completo del usuario autenticado
     }
+
     return render(request, 'coordinador/rubrica_info_avances.html', context)
+

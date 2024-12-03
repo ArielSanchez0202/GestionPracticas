@@ -52,10 +52,10 @@
         {% if informe_avances %}
             <p>Este informe se presenta a la mitad de la práctica para detallar avances, logros y desafíos. Es esencial para la retroalimentación del supervisor.</p>
             <div class="action-buttons-container">
-                <a href="">
+                <a href="{% url 'descargar_informe' informe_avances.practica.id %}">
                     <button class="action-button">Ver informe</button>
                 </a>
-                <a href="">
+                <a href="{% url 'evaluar_informe_avances' informe_avances.practica.id %}">
                     <button class="action-button">Evaluar informe</button>
                 </a>
             </div>
@@ -74,11 +74,14 @@
     <div class="card-data">
         {% if informe_final %}
             <p>Documento final que resume todas las actividades, logros y aprendizajes durante la práctica profesional.</p>
-            <div class="action-buttons-container">
-                <a href="">
-                    <button class="action-button">Ver informe</button>
-                </a>
-                <a href="">
+                            <div class="action-buttons-container">
+                                {% if practica.informefinal_set.exists %}
+                    <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" 
+                    class="action-button" target="_blank">Descargar Informe</a>
+                {% else %}
+                    <p>No hay informe final disponible.</p>
+                {% endif %}
+                <a href="{% url 'evaluar_informe_final' informe_final.practica.id %}">
                     <button class="action-button">Evaluar informe</button>
                 </a>
             </div>
