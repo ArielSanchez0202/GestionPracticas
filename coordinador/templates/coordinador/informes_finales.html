@@ -42,6 +42,7 @@
 
                             <!-- Práctica asociada -->
                             <td>Práctica {{ practica.pk }}</td>
+                            <td>{{ practica.informefinal_set.last.nota|default:"Pendiente" }}</td>
 
                             <!-- Estado calculado -->
                             <td>
@@ -62,7 +63,7 @@
                                     <a href="{% url 'evaluar_informe_final' practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
                                     {% endif %}
                                     <button 
-                                        class="btn btn-secondary" 
+                                        class="btn btn-secondary" style="margin-top: 0px; !important"
                                         onclick="openEditModal(
                                             {{ practica.pk }},
                                             '{{ practica.estudiante.usuario.first_name|escapejs }} {{ practica.estudiante.usuario.last_name|escapejs }}',
@@ -99,7 +100,7 @@
             <input type="text" name="nota" id="modal-note-input" required 
                    pattern="^\d+([,\.]\d+)?$"
                    title="Por favor ingresa una nota válida, usa solo números y coma o punto como separador decimal">
-            <button type="submit" class="btn btn-primary">Guardar Nota</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20bx; !important">Guardar Nota</button>
         </form>
     </div>
 </div>

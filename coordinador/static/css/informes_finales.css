@@ -129,6 +129,10 @@ input {
     text-align: center;
 }
 
+button {
+    margin-top: 20px;
+}
+
 /* Close button */
 .close {
     color: #aaa;
