@@ -9,7 +9,7 @@
 
     <div class="row mt-4">
         <!-- Total de Solicitudes -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Total de Solicitudes</h5>
@@ -18,7 +18,7 @@
             </div>
         </div>
         <!-- Solicitudes Pendientes -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Solicitudes Pendientes</h5>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <!-- Solicitudes Aprobadas -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Solicitudes Aprobadas</h5>
@@ -35,13 +35,21 @@
                 </div>
             </div>
         </div>
+        <!-- Solicitudes Rechazadas -->
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Solicitudes Rechazadas</h5>
+                    <p class="card-text">{{ solicitudes_rechazadas }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Gráfico de "Solicitudes por Estado" -->
     <div class="row mt-5">
         <div class="col-md-6">
             <h3>Solicitudes por Estado</h3>
-            <canvas id="estadoChart"></canvas>
+            <canvas id="estadoChart" style="max-width: 400px; max-height: 400px;"></canvas>
         </div>
     </div>
 
@@ -59,13 +67,15 @@
         <tbody>
             {% for solicitud in solicitudes_recientes %}
             <tr>
-                <td>{% if solicitud.practica1 %}
-                    Práctica 1
-                {% elif solicitud.practica2 %}
-                    Práctica 2
-                {% else %}
-                    No seleccionada
-                {% endif %}</td>
+                <td>
+                    {% if solicitud.practica1 %}
+                        Práctica 1
+                    {% elif solicitud.practica2 %}
+                        Práctica 2
+                    {% else %}
+                        No seleccionada
+                    {% endif %}
+                </td>
                 <td>{{ solicitud.estudiante }}</td>
                 <td>{{ solicitud.estado }}</td>
                 <td>
@@ -97,6 +107,18 @@
                 data: [{{ solicitudes_aprobadas }}, {{ solicitudes_rechazadas }}, {{ solicitudes_pendientes }}],
                 backgroundColor: ['#4caf50', '#f44336', '#ffeb3b']
             }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.raw;
+                        }
+                    }
+                }
+            }
         }
     });
 </script>
