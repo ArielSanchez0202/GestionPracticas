@@ -22,6 +22,7 @@ urlpatterns = [
     path('ver_documento/<int:document_id>/', views.ver_documento, name='ver_documento'),
     path('descargar_informe/<int:practica_id>/', descargar_informe, name='descargar_informe'),
     path('evaluar_informe_avances/<int:practica_id>/', views.evaluar_informe_avances, name='evaluar_informe_avances'),
+    path('rubrica_info_avances/<int:informe_id>/', views.rubrica_info_avances, name='rubrica_info_avances'),
     path('practicas/<int:practica_id>/evaluar-informe-final/', evaluar_informe_final, name='evaluar_informe_final'),
     path('informes-finales/', listar_informes_finales, name='informes_finales'),
     #Lista Coordinadores

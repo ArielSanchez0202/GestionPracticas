@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from autenticacion.decorators import estudiante_required
-from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document, Autoevaluacion
+from coordinador.models import Estudiante, Practica, FichaInscripcion, InformeAvances, InformeFinal, Document, Autoevaluacion, InformeConfidencial
 from django.http import HttpResponse, JsonResponse, FileResponse
 from datetime import datetime, date
 from django.conf import settings
+from decimal import Decimal
 import os
 from coordinador.models import Document, PracticaConfig
 
@@ -25,11 +26,42 @@ def estudiante_view(request):
                 ficha.practica.estado = 'finalizada'
                 ficha.practica.save()
 
+                # Calcular la nota dentro de la vista
+                practica = ficha.practica
+
+                # Validar que todas las notas existan
+                informe_final = InformeFinal.objects.filter(practica=practica).first()
+                informe_confidencial = InformeConfidencial.objects.filter(practica=practica).first()
+                autoevaluacion = Autoevaluacion.objects.filter(practica=practica).first()
+
+                if informe_final and informe_confidencial and autoevaluacion:
+                    # Porcentajes como Decimal
+                    peso_informe_final = Decimal('0.4')
+                    peso_informe_confidencial = Decimal('0.5')
+                    peso_autoevaluacion = Decimal('0.1')
+
+                    # Obtener las notas relacionadas y convertirlas a Decimal
+                    nota_informe_final = Decimal(informe_final.nota)
+                    nota_informe_confidencial = Decimal(informe_confidencial.nota)
+                    nota_autoevaluacion = Decimal(autoevaluacion.nota)
+
+                    # Calcular la nota ponderada
+                    nota_final = (
+                        (nota_informe_final * peso_informe_final)
+                        + (nota_informe_confidencial * peso_informe_confidencial)
+                        + (nota_autoevaluacion * peso_autoevaluacion)
+                    )
+
+                    # Actualizar la nota de la práctica
+                    practica.nota = round(nota_final, 1)
+                    practica.save()
+
     context = {
         'fichas_inscripcion': fichas_inscripcion,
     }
 
     return render(request, 'estudiante.html', context)
+
 
 @estudiante_required
 def inscripcion_practica_view(request):

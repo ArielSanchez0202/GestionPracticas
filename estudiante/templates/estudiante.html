@@ -50,7 +50,12 @@
                             {{ ficha.practica.get_estado_display }}
                         {% endif %}<br>
                         Fecha de Inscripción: {{ ficha.practica.fecha_inscripcion }} <br>
-                        Nota: {{ ficha.practica.nota }}<br>
+                        Nota: 
+                        {% if ficha.practica.nota %}
+                            {{ ficha.practica.nota }}
+                        {% else %}
+                            No disponible
+                        {% endif %} <br>
                         <a href="{% url 'detalle_practica' ficha.id %}">
                             <button type="button" class="detalle-btn">Detalle</button>
                         </a>

@@ -1466,6 +1466,7 @@ def crear_notificacion(usuario, mensaje, tipo='info'):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Practica, FichaInscripcion, Autoevaluacion, InformeAvances, InformeFinal, InformeConfidencial
 
+@coordinador_required
 def detalle_practica_coordinador(request, practica_id):
     practica = get_object_or_404(Practica, id=practica_id)
     ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
@@ -1658,3 +1659,23 @@ def listar_informes_finales(request):
         "usuario_sesion": request.user.get_full_name()
     }
     return render(request, 'coordinador/informes_finales.html', context)
+
+def rubrica_info_avances(request, informe_id):
+    informe = get_object_or_404(InformeAvances, id=informe_id)
+    practica = informe.practica
+    # Recuperamos la Rubrica asociada a este InformeAvances
+    rubrica = informe.rubrica
+
+
+    coordinador = request.user
+
+    # Contexto para la plantilla
+    context = {
+        'rubrica': rubrica,
+        'practica': practica,
+        'informe': informe,
+      
+        "coordinador": coordinador,  # Pasar datos del coordinador
+        "usuario_sesion": request.user.get_full_name()  # Nombre completo del usuario autenticado
+    }
+    return render(request, 'coordinador/rubrica_info_avances.html', context)

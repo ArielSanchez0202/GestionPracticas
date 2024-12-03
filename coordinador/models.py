@@ -40,6 +40,7 @@ class Practica(models.Model):
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='practicas')
     estado = models.CharField(max_length=50, choices=ESTADO_CHOICES, default='pendiente')
     fecha_inscripcion = models.DateField(default=date.today)
+    nota = models.DecimalField(max_digits=3, decimal_places=1, null=True)
 
     def __str__(self):
         return f'Práctica {self.pk} - {self.get_estado_display()}'
