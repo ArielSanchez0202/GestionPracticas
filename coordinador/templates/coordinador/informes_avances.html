@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} Lista de Informes de Avances {% endblock %}
+{% block title %} Revisión de Informes de Avances {% endblock %}
 
 {% block content %}
 <meta charset="UTF-8">
@@ -20,6 +20,7 @@
                         <th>RUT</th>
                         <th>Carrera</th>
                         <th>Práctica</th>
+                        <th>Nota</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -49,30 +50,57 @@
                                     No asignada
                                 {% endif %}
                             </td>
-
-                            <!-- Estado calculado de la ficha -->
-                            <td>{{ ficha_data.estado }}</td>
-
-                            <!-- Acciones -->
                             <td>
-                                <!-- Botón para descargar el informe -->
+                                {% with ficha_data.ficha.practica.informeavances_set.last as informe %}
+                                    {{ informe.nota_avance|default:"Pendiente" }}
+                                {% endwith %}
+                            </td>
+                            <td>{{ ficha_data.estado }}</td>
+                            <td>
                                 <a href="{% url 'descargar_informe' ficha_data.ficha.practica.pk %}" class="btn btn-primary">Descargar Informe</a>
-
-                                <!-- Si el estado es 'Entregado', botón para ver rubrica -->
                                 {% if ficha_data.estado == 'Entregado' %}
-                                <a href="#    {% comment %} {% url 'ver_rubrica' ficha_data.ficha.practica.pk %} {% endcomment %}" class="btn btn-secondary">Ver Rubrica</a>
-                                {% endif %}
-
-                                <!-- Si el estado es 'Pendiente de entrega', botón para evaluar el informe -->
-                                {% if ficha_data.estado == 'Pendiente de entrega' %}
+                                    <a href="#" class="btn btn-secondary">Ver Rúbrica</a>
+                                {% else %}
                                     <a href="{% url 'evaluar_informe_avances' ficha_data.ficha.practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
                                 {% endif %}
+                                <button 
+                                class="btn btn-secondary" 
+                                onclick="openEditModal(
+                                    {{ ficha_data.ficha.practica.pk }},
+                                    '{{ ficha_data.ficha.estudiante.usuario.first_name|escapejs }} {{ ficha_data.ficha.estudiante.usuario.last_name|escapejs }}',
+                                    {% with ficha_data.ficha.practica.informeavances_set.last as informe %}
+                                        {% if informe.nota_avance %}'{{ informe.nota_avance|escapejs }}'{% else %}'Pendiente'{% endif %}
+                                    {% endwith %}
+                                )">
+                                Editar Nota
+                            </button>
+                            
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>                       
+            </table>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="editNoteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Editar Nota</h2>
+        <p id="modal-student-name"></p>
+        <form id="editNoteForm" method="post" action="{% url 'actualizar_nota_avance' %}">
+            {% csrf_token %}
+            <input type="hidden" name="practica_id" id="modal-practica-id">
+            <label for="nota">Nueva Nota:</label>
+            <input type="text" name="nota" id="modal-note-input" required 
+                   pattern="^\d+([,\.]\d+)?$"
+                   title="Por favor ingresa una nota válida, usa solo números y coma o punto como separador decimal">
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Guardar Nota</button>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/editar_nota_avance.js' %}"></script>
 {% endblock %}

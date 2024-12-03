@@ -50,5 +50,7 @@ urlpatterns = [
     ####################################################################
     path('detalle_practica_coordinador/<int:practica_id>/', views.detalle_practica_coordinador, name='detalle_practica_coordinador'),
     path('configurar-correo-director/', views.configurar_correo_director, name='configurar_correo_director'),
+    path('actualizar_nota_avance/', views.actualizar_nota_avance, name='actualizar_nota_avance'),
+    path('actualizar_nota_final/', views.actualizar_nota_final, name='actualizar_nota_final'),
 
 ]

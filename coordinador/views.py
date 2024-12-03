@@ -685,6 +685,12 @@ def verificar_rut(request):
     return JsonResponse({'existe': existe})
 
 @coordinador_required
+def informes_finales(request):
+    # Obtener las prácticas del coordinador, puedes agregar filtros si es necesario
+    practicas = Practica.objects.all()
+    return render(request, 'coordinador/informes_finales.html', {'practicas': practicas})
+
+@coordinador_required
 def informes_avances(request):
     # Filtrar solo las fichas aprobadas y que tienen un informe de avance asociado
     fichas_aprobadas = FichaInscripcion.objects.filter(estado="Aprobada").select_related('estudiante__usuario', 'practica')
@@ -749,6 +755,50 @@ def actualizar_nota(request):
         return redirect('autoevaluaciones')  # Redirige tras actualizar
     return redirect('autoevaluaciones')  # Manejo de métodos no POST
 
+@coordinador_required
+def actualizar_nota_avance(request):
+    if request.method == "POST":
+        practica_id = request.POST.get("practica_id")
+        nueva_nota = request.POST.get("nota")
+
+        practica = get_object_or_404(Practica, pk=practica_id)
+        informe = practica.informeavances_set.last()
+
+        if informe:
+            try:
+                informe.nota_avance = float(nueva_nota.replace(',', '.'))
+                informe.save()
+                messages.success(request, "Nota de avance actualizada correctamente.")
+            except ValueError:
+                messages.error(request, "La nota ingresada no es válida.")
+        else:
+            messages.error(request, "No se encontró un informe asociado.")
+
+    return redirect("informes_avances")
+
+def actualizar_nota_final(request):
+    if request.method == "POST":
+        practica_id = request.POST.get("practica_id")
+        nueva_nota = request.POST.get("nota")
+        practica = get_object_or_404(Practica, id=practica_id)
+        informe_final = practica.informefinal_set.last()
+
+        if informe_final:
+            try:
+                # Guardar la nueva nota
+                informe_final.nota = float(nueva_nota)
+                informe_final.save()
+                messages.success(request, "Nota actualizada correctamente.")
+            except ValueError:
+                messages.error(request, "La nota ingresada no es válida.")
+        else:
+            messages.error(request, "No se encontró un informe final para esta práctica.")
+
+        return redirect("informes_finales")  # Cambia al nombre de tu vista correspondiente
+    else:
+        messages.error(request, "Método no permitido.")
+        return redirect("informes_finales")
+    
 def actualizar_nota_informe_confidencial(request):
     if request.method == 'POST':
         practica_id = request.POST.get('practica_id')
@@ -791,9 +841,6 @@ def revisar_autoevaluacion(request, practica_id):
 
     return render(request, 'coordinador/revisar_autoevaluacion.html', context)
 
-@coordinador_required
-def informes_finales(request):
-    return render(request, 'coordinador/informes_finales.html')
 
 @coordinador_required
 def dashboard(request):

@@ -20,6 +20,7 @@
                         <th>RUT</th>
                         <th>Carrera</th>
                         <th>Práctica</th>
+                        <th>Nota</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -45,20 +46,30 @@
                             <!-- Estado calculado -->
                             <td>
                                 {% if practica.informefinal_set.last %}
-                                    Evaluado: {{ practica.informefinal_set.last.nota|default:"Pendiente" }}
+                                    Evaluado
                                 {% else %}
                                     Sin Informe Final
                                 {% endif %}
                             </td>
-
-                            <!-- Acciones -->
                             <td>
                                 {% if practica.informefinal_set.last %}
-                                    <!-- Botón para descargar el informe final -->
+                                    
                                     <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" class="btn btn-primary" target="_blank">Descargar Informe</a>
-
-                                    <!-- Botón para evaluar el informe -->
+                                    <a>{{ficha_data.estado}}</a>
+                                    {% if ficha_data.estado == 'Entregado' %}
+                                    <a href="#" class="btn btn-secondary">Ver Rúbrica</a>
+                                    {% else %}
                                     <a href="{% url 'evaluar_informe_final' practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
+                                    {% endif %}
+                                    <button 
+                                        class="btn btn-secondary" 
+                                        onclick="openEditModal(
+                                            {{ practica.pk }},
+                                            '{{ practica.estudiante.usuario.first_name|escapejs }} {{ practica.estudiante.usuario.last_name|escapejs }}',
+                                            {% if practica.informefinal_set.last.nota %}'{{ practica.informefinal_set.last.nota|escapejs }}'{% else %}'Pendiente'{% endif %}
+                                        )">
+                                        Editar Nota
+                                    </button>
                                 {% else %}
                                     <span class="text-muted">No disponible</span>
                                 {% endif %}
@@ -66,7 +77,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7" class="text-center">No hay informes finales registrados.</td>
+                            <td colspan="8" class="text-center">No hay informes finales registrados.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -74,4 +85,23 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="editNoteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditModal()">&times;</span>
+        <h2>Editar Nota Informe Final</h2>
+        <p id="modal-student-name"></p>
+        <form id="editNoteForm" method="post" action="{% url 'actualizar_nota_final' %}">
+            {% csrf_token %}
+            <input type="hidden" name="practica_id" id="modal-practica-id">
+            <label for="nota">Nueva Nota:</label>
+            <input type="text" name="nota" id="modal-note-input" required 
+                   pattern="^\d+([,\.]\d+)?$"
+                   title="Por favor ingresa una nota válida, usa solo números y coma o punto como separador decimal">
+            <button type="submit" class="btn btn-primary">Guardar Nota</button>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/editar_nota_final.js' %}"></script>
 {% endblock %}
