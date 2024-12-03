@@ -1483,6 +1483,55 @@ def evaluar_informe_avances(request, practica_id):
 
     coordinador = request.user
 
+    if request.method == 'POST':
+        # Define los puntajes por respuesta
+        puntajes = {'Desempeño de excelencia': 3, 'Desempeño efectivo': 2, 'Desempeño que se debe mejorar': 1, 'Desempeño insatisfactorio': 0}
+        total_preguntas = 17  # Número total de preguntas
+        puntaje_maximo = total_preguntas * 3
+
+        # Obtener y procesar las respuestas del formulario
+        puntaje_obtenido = sum(
+            puntajes.get(request.POST.get(f'pregunta{i}', 'Desempeño insatisfactorio'), 0)
+            for i in range(1, total_preguntas + 1)
+        )
+
+        # Calcular la nota (escala de 1.0 a 7.0)
+        nota = 1.0 + (puntaje_obtenido / puntaje_maximo) * 6.0
+
+        # Obtener otros campos del formulario
+        comentarios = request.POST.get('comentarios', '')
+
+        # Crear y guardar la autoevaluación
+        rubrica = Rubrica.objects.create(
+            tipo_informe="Avances",
+            portada=request.POST.get('pregunta1', ''),
+            introduccion=request.POST.get('pregunta2', ''),
+            objetivo_general=request.POST.get('pregunta3', ''),
+            objetivos_especificos=request.POST.get('pregunta4', ''),
+            caracterizacion_empresa=request.POST.get('pregunta5', ''),
+            datos_supervisor=request.POST.get('pregunta6', ''),
+            desarrollo_practica=request.POST.get('pregunta7', ''),
+            formato_establecido=request.POST.get('pregunta8', ''),
+            tercera_persona=request.POST.get('pregunta9', ''),
+            cita_fuente=request.POST.get('pregunta10', ''),
+            extension=request.POST.get('pregunta11', ''),
+            tabla_grafico=request.POST.get('pregunta12', ''),
+            ortografia=request.POST.get('pregunta13', ''),
+            cohesion_coherencia=request.POST.get('pregunta14', ''),
+            ideas_profundizacion=request.POST.get('pregunta15', ''),
+            roles_impacto=request.POST.get('pregunta16', ''),
+            riqueza_linguistica=request.POST.get('pregunta17', ''),
+            comentarios=comentarios
+        )
+
+        # Actualizar la nota y retroalimentación directamente
+        informe.nota_avance = round(nota, 2)  # Actualizamos la nota
+        informe.retroalimentacion = comentarios  # Actualizamos la retroalimentación
+        informe.save()  # Guardamos los cambios
+
+        # Redirigir al usuario a una página de éxito
+        return redirect('informes_avances') 
+
     # Contexto para la plantilla
     context = {
         "practica": practica,
@@ -1491,52 +1540,7 @@ def evaluar_informe_avances(request, practica_id):
         "ficha_inscripcion": ficha_inscripcion,  # Pasar la ficha de inscripción
         "coordinador": coordinador,  # Pasar datos del coordinador
         "usuario_sesion": request.user.get_full_name()  # Nombre completo del usuario autenticado
-}
-
-    if request.method == "POST":
-        # Obtener criterios desde el formulario
-        criterios = [
-            request.POST.get("portada"),
-            request.POST.get("introduccion"),
-            request.POST.get("objetivo_general"),
-            request.POST.get("objetivos_especificos"),
-            request.POST.get("caracterizacion_empresa"),
-            request.POST.get("datos_supervisor"),
-            request.POST.get("desarrollo_practica"),
-            request.POST.get("formato_establecido"),
-        ]
-
-        # Asignar puntajes según el criterio
-        puntajes = {
-            "Desempeño de excelencia": 4,
-            "Desempeño efectivo": 3,
-            "Desempeño que se debe mejorar": 2,
-            "Desempeño insatisfactorio": 1,
-        }
-
-        # Calcular el total de puntajes obtenidos
-        total_puntaje_obtenido = sum(puntajes.get(criterio, 0) for criterio in criterios if criterio)
-
-        # Determinar el puntaje máximo y mínimo posibles
-        max_puntaje = len(criterios) * 4  # Todos con "Desempeño de excelencia"
-        min_puntaje = len(criterios) * 1  # Todos con "Desempeño insatisfactorio"
-
-        if max_puntaje > min_puntaje:
-            # Escalar la nota final al rango de 1.0 a 7.0
-            nota_final = 1.0 + ((total_puntaje_obtenido - min_puntaje) * 6.0 / (max_puntaje - min_puntaje))
-        else:
-            nota_final = 1.0
-
-        nota_final = round(nota_final, 1)  # Redondear a un decimal
-
-        if informe:
-            informe.nota_avance = nota_final
-            informe.retroalimentacion = request.POST.get("comentarios", "")
-            informe.save()
-            messages.success(request, f"El informe ha sido evaluado exitosamente. Nota: {nota_final}")
-            return redirect('informes_avances')
-        else:
-            messages.error(request, "No se encontró un informe asociado a esta práctica.")
+    }
 
     return render(request, 'coordinador/evaluar_informe_avances.html', context)
 
@@ -1549,6 +1553,53 @@ def evaluar_informe_final(request, practica_id):
     ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
     coordinador = request.user
 
+    if request.method == 'POST':
+        # Define los puntajes por respuesta
+        puntajes = {'Desempeño de excelencia': 3, 'Desempeño efectivo': 2, 'Desempeño que se debe mejorar': 1, 'Desempeño insatisfactorio': 0}
+        total_preguntas = 20  # Número total de preguntas
+        puntaje_maximo = total_preguntas * 3
+
+        # Obtener y procesar las respuestas del formulario
+        puntaje_obtenido = sum(
+            puntajes.get(request.POST.get(f'pregunta{i}', 'Desempeño insatisfactorio'), 0)
+            for i in range(1, total_preguntas + 1)
+        )
+
+        # Calcular la nota (escala de 1.0 a 7.0)
+        nota = 1.0 + (puntaje_obtenido / puntaje_maximo) * 6.0
+
+        # Crear y guardar la autoevaluación
+        rubrica = Rubrica.objects.create(
+            tipo_informe="Final",
+            portada=request.POST.get('pregunta1', ''),
+            introduccion=request.POST.get('pregunta2', ''),
+            objetivo_general=request.POST.get('pregunta3', ''),
+            objetivos_especificos=request.POST.get('pregunta4', ''),
+            caracterizacion_empresa=request.POST.get('pregunta5', ''),
+            datos_supervisor=request.POST.get('pregunta6', ''),
+            desarrollo_practica=request.POST.get('pregunta7', ''),
+            recomendaciones=request.POST.get('pregunta8', ''),
+            conclusiones=request.POST.get('pregunta9', ''),
+            anexos=request.POST.get('pregunta10', ''),
+            formato_establecido=request.POST.get('pregunta11', ''),
+            tercera_persona=request.POST.get('pregunta12', ''),
+            cita_fuente=request.POST.get('pregunta13', ''),
+            extension=request.POST.get('pregunta14', ''),
+            tabla_grafico=request.POST.get('pregunta15', ''),
+            ortografia=request.POST.get('pregunta16', ''),
+            cohesion_coherencia=request.POST.get('pregunta17', ''),
+            ideas_profundizacion=request.POST.get('pregunta18', ''),
+            roles_impacto=request.POST.get('pregunta19', ''),
+            riqueza_linguistica=request.POST.get('pregunta20', ''),
+        )
+
+        # Actualizar la nota y retroalimentación directamente
+        informe_final.nota = round(nota, 2)  # Actualizamos la nota
+        informe_final.save()  # Guardamos los cambios
+
+        # Redirigir al usuario a una página de éxito
+        return redirect('informes_finales')
+
     context = {
         "practica": practica,
         "informe_final": informe_final,
@@ -1557,46 +1608,6 @@ def evaluar_informe_final(request, practica_id):
         "coordinador": coordinador,
         "usuario_sesion": request.user.get_full_name()
     }
-
-    if request.method == "POST":
-        criterios = [
-            request.POST.get("portada"),
-            request.POST.get("introduccion"),
-            request.POST.get("objetivo_general"),
-            request.POST.get("objetivos_especificos"),
-            request.POST.get("caracterizacion_empresa"),
-            request.POST.get("datos_supervisor"),
-            request.POST.get("desarrollo_practica"),
-            request.POST.get("formato_establecido"),
-        ]
-
-        puntajes = {
-            "Desempeño de excelencia": 4,
-            "Desempeño efectivo": 3,
-            "Desempeño que se debe mejorar": 2,
-            "Desempeño insatisfactorio": 1,
-        }
-
-        total_puntaje_obtenido = sum(puntajes.get(criterio, 0) for criterio in criterios if criterio)
-
-        max_puntaje = len(criterios) * 4
-        min_puntaje = len(criterios) * 1
-
-        if max_puntaje > min_puntaje:
-            nota_final = 1.0 + ((total_puntaje_obtenido - min_puntaje) * 6.0 / (max_puntaje - min_puntaje))
-        else:
-            nota_final = 1.0
-
-        nota_final = round(nota_final, 1)
-
-        if informe_final:
-            informe_final.nota = nota_final
-            informe_final.retroalimentacion = request.POST.get("comentarios", "")
-            informe_final.save()
-            messages.success(request, f"El informe final ha sido evaluado exitosamente. Nota: {nota_final}")
-            return redirect('informes_finales')
-        else:
-            messages.error(request, "No se encontró un informe final asociado a esta práctica.")
 
     return render(request, 'coordinador/evaluar_informe_final.html', context)
 

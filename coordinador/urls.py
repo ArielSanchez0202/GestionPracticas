@@ -18,7 +18,6 @@ urlpatterns = [
     path('actualizar-nota/', views.actualizar_nota, name='actualizar_nota'),
     path('actualizar-nota-informe-confidencial/', views.actualizar_nota_informe_confidencial, name='actualizar_nota_informe_confidencial'),
     path('revisar_autoevaluacion/<int:practica_id>/', views.revisar_autoevaluacion, name='revisar_autoevaluacion'),
-    path('informes_finales/', views.informes_finales, name='informes_finales'),
     path('documentos/', views.documentos, name='documentos'),
     path('ver_documento/<int:document_id>/', views.ver_documento, name='ver_documento'),
     path('descargar_informe/<int:practica_id>/', descargar_informe, name='descargar_informe'),

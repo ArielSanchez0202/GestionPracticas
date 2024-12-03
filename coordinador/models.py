@@ -220,9 +220,147 @@ class InformeConfidencial(models.Model):
 # Modelo Rubrica
 class Rubrica(models.Model):
     tipo_informe = models.CharField(max_length=100)
-    criterio1 = models.CharField(max_length=100)
-    criterio2 = models.CharField(max_length=100)
-    ponderacion_criterio1 = models.DecimalField(max_digits=5, decimal_places=2)
+    # Sección I: Contenido del Documento
+    portada = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    introduccion = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    objetivo_general = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    objetivos_especificos = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    caracterizacion_empresa = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    datos_supervisor = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    desarrollo_practica = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    recomendaciones = models.CharField(
+        max_length=50,
+        choices=[
+            ("Desempeño de excelencia", "Desempeño de excelencia"),
+            ("Desempeño efectivo", "Desempeño efectivo"),
+            ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+            ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+        ],
+        blank=True,
+        null=True
+    )
+    conclusiones = models.CharField(
+        max_length=50,
+        choices=[
+            ("Desempeño de excelencia", "Desempeño de excelencia"),
+            ("Desempeño efectivo", "Desempeño efectivo"),
+            ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+            ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+        ],
+        blank=True,
+        null=True
+    )
+    anexos = models.CharField(
+        max_length=50,
+        choices=[
+            ("Desempeño de excelencia", "Desempeño de excelencia"),
+            ("Desempeño efectivo", "Desempeño efectivo"),
+            ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+            ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+        ],
+        blank=True,
+        null=True
+    )
+
+    # Sección II: Formato
+    formato_establecido = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    tercera_persona = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    cita_fuente = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    extension = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    tabla_grafico = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    ortografia = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    cohesion_coherencia = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    ideas_profundizacion = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    roles_impacto = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+    riqueza_linguistica = models.CharField(max_length=50, choices=[
+        ("Desempeño de excelencia", "Desempeño de excelencia"),
+        ("Desempeño efectivo", "Desempeño efectivo"),
+        ("Desempeño que se debe mejorar", "Desempeño que se debe mejorar"),
+        ("Desempeño insatisfactorio", "Desempeño insatisfactorio"),
+    ])
+
+    # Comentarios
+    comentarios = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f'Rubrica: {self.tipo_informe}'
