@@ -2,7 +2,7 @@
 
 from django.urls import path
 from . import views
-from .views import descargar_informe
+from .views import descargar_informe, evaluar_informe_final
 urlpatterns = [
     # Agrega aquí tus patrones de URL
     path('agregar_estudiante/', views.agregar_estudiante, name='agregar_estudiante'),
@@ -23,6 +23,7 @@ urlpatterns = [
     path('ver_documento/<int:document_id>/', views.ver_documento, name='ver_documento'),
     path('descargar_informe/<int:practica_id>/', descargar_informe, name='descargar_informe'),
     path('evaluar_informe_avances/<int:practica_id>/', views.evaluar_informe_avances, name='evaluar_informe_avances'),
+    path('practicas/<int:practica_id>/evaluar-informe-final/', evaluar_informe_final, name='evaluar_informe_final'),
     #Lista Coordinadores
     path('listar_coordinador/',views.listar_coordinador,name='listar_coordinador'),
     path('crear_coordinador/',views.crear_coordinador,name='crear_coordinador'),

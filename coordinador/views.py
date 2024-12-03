@@ -1492,3 +1492,63 @@ def evaluar_informe_avances(request, practica_id):
             messages.error(request, "No se encontró un informe asociado a esta práctica.")
 
     return render(request, 'coordinador/evaluar_informe_avances.html', context)
+
+@coordinador_required
+def evaluar_informe_final(request, practica_id):
+    practica = get_object_or_404(Practica, pk=practica_id)
+    informe_final = practica.informefinal_set.last()  # Obtener el último informe final
+
+    estudiante = practica.estudiante
+    ficha_inscripcion = FichaInscripcion.objects.filter(practica=practica).first()
+    coordinador = request.user
+
+    context = {
+        "practica": practica,
+        "informe_final": informe_final,
+        "estudiante": estudiante,
+        "ficha_inscripcion": ficha_inscripcion,
+        "coordinador": coordinador,
+        "usuario_sesion": request.user.get_full_name()
+    }
+
+    if request.method == "POST":
+        criterios = [
+            request.POST.get("portada"),
+            request.POST.get("introduccion"),
+            request.POST.get("objetivo_general"),
+            request.POST.get("objetivos_especificos"),
+            request.POST.get("caracterizacion_empresa"),
+            request.POST.get("datos_supervisor"),
+            request.POST.get("desarrollo_practica"),
+            request.POST.get("formato_establecido"),
+        ]
+
+        puntajes = {
+            "Desempeño de excelencia": 4,
+            "Desempeño efectivo": 3,
+            "Desempeño que se debe mejorar": 2,
+            "Desempeño insatisfactorio": 1,
+        }
+
+        total_puntaje_obtenido = sum(puntajes.get(criterio, 0) for criterio in criterios if criterio)
+
+        max_puntaje = len(criterios) * 4
+        min_puntaje = len(criterios) * 1
+
+        if max_puntaje > min_puntaje:
+            nota_final = 1.0 + ((total_puntaje_obtenido - min_puntaje) * 6.0 / (max_puntaje - min_puntaje))
+        else:
+            nota_final = 1.0
+
+        nota_final = round(nota_final, 1)
+
+        if informe_final:
+            informe_final.nota = nota_final
+            informe_final.retroalimentacion = request.POST.get("comentarios", "")
+            informe_final.save()
+            messages.success(request, f"El informe final ha sido evaluado exitosamente. Nota: {nota_final}")
+            return redirect('informes_finales')
+        else:
+            messages.error(request, "No se encontró un informe final asociado a esta práctica.")
+
+    return render(request, 'coordinador/evaluar_informe_final.html', context)

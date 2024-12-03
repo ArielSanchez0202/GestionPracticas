@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Evaluar Informe Final</h2>
+<p><strong>Estudiante:</strong> {{ estudiante.usuario.first_name }} {{ estudiante.usuario.last_name }}</p>
+<p><strong>Carrera:</strong> {{ estudiante.carrera }}</p>
+<p><strong>Práctica ID:</strong> {{ practica.pk }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <h3>Criterios de Evaluación</h3>
+    <div>
+        <label for="portada">Portada</label>
+        <select name="portada" required>
+            <option value="Desempeño de excelencia">Desempeño de excelencia</option>
+            <option value="Desempeño efectivo">Desempeño efectivo</option>
+            <option value="Desempeño que se debe mejorar">Desempeño que se debe mejorar</option>
+            <option value="Desempeño insatisfactorio">Desempeño insatisfactorio</option>
+        </select>
+    </div>
+
+    <!-- Repite este bloque para cada criterio -->
+    <div>
+        <label for="introduccion">Introducción</label>
+        <select name="introduccion" required>
+            <option value="Desempeño de excelencia">Desempeño de excelencia</option>
+            <option value="Desempeño efectivo">Desempeño efectivo</option>
+            <option value="Desempeño que se debe mejorar">Desempeño que se debe mejorar</option>
+            <option value="Desempeño insatisfactorio">Desempeño insatisfactorio</option>
+        </select>
+    </div>
+
+    <!-- Otros criterios aquí -->
+
+    <div>
+        <label for="comentarios">Comentarios</label>
+        <textarea name="comentarios" rows="4" cols="50"></textarea>
+    </div>
+
+    <button type="submit">Evaluar</button>
+</form>
+
+{% if informe_final %}
+<p><strong>Archivo del Informe Final:</strong></p>
+<a href="{{ informe_final.archivo_informe_final.url }}" target="_blank">Descargar Informe Final</a>
+{% else %}
+<p>No se encontró un informe final asociado.</p>
+{% endif %}
+
+<a href="{% url 'informes_finales' %}">Volver</a>
+{% endblock %}

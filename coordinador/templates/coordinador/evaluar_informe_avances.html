@@ -84,7 +84,7 @@
                 </div>
             </div>
 
-    <form action="{% url 'evaluar_informe' practica.id %}" method="post">
+    <form action="{% url 'evaluar_informe_avances' practica.id %}" method="post">
         {% csrf_token %}
 
         <!-- Sección I: Contenido del Documento -->
