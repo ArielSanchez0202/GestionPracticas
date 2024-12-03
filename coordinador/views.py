@@ -1073,9 +1073,8 @@ def update_document(request, document_id):
 def documentos(request):
     # Tipos de documentos permitidos
     tipo_documentos = {
-    'reglamento': 'Reglamento Práctica Profesional',
-    'avance': 'Plantilla de informe ',
-
+        'reglamento': 'Reglamento Práctica Profesional',
+        'avance': 'Plantilla de informe ',
     }
 
     # Obtener los documentos existentes por tipo
@@ -1093,9 +1092,9 @@ def documentos(request):
         configuracion = PracticaConfig.objects.first()
         fecha_inicio_limite = configuracion.fecha_inicio_limite if configuracion else None
         fecha_termino_limite = configuracion.fecha_termino_limite if configuracion else None
-        correo_director = configuracion.correo_director
+        correo_director = configuracion.correo_director if configuracion else None
     except PracticaConfig.DoesNotExist:
-        fecha_inicio_limite = fecha_termino_limite = None
+        fecha_inicio_limite = fecha_termino_limite = correo_director = None
 
     # Formulario inicial vacío
     form = DocumentForm()
@@ -1129,7 +1128,7 @@ def documentos(request):
                 for error in errors:
                     messages.error(request, f"Error en {field}: {error}")
 
-    # Pasar las fechas al contexto
+    # Pasar las fechas y correo al contexto
     context = {
         'documentos': documentos,
         'form': form,
