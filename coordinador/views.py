@@ -1552,3 +1552,12 @@ def evaluar_informe_final(request, practica_id):
             messages.error(request, "No se encontró un informe final asociado a esta práctica.")
 
     return render(request, 'coordinador/evaluar_informe_final.html', context)
+
+@coordinador_required
+def listar_informes_finales(request):
+    practicas = Practica.objects.prefetch_related('informefinal_set').all()
+    context = {
+        "practicas": practicas,
+        "usuario_sesion": request.user.get_full_name()
+    }
+    return render(request, 'coordinador/informes_finales.html', context)

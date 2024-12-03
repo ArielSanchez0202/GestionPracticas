@@ -1,7 +1,53 @@
 {% extends 'base_coordinador.html' %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="text-center">{{ "informes_finales" }}</h1>
-    </div>
+
+<h2>Informes Finales</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Carrera</th>
+            <th>Práctica</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for practica in practicas %}
+        <tr>
+            <td>{{ practica.estudiante.usuario.first_name }} {{ practica.estudiante.usuario.last_name }}</td>
+            <td>{{ practica.estudiante.carrera }}</td>
+            <td>{{ practica.pk }}</td>
+            <td>
+                {% if practica.informefinal_set.last %}
+                    Evaluado: {{ practica.informefinal_set.last.nota|default:"Pendiente" }}
+                {% else %}
+                    Sin Informe Final
+                {% endif %}
+            </td>
+            <td>
+                {% if practica.informefinal_set.last %}
+                <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" target="_blank">
+                    Descargar Informe Final
+                </a>
+                |
+                <a href="{% url 'evaluar_informe_final' practica.pk %}">
+                    Evaluar
+                </a>
+                {% else %}
+                <span>No disponible</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay informes finales registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'dashboard' %}">Volver al Dashboard</a>
 {% endblock %}
