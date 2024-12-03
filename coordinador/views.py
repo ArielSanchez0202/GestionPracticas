@@ -5,6 +5,7 @@ import string
 from datetime import datetime, timezone
 from smtplib import SMTPException
 from django.forms import ValidationError
+from django.test import RequestFactory
 import pandas as pd
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -337,6 +338,7 @@ def descargar_plantilla_estudiantes(request):
 
 @coordinador_required
 def listar_estudiantes(request):
+    actualizar_estado_practicas()
     # Obtener el estado de la URL o establecerlo en "activo" por defecto
     estado = request.GET.get('estado', 'activo')
 
@@ -352,6 +354,41 @@ def listar_estudiantes(request):
         'estudiantes': estudiantes,
     }
     return render(request, 'coordinador/listar_estudiantes.html', context)
+def actualizar_estado_practicas():
+    """
+    Actualiza el estado de las prácticas vencidas y ejecuta acciones adicionales como enviar formularios.
+    """
+    hoy = date.today()
+    practicas_pendientes = Practica.objects.filter(
+        estado='en_progreso', 
+        fichainscripcion__isnull=False, 
+        fichainscripcion__fecha_termino__lt=hoy
+    )
+
+    for practica in practicas_pendientes:
+        try:
+            # Actualiza el estado de la práctica
+            practica.estado = 'finalizada'
+            practica.save()
+            print(f'Práctica {practica.pk} actualizada a "finalizada"')
+
+            # Buscar la ficha de inscripción asociada a la práctica
+            ficha = FichaInscripcion.objects.get(practica=practica)
+
+            # Crea una solicitud GET ficticia para llamar a enviar_formulario
+            factory = RequestFactory()
+            request = factory.get(f'/enviar-formulario/{ficha.id}/')
+
+            # Llamar a enviar_formulario con el objeto request y la ficha_id
+            enviar_formulario(request, ficha.id)
+
+            # Verifica que se haya creado el token
+            token = FormularioToken.objects.get(ficha_inscripcion=ficha)
+            print(f"Token generado: {token.token}")
+            print(f"¿Enviado?: {token.enviado}")
+
+        except Exception as e:
+            print(f'Error al actualizar práctica {practica.pk}: {e}')
 
 @coordinador_required
 def coordinadores(request):
@@ -847,12 +884,14 @@ def dashboard(request):
     total_solicitudes = FichaInscripcion.objects.count()
     solicitudes_pendientes = FichaInscripcion.objects.filter(estado='Pendiente').count()
     solicitudes_aprobadas = FichaInscripcion.objects.filter(estado='Aprobada').count()
+    solicitudes_rechazadas = FichaInscripcion.objects.filter(estado='Rechazada').count()
     solicitudes_recientes = FichaInscripcion.objects.order_by('-id')[:5]  # Últimas 5 solicitudes
 
     context = {
         'total_solicitudes': total_solicitudes,
         'solicitudes_pendientes': solicitudes_pendientes,
         'solicitudes_aprobadas': solicitudes_aprobadas,
+        'solicitudes_rechazadas': solicitudes_rechazadas,
         'solicitudes_recientes': solicitudes_recientes,
     }
     return render(request, 'coordinador/dashboard.html', context)
@@ -1446,7 +1485,7 @@ def detalle_practica_coordinador(request, practica_id):
             archivo_final = request.FILES.get("archivo_informe_final")
             informe_final, created = InformeFinal.objects.get_or_create(practica=practica)
             if informe_final.archivo_informe_final:
-                informe_final.archivo_informe_final.delete()  # Eliminar archivo anterior
+                informe_final.archivo_informe_final.delete()  # Eliminar archivo anteriorF
             informe_final.archivo_informe_final = archivo_final
             informe_final.intentos_subida_final += 1
             informe_final.save()
