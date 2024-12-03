@@ -54,16 +54,24 @@
                             </td>
                             <td>
                                 {% if practica.informefinal_set.last %}
+                                    <!-- Botón para descargar el informe final -->
+                                    <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" 
+                                       class="btn btn-primary" target="_blank">Descargar Informe</a>
+                                    <a>{{ ficha_data.estado }}</a>
                                     
-                                    <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" class="btn btn-primary" target="_blank">Descargar Informe</a>
-                                    <a>{{ficha_data.estado}}</a>
-                                    {% if ficha_data.estado == 'Entregado' %}
-                                    <a href="#" class="btn btn-secondary">Ver Rúbrica</a>
+                                    <!-- Ver o evaluar rúbrica según el estado -->
+                                    {% if ficha_data.estado == 'Evaluado' %}
+                                        <a href="{% url 'rubrica_informe_final' practica.pk %}" 
+                                           class="btn btn-secondary">Ver Rúbrica</a>
                                     {% else %}
-                                    <a href="{% url 'evaluar_informe_final' practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
+                                        <a href="{% url 'evaluar_informe_final' practica.pk %}" 
+                                           class="btn btn-warning">Evaluar Informe</a>
                                     {% endif %}
+                            
+                                    <!-- Botón para editar nota -->
                                     <button 
-                                        class="btn btn-secondary" style="margin-top: 0px; !important"
+                                        class="btn btn-secondary" 
+                                        style="margin-top: 0px !important;"
                                         onclick="openEditModal(
                                             {{ practica.pk }},
                                             '{{ practica.estudiante.usuario.first_name|escapejs }} {{ practica.estudiante.usuario.last_name|escapejs }}',
@@ -75,6 +83,7 @@
                                     <span class="text-muted">No disponible</span>
                                 {% endif %}
                             </td>
+                            
                         </tr>
                     {% empty %}
                         <tr>

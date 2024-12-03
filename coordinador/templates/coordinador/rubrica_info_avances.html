@@ -87,124 +87,102 @@
     <form>
         {% csrf_token %}
 
-        <!-- Sección I: Contenido del Documento -->
-        <h2>I. Contenido del Documento</h2>
+        <legend>Rúbrica de Evaluación:</legend>
+<div class="rubrica-section">
+    <h3>Sección I: Contenido del Documento</h3>
+    <div class="form-group">
+        <label for="portada">Portada:</label>
+        <input type="text" id="portada" value="{{ rubrica.portada }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="introduccion">Introducción:</label>
+        <input type="text" id="introduccion" value="{{ rubrica.introduccion }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="objetivo_general">Objetivo General:</label>
+        <input type="text" id="objetivo_general" value="{{ rubrica.objetivo_general }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="objetivos_especificos">Objetivos Específicos:</label>
+        <input type="text" id="objetivos_especificos" value="{{ rubrica.objetivos_especificos }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="caracterizacion_empresa">Caracterización de la Empresa:</label>
+        <input type="text" id="caracterizacion_empresa" value="{{ rubrica.caracterizacion_empresa }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="datos_supervisor">Datos del Supervisor:</label>
+        <input type="text" id="datos_supervisor" value="{{ rubrica.datos_supervisor }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="desarrollo_practica">Desarrollo de la Práctica:</label>
+        <input type="text" id="desarrollo_practica" value="{{ rubrica.desarrollo_practica }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="recomendaciones">Recomendaciones:</label>
+        <input type="text" id="recomendaciones" value="{{ rubrica.recomendaciones }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="conclusiones">Conclusiones:</label>
+        <input type="text" id="conclusiones" value="{{ rubrica.conclusiones }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="anexos">Anexos:</label>
+        <input type="text" id="anexos" value="{{ rubrica.anexos }}" readonly>
+    </div>
+</div>
 
-        <!-- Portada e Índice de Contenidos -->
-        <h3>1.- Portada e Índice de Contenidos:</h3>
-        <label><input type="radio" name="pregunta1" value="Desempeño de excelencia" {% if rubrica.pregunta1 == 'Desempeño de excelencia' %}checked{% endif %} required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta1" value="Desempeño efectivo" {% if rubrica.pregunta1 == 'Desempeño efectivo' %}checked{% endif %} required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta1" value="Desempeño que se debe mejorar" {% if rubrica.pregunta1 == 'Desempeño que se debe mejorar' %}checked{% endif %} required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta1" value="Desempeño insatisfactorio" {% if rubrica.pregunta1 == 'Desempeño insatisfactorio' %}checked{% endif %} required> Desempeño insatisfactorio</label>
+<div class="rubrica-section">
+    <h3>Sección II: Formato</h3>
+    <div class="form-group">
+        <label for="formato_establecido">Formato Establecido:</label>
+        <input type="text" id="formato_establecido" value="{{ rubrica.formato_establecido }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="tercera_persona">Tercera Persona:</label>
+        <input type="text" id="tercera_persona" value="{{ rubrica.tercera_persona }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="cita_fuente">Cita de Fuente:</label>
+        <input type="text" id="cita_fuente" value="{{ rubrica.cita_fuente }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="extension">Extensión:</label>
+        <input type="text" id="extension" value="{{ rubrica.extension }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="tabla_grafico">Tablas y Gráficos:</label>
+        <input type="text" id="tabla_grafico" value="{{ rubrica.tabla_grafico }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="ortografia">Ortografía:</label>
+        <input type="text" id="ortografia" value="{{ rubrica.ortografia }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="cohesion_coherencia">Cohesión y Coherencia:</label>
+        <input type="text" id="cohesion_coherencia" value="{{ rubrica.cohesion_coherencia }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="ideas_profundizacion">Ideas y Profundización:</label>
+        <input type="text" id="ideas_profundizacion" value="{{ rubrica.ideas_profundizacion }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="roles_impacto">Roles e Impacto:</label>
+        <input type="text" id="roles_impacto" value="{{ rubrica.roles_impacto }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="riqueza_linguistica">Riqueza Lingüística:</label>
+        <input type="text" id="riqueza_linguistica" value="{{ rubrica.riqueza_linguistica }}" readonly>
+    </div>
+</div>
 
-        <!-- Introducción -->
-        <h3>2.- Introducción:</h3>
-        <label><input type="radio" name="pregunta2" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta2" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta2" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta2" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Objetivos Generales -->
-        <h3>3.- Objetivo General:</h3>
-        <label><input type="radio" name="pregunta3" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta3" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta3" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta3" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Objetivos Específicos -->
-        <h3>4.- Objetivos Específicos:</h3>
-        <label><input type="radio" name="pregunta4" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta4" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta4" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta4" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Caracterización de la Empresa -->
-        <h3>5.- Caracterización de la Empresa:</h3>
-        <label><input type="radio" name="pregunta5" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta5" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta5" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta5" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Datos del Supervisor -->
-        <h3>6.- Datos del Supervisor y Organigrama:</h3>
-        <label><input type="radio" name="pregunta6" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta6" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta6" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta6" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Desarrollo de la Práctica -->
-        <h3>7.- Desarrollo de la Práctica:</h3>
-        <label><input type="radio" name="pregunta7" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta7" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta7" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta7" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Sección II: Formato -->
-        <h2>II. Formato del Documento</h2>
-        <h3>8.- Uso del Formato Establecido:</h3>
-        <label><input type="radio" name="pregunta8" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta8" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta8" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta8" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>9.- Uso de la Tercera Persona:</h3>
-        <label><input type="radio" name="pregunta9" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta9" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta9" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta9" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-        
-        <h3>10.- Citas y Fuentes:</h3>
-        <label><input type="radio" name="pregunta10" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta10" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta10" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta10" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>11.- Extensión:</h3>
-        <label><input type="radio" name="pregunta11" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta11" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta11" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta11" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>12.- Identificación de Tablas y Gráficos:</h3>
-        <label><input type="radio" name="pregunta12" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta12" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta12" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta12" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>13.- Ortografía:</h3>
-        <label><input type="radio" name="pregunta13" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta13" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta13" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta13" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>14.- Cohesión y Coherencia:</h3>
-        <label><input type="radio" name="pregunta14" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta14" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta14" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta14" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>15.- Desarrollo de Ideas/Profundización:</h3>
-        <label><input type="radio" name="pregunta15" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta15" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta15" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta15" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>16.- Identificación de Roles e Impacto:</h3>
-        <label><input type="radio" name="pregunta16" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta16" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta16" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta16" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <h3>17.- Riqueza Lingüística:</h3>
-        <label><input type="radio" name="pregunta17" value="Desempeño de excelencia" required> Desempeño de excelencia</label><br>
-        <label><input type="radio" name="pregunta17" value="Desempeño efectivo" required> Desempeño efectivo</label><br>
-        <label><input type="radio" name="pregunta17" value="Desempeño que se debe mejorar" required> Desempeño que se debe mejorar</label><br>
-        <label><input type="radio" name="pregunta17" value="Desempeño insatisfactorio" required> Desempeño insatisfactorio</label>
-
-        <!-- Sección de Comentarios -->
-        <h2>Comentarios:</h2>
-        <textarea name="comentarios" rows="4" cols="50" placeholder="Escriba sus comentarios aquí..."></textarea>
-
+<div class="rubrica-section">
+    <h3>Comentarios</h3>
+    <div class="form-group">
+        <textarea id="comentarios" readonly>{{ rubrica.comentarios }}</textarea>
+    </div>
+</div>
+    
     </form>
 </div>
 {% endblock %}
