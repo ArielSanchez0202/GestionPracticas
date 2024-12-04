@@ -57,14 +57,14 @@
                             </td>
                             <td>{{ ficha_data.estado }}</td>
                             <td>
-                                <a href="{% url 'descargar_informe' ficha_data.ficha.practica.pk %}" class="btn btn-primary">Descargar Informe</a>
+                                <a href="{% url 'descargar_informe' ficha_data.ficha.practica.pk %}" class="action-button">Descargar Informe</a>
                                 {% if ficha_data.estado == 'Entregado' %}
                                 <a href="{% url 'rubrica_info_avances' ficha_data.ficha.practica.id %}" class="action-button">Ver Rúbrica</a>
                                 {% else %}
-                                    <a href="{% url 'evaluar_informe_avances' ficha_data.ficha.practica.pk %}" class="btn btn-warning">Evaluar Informe</a>
+                                    <a href="{% url 'evaluar_informe_avances' ficha_data.ficha.practica.pk %}" class="action-button">Evaluar Informe</a>
                                 {% endif %}
                                 <button 
-                                class="btn btn-secondary" 
+                                class="action-button" 
                                 onclick="openEditModal(
                                     {{ ficha_data.ficha.practica.pk }},
                                     '{{ ficha_data.ficha.estudiante.usuario.first_name|escapejs }} {{ ficha_data.ficha.estudiante.usuario.last_name|escapejs }}',

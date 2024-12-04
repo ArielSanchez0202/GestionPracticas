@@ -159,8 +159,8 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
     background-color: transparent; /* Sin fondo */
     border: none; /* Sin borde */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    margin-left: 690%;
-    margin-top: 35%;
+    margin-left: auto;
+    margin-top: 0;
 }
 
 .image-button:hover {

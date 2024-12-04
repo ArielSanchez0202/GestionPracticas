@@ -105,6 +105,22 @@ input {
     cursor: pointer;
 }
 
+.action-button{
+    width: auto;
+    padding: 5px;
+    background-color: #c4c4c4; /* Cambia el color de fondo */
+    color: black; /* Cambia el color del texto */
+    border: 1px solid black; /* Borde opcional */
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* Elimina el subrayado */
+}
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 68%; /* Asegura que ocupe todo el ancho disponible */
+}
+
 /* Modal container */
 .modal {
     display: none; /* Oculto por defecto */

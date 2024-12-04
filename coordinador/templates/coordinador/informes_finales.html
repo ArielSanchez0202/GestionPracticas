@@ -56,21 +56,21 @@
                                 {% if practica.informefinal_set.last %}
                                     <!-- Botón para descargar el informe final -->
                                     <a href="{{ practica.informefinal_set.last.archivo_informe_final.url }}" 
-                                       class="btn btn-primary" target="_blank">Descargar Informe</a>
+                                       class="action-button" target="_blank">Descargar Informe</a>
                                     <a>{{ ficha_data.estado }}</a>
                                     
                                     <!-- Ver o evaluar rúbrica según el estado -->
                                     {% if ficha_data.estado == 'Evaluado' %}
                                         <a href="{% url 'rubrica_informe_final' practica.pk %}" 
-                                           class="btn btn-secondary">Ver Rúbrica</a>
+                                           class="action-button">Ver Rúbrica</a>
                                     {% else %}
                                         <a href="{% url 'evaluar_informe_final' practica.pk %}" 
-                                           class="btn btn-warning">Evaluar Informe</a>
+                                           class="action-button">Evaluar Informe</a>
                                     {% endif %}
                             
                                     <!-- Botón para editar nota -->
                                     <button 
-                                        class="btn btn-secondary" 
+                                        class="action-button" 
                                         style="margin-top: 0px !important;"
                                         onclick="openEditModal(
                                             {{ practica.pk }},

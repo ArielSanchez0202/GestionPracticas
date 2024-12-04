@@ -1,84 +1,255 @@
-.contenedor-grid {
-    display: grid;
-    grid-template-columns: 250px 1fr; /* Sidebar a 250px y contenido al resto del ancho */
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-}
-
-.main-content {
-    padding: 20px;
-    background-color: #CBCFD2; /* Fondo del contenido principal */
-    overflow-y: auto; /* Permite hacer scroll si el contenido es largo */
-}
-
-
 .sidebar {
+    position: fixed;
+    height: 100vh; /* Altura completa */
+    background-color: #343A40; /* Color de fondo */
+    overflow-y: auto; /* Habilita la barra de desplazamiento vertical */
+    text-align: center;
     width: 250px;
-    background-color: #2c2c2c;
-    color: #ffffff;
+    transition: transform 0.3s ease;
+}
+.sidebar.show {
+    transform: translateX(0); /* Mostrar el sidebar */
+}
+.sidebar.hide {
+    transform: translateX(-100%); /* Ocultar el sidebar */
+}
+.sidebar img {
+    width: 100%; /* Asegura que la imagen ocupe el 100% del ancho del sidebar */
+    height: auto; /* Mantiene la relación de aspecto */
+    max-height: 100px; /* Establecer altura máxima para la imagen */
+    margin-bottom: 20px; /* Espacio debajo de la imagen */
+}
+
+/* Estilos para la sección de Coordinador */
+.sidebar .coordinador-section {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 20px;
-    font-family: 'Jost', sans-serif;
-}
-
-.logo-container img {
-    width: 100px;
-    margin-bottom: 20px;
-}
-
-.divider {
-    width: 100%;
-    height: 1px;
-    background-color: #555;
-    margin: 10px 0;
-}
-
-.user-role {
-    color: #ffffff;
-    font-weight: bold;
+    margin-top: 20px;
+    padding: 10px 0 1px; /* Ajusta el padding inferior para acercar la línea */
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    color: white; /* Texto blanco */
     text-align: center;
-    margin-bottom: 20px;
 }
 
-.menu {
-    list-style: none;
-    padding: 0;
-    width: 100%;
+.sidebar .coordinador-section img {
+    width: 30px; /* Tamaño reducido del icono */
+    height: 30px;
+    margin-left: 10px;
+    margin-right: -25px;
+    margin-bottom: 5px;
+    vertical-align: middle;
 }
 
-.menu li {
-    margin: 10px 0;
+.sidebar .coordinador-section span {
+    display: inline-block;
+    text-align: center;
+    flex: 5; /* Ocupa todo el espacio restante */
 }
 
-.menu li a {
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block; /* Mostrar el botón en pantallas pequeñas */
+        position: fixed; /* Fijo en la pantalla */
+        z-index: 1060; /* Encima del sidebar */
+        top: 10px;
+        left: 10px;
+        background-color: #343A40;
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+}
+
+.sidebar li a:hover {
+    background-color: #DD211C;
+    color: white;
+}
+
+.sidebar li a {
     text-decoration: none;
-    color: #ffffff;
-    display: block;
-    padding: 10px;
+    color: white;
+    margin-top: 15%;
     border-radius: 5px;
-    text-align: center;
+    display: block; /* Asegura que el enlace ocupe todo el ancho */
+    padding: 10px; /* Espaciado alrededor del texto */
+}
+.sidebar li a:visited {
+    color: white;
 }
 
-.menu li a.active, .menu li a:hover {
-    background-color: #d63031;
-    color: #ffffff;
+/* Mantener el color cuando esté activo */
+.sidebar li a:active {
+    color: white;
 }
 
-.logout {
-    margin-top: auto;
+/* Estilo específico para el botón de cerrar sesión */
+.sidebar li a.btn-danger {
+    border-top: 2px solid black; /* Borde superior */
+    border-bottom: 2px solid black; /* Borde inferior */
+    margin-top: 35%; /* Margen superior */
 }
 
-.logout a {
-    text-decoration: none;
-    color: #ffffff;
-    padding: 10px;
-    display: block;
-    text-align: center;
-    border-radius: 5px;
-    background-color: #555;
+/* Estilos opcionales para el scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* Ancho del scrollbar */
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color del scrollbar */
+    border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Color al pasar el cursor */
 }
 
-.logout a:hover {
-    background-color: #d63031;
+@media (max-width: 1366px) {
+    /* Ajustar la sidebar para pantallas medianas */
+    .sidebar {
+        width: 230px; /* Sidebar más estrecha */
+        height: 100%;
+        overflow-y: hidden; /* Quitar la barra de scroll */
+    }
+
+    .sidebar img {
+        max-height: 70px; /* Reducir tamaño de imágenes */
+    }
+
+    .sidebar .estudiante-section {
+        display: flex; /* Alineación horizontal */
+        align-items: center; /* Alinea el icono y el nombre */
+        margin-top: 20px;
+        padding: 10px 0 1px;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        color: white;
+        text-align: left;
+    }
+
+    .sidebar .estudiante-section img {
+        width: 18px; /* Reducir tamaño del icono */
+        height: 18px;
+        margin-right: 10px; /* Espacio entre el icono y el nombre */
+    }
+
+    .sidebar .estudiante-section span {
+        font-size: 12px; /* Reducir tamaño del texto */
+    }
+
+    .sidebar li a {
+        padding: 6px; /* Reducir el espaciado de los enlaces */
+        font-size: 12px; /* Reducir el tamaño de fuente */
+    }
+
+    /* Ajustar el contenido principal */
+    main {
+        margin-left: 230px; /* Compensar el ancho reducido de la sidebar */
+    }
+
+    /* Ajustar el contenedor de cierre de sesión */
+    .sidebar .logout-section {
+        position: absolute;
+        bottom: 40px; /* Subir más el botón de logout (ajustado) */
+    }    
+
+    .sidebar li a.btn-danger {
+        font-size: 12px; /* Reducir el tamaño de fuente en Logout */
+        padding: 5px 8px; /* Reducir espaciado del botón */
+        border-radius: 4px; /* Bordes más sutiles */
+    }
+
+    .logout-form {
+        position: static;
+        margin-top: 180%; /* Eliminar el margen inferior para asegurar que el logout se suba */
+    }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    /* Ajustar la sidebar para pantallas pequeñas */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0; /* La sidebar estará visible en todo momento */
+        width: 230px; /* Ancho de la sidebar, igual que en 1366px */
+        height: 100%; /* Altura completa */
+        background-color: #343A40; /* Mantener el color de fondo */
+        overflow-y: hidden; /* Quitar la barra de scroll */
+        transition: left 0.3s ease; /* Animación suave */
+        z-index: 1050; /* Encima del contenido */
+    }
+
+    /* Mostrar la sidebar cuando tenga la clase 'show' */
+    .sidebar.show {
+        left: 0;
+    }
+
+    /* Botón de alternancia */
+    .sidebar-toggle {
+        display: block;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: #343A40;
+        color: white;
+        border: none;
+        font-size: 24px;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 1060; /* Encima de la sidebar */
+        border-radius: 5px;
+    }
+
+    /* Ajustar el contenido principal cuando la sidebar está visible */
+    main {
+        margin-left: 0; /* Sin margen para la sidebar */
+        padding-top: 60px; /* Espaciado adicional para el botón */
+    }
+
+    /* Estilo de la sección del estudiante */
+    .sidebar .estudiante-section {
+        display: flex;
+        align-items: center; /* Alineación horizontal */
+        margin-top: 20px;
+        padding: 10px 0 1px;
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+        color: white;
+        text-align: left;
+    }
+
+    /* Ajustes del icono del estudiante */
+    .sidebar .estudiante-section img {
+        width: 18px; /* Reducir tamaño del icono */
+        height: 18px;
+        margin-right: 10px; /* Espacio entre el icono y el nombre */
+    }
+
+    .sidebar .estudiante-section span {
+        font-size: 12px; /* Reducir tamaño del texto */
+    }
+
+    /* Estilo de los enlaces */
+    .sidebar li a {
+        padding: 6px; /* Reducir el espaciado de los enlaces */
+        font-size: 12px; /* Reducir el tamaño de fuente */
+    }
+
+    /* Estilo de la sección de Logout */
+    .sidebar .logout-section {
+        position: absolute;
+        bottom: 40px; /* Subir más el botón de logout */
+    }
+
+    .sidebar li a.btn-danger {
+        font-size: 12px; /* Reducir el tamaño de fuente en Logout */
+        padding: 5px 8px; /* Reducir espaciado del botón */
+        border-radius: 4px; /* Bordes más sutiles */
+    }
+
+    /* Eliminar márgenes innecesarios */
+    .logout-form {
+        position: static;
+        margin-top: 180%; /* Eliminar el margen inferior para asegurar que el logout se suba */
+    }
 }
