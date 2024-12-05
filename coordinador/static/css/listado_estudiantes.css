@@ -230,6 +230,13 @@ h1 {
     }
 }
 
+@media (max-width: 1366px){
+    .search-container input {
+        width: 100%;
+        max-width: 950px; 
+    }
+}
+
 /* Para pantallas medianas, como tablets (hasta 768px de ancho) */
 @media (max-width: 768px) {
     .form-header h1 {

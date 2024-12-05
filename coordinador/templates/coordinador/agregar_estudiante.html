@@ -5,11 +5,13 @@
     <link rel="stylesheet" href="{% static 'css/messages.css' %}">
     <script src="{% static 'js/validaciones.js' %}"></script>
 
+    <a href="javascript:history.back()" class="back-arrow">
+        <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
+    </a>
+
     <div class="container">
         <div class="main-content">
-            <a href="javascript:history.back()" class="back-arrow">
-                <img src="{% static 'icons/arrow_back.svg' %}" alt="Volver" style="width: 30px; height: 30px;">
-            </a>
+            
         <div class="form-header">
             <h1>AGREGAR ALUMNO</h1>
             <button class="btn-carga-masiva" onclick="window.location.href='{% url 'carga_masiva_estudiantes' %}'">Carga Masiva</button>
@@ -66,8 +68,8 @@
             </div>
             <button type="submit" class="btn-agregar">Agregar Estudiante</button>
         </form>
-    </div>
-
+        </div>
+    </div>    
     {% if messages %}
     <div id="myModal" class="modalms">
         <div class="modal-contentms">

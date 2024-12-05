@@ -19,7 +19,6 @@ body {
     border-color: red;
 }
 
-
 .form-header {
     display: flex;
     justify-content: space-between;
@@ -39,25 +38,6 @@ body {
     align-items: center;
     margin-bottom: 10px;
     padding: 20px;
-}
-
-.custom-warning-btn {
-    background-color: #c4c4c4; /* Cambia el color de fondo */
-    color: black; /* Cambia el color del texto */
-    border: 1px solid white; /* Borde opcional */
-}
-
-.custom-info-btn {
-    background-color: #c4c4c4; /* Cambia el color de fondo */
-    color: black; /* Cambia el color del texto */
-    border: 1px solid white; /* Borde opcional */
-}
-
-/* Opcional: hover para mejorar la interacción */
-.custom-warning-btn:hover,
-.custom-info-btn:hover {
-    background-color: #c4c4c4;
-    border: 1px solid black;
 }
 
 /* Formulario en dos columnas */
@@ -164,6 +144,57 @@ input {
 }
 
 /* Media Queries para Responsiveness */
+
+/* Pantallas entre 1024px y 1366px */
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .container {
+        max-width: 1000px; /* Reduce ligeramente el ancho máximo */
+    }
+
+    .form-header h1 {
+        font-size: 2.3rem; /* Ajusta el tamaño del título */
+    }
+
+    .table td, .table th {
+        padding: 8px; /* Reduce el espacio interno */
+        font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+    }
+
+    .table {
+        font-size: 0.9rem; /* Reducción global de fuente para la tabla */
+    }
+
+    .action-buttons-container {
+        width: 80%; /* Aumenta el ancho para mayor uso del espacio */
+        justify-content: space-evenly; /* Distribuye botones de forma equitativa */
+        display: flex;
+        gap: 10px; /* Ajusta el espacio entre los botones */
+    }
+
+    .action-button {
+        padding: 4px 15px; /* Ajusta el padding */
+        font-size: 12px; /* Reduce el tamaño del texto ligeramente */
+        white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+        text-align: center; /* Alinea el texto dentro del botón */
+    }
+
+    .form-group, .form-group1 {
+        margin-bottom: 15px; /* Reduce el espacio entre los grupos */
+    }
+
+    .input-column {
+        width: 48%; /* Ajusta el ancho relativo de los inputs */
+    }
+
+    input {
+        font-size: 0.95rem; /* Reduce el tamaño de fuente */
+        padding: 10px; /* Ajusta el padding para inputs */
+    }
+
+    label {
+        font-size: 1.1rem; /* Ajusta el tamaño de los labels */
+    }
+}
 
 /* Tablets y pantallas medianas */
 @media (max-width: 768px) {

@@ -10,14 +10,17 @@ body {
 }
 
 .container {
-    width: 100%; /* Resta el ancho de la sidebar */
-    margin: 20px auto;
-    margin-left: 0%; /* Deja espacio para la sidebar */
-    margin-right: 0%; /* Deja espacio al borde derecho */
-    padding: 20px;
+    max-width: 100vw; /* Asegura que no exceda el ancho de la ventana */
+    margin: 0 auto; /* Centra el contenido */
+    padding: 0 10px; /* Agrega un pequeño espacio interno */
+    overflow-x: hidden; /* Evita el desbordamiento horizontal */
 }
 
-.inscripcion-container * {
+.inscripcion-container {
+    width: 100%;
+    max-width: 1400px; /* Ajusta según el diseño deseado */
+    margin: 0 auto;
+    padding: 20px;
     box-sizing: border-box;
 }
 
@@ -159,8 +162,8 @@ input[type="text"], input[type="email"], input[type="number"], input[type="date"
     background-color: transparent; /* Sin fondo */
     border: none; /* Sin borde */
     cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    margin-left: auto;
-    margin-top: 0;
+    margin-left: 690%;
+    margin-top: 35%;
 }
 
 .image-button:hover {
@@ -216,6 +219,21 @@ table input[type="text"]:focus {
     border: none;  /* Elimina el borde que aparece al hacer clic */
 }
 
+@media (max-width: 1366px) {
+    .container {
+        margin-left: 0; /* Centra el contenido en pantallas pequeñas */
+        width: 100%;
+    }
+
+    .inscripcion-container {
+        width: 100%;
+        max-width: 1000px; /* Ajusta según el diseño deseado */
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+}
+
 @media (min-width: 768px) {
     .form-group {
         flex: 1 1 calc(50% - 20px); /* Ajusta a dos columnas en pantallas grandes */
@@ -226,5 +244,16 @@ table input[type="text"]:focus {
     .container {
         margin-left: 0; /* Centra el contenido en pantallas pequeñas */
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .form-group {
+        flex: 1 1 100%; /* Asegura que se ajusten en una sola columna */
     }
 }
