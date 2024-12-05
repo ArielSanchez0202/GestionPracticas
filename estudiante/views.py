@@ -201,6 +201,7 @@ def inscripcion_practica_view(request):
         'fecha_inicio_limite': fecha_inicio_limite,
         'fecha_termino_limite': fecha_termino_limite,
         'practica1_aprobada': practica1_aprobada,
+        'practica2_aprobada': practica2_aprobada,
     }
 
     return render(request, 'inscripcion_practica.html', context)
