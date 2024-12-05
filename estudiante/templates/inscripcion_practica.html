@@ -65,10 +65,10 @@
         
             <div class="radio-group">
                 <p>Seleccione el tipo de práctica:</p>
-                <input type="radio" id="practica1" name="tipo_practica" value="1" {% if tipo_practica == '1' %}checked{% endif %} required>
+                <input type="radio" id="practica1" name="tipo_practica" value="1" {% if not practica_1_aprobada %}checked{% endif %} required>
                 <label for="practica1">Práctica I</label>
                 
-                <input type="radio" id="practica2" name="tipo_practica" value="2" {% if tipo_practica == '2' %}checked{% endif %} required>
+                <input type="radio" id="practica2" name="tipo_practica" value="2" {% if practica_1_aprobada %}checked{% endif %} required>
                 <label for="practica2">Práctica II</label>
             </div>
         
