@@ -20,7 +20,6 @@ body {
     border-color: red;
 }
 
-
 /* Estilos del título y la sección de carga masiva */
 .form-header {
     display: flex;
@@ -49,6 +48,9 @@ body {
     border-radius: 10px;
     cursor: pointer;
     font-size: 1.1rem;
+}
+.btn-carga-masiva:hover {
+    background-color: #C0392B;
 }
 /* Formulario en dos columnas */
 .form-group {
@@ -98,11 +100,39 @@ select {
     color: white;
     border: none;
     border-radius: 10px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
+}
+.btn-agregar:hover {
+    background-color: #C0392B;
 }
 
 /* Media Queries para Responsiveness */
+
+/* Estilos específicos para pantallas de hasta 1366px */
+@media (max-width: 1366px) {
+    /* Encabezado */
+    .form-header h1 {
+        font-size: 2rem; /* Reducir más el tamaño del título */
+    }
+
+    /* Formulario */
+    label {
+        font-size: 0.9rem; /* Reducir tamaño del texto del label */
+    }
+    input, select {
+        font-size: 0.85rem; /* Reducir tamaño del texto */
+        padding: 8px; /* Compactar padding interno */
+    }
+
+    /* Márgenes y espacios */
+    .form-group {
+        margin-bottom: 12px; /* Reducir separación entre grupos */
+    }
+    .form-header {
+        margin-bottom: 10px; /* Reducir espacio inferior */
+    }
+}  
 
 /* Tablets y pantallas medianas */
 @media (max-width: 768px) {

@@ -1,3 +1,4 @@
+/* Estilos específicos para la página de agregar estudiante */
 body {
     font-family: 'Helvetica', sans-serif;
     background-color: #D4D5DB;
@@ -19,6 +20,8 @@ body {
     border-color: red;
 }
 
+
+/* Estilos del título y la sección de carga masiva */
 .form-header {
     display: flex;
     justify-content: space-between;
@@ -38,6 +41,22 @@ body {
     align-items: center;
     margin-bottom: 10px;
     padding: 20px;
+}
+
+.action-button{
+    width: auto;
+    text-decoration: none;
+    padding: 5px;
+    background-color: #c4c4c4; /* Cambia el color de fondo */
+    color: black; /* Cambia el color del texto */
+    border: 1px solid black; /* Borde opcional */
+    border-radius: 5px;
+    cursor: pointer;
+}
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 68%; /* Asegura que ocupe todo el ancho disponible */
 }
 
 /* Formulario en dos columnas */
@@ -71,77 +90,6 @@ input {
     font-size: 1rem;
     width: 100%;
 }
-.btn-agregar {
-    display: block;
-    width: 20%;
-    padding: 10px;
-    margin: 20px auto;
-    margin-top: 70px;
-    background-color: #DD211C;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.action-button{
-    width: auto;
-    padding: 5px;
-    background-color: #c4c4c4; /* Cambia el color de fondo */
-    color: black; /* Cambia el color del texto */
-    border: 1px solid black; /* Borde opcional */
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none; /* Elimina el subrayado */
-}
-.action-buttons-container {
-    display: flex;
-    justify-content: space-between;
-    width: 68%; /* Asegura que ocupe todo el ancho disponible */
-}
-
-/* Modal container */
-.modal {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Fondo semitransparente */
-}
-
-/* Modal content */
-.modal-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 30%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-}
-
-/* Close button */
-.close {
-    color: #aaa;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute;  /* Posiciona el botón de forma absoluta */
-    top: 0;           /* Distancia desde la parte superior */
-    right: 10px;         /* Distancia desde la parte derecha */
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 /* Media Queries para Responsiveness */
 
@@ -150,7 +98,7 @@ input {
     .container {
         max-width: 1000px; /* Reduce ligeramente el ancho máximo */
     }
-
+    
     .form-header h1 {
         font-size: 2.3rem; /* Ajusta el tamaño del título */
     }
@@ -168,7 +116,8 @@ input {
         width: 80%; /* Aumenta el ancho para mayor uso del espacio */
         justify-content: space-evenly; /* Distribuye botones de forma equitativa */
         display: flex;
-        gap: 10px; /* Ajusta el espacio entre los botones */
+        gap: 20px; /* Ajusta el espacio entre los botones */
+        
     }
 
     .action-button {
