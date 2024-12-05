@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: 'Jost', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     background-color: #CBCFD2;
     justify-content: center;
 }
@@ -48,6 +48,65 @@ h1 {
     background-color: #C0392B;
 }
 
+.button-group {
+    display: flex;
+    gap: 10px; /* Espaciado entre botones */
+    align-items: center; /* Alineación vertical */
+    margin-bottom: 10px;
+}
+
+.action-button {
+    width: auto;
+    padding: 5px 15px; 
+    background-color: #C0392B; /* Mantiene el color de fondo */
+    color: white; /* Mantiene el color del texto */
+    font-weight: bold; /* Texto en negrita */
+    border-radius: 8px; /* Bordes redondeados */
+    border: 1px solid #922B21; /* Borde oscuro para resaltar el botón */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Transiciones suaves para efectos de hover */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra inicial */
+}
+
+.action-button:hover {
+    background-color: #922B21; /* Fondo más oscuro al pasar el mouse */
+    color: #F8F9F9; /* Texto ligeramente más claro */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+}
+
+.action-button:active {
+    background-color: #641E16; /* Fondo más oscuro al hacer clic */
+    transform: translateY(0px); /* Elimina la elevación */
+    box-shadow: none; /* Sin sombra al presionar */
+}
+
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Espaciado entre botones */
+}
+
+.btn.btn-secondary {
+    border-color: #555555;    /* Color del borde */
+    color: #FFFFFF;           /* Texto blanco */
+    font-weight: bold;        /* Texto en negrita */
+    padding: 5px 15px;       /* Más espacio alrededor del texto */
+    border-radius: 8px;       /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave al interactuar */
+}
+
+.btn.btn-secondary:hover {
+    background-color: #555555; /* Fondo más claro al pasar el mouse */
+    color: #F0F0F0;            /* Texto ligeramente más claro */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+}
+
+.btn.btn-secondary:active {
+    background-color: #222222; /* Fondo más oscuro al presionar */
+    transform: translateY(0px); /* Elimina la elevación */
+    box-shadow: none;          /* Sin sombra */
+}
+
 /* Barra de búsqueda */
 .search-container {
     margin-bottom: 20px;
@@ -78,9 +137,9 @@ h1 {
     padding: 20px;
 }
 .form-header h1 {
-    color: black;
+    /*color: black;
+    font-weight: bold;*/
     font-size: 2.5rem;
-    font-weight: bold;
 }
 
 .form-control{

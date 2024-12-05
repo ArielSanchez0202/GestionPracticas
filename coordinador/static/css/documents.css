@@ -1,5 +1,4 @@
-/* Asegura que la fuente Jost con peso 500 esté disponible */
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
+/* Elimina el @import de Google Fonts */
 
 /* Estilo para la sección de configuración de fechas */
 hr.my-5 {
@@ -7,13 +6,13 @@ hr.my-5 {
 }
 
 h2 {
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
     font-weight: 500; /* Peso Medium */
     color: #000000; /* Cambia el color del texto a negro */
 }
 
 p {
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
     font-weight: 500; /* Peso Medium */
     color: #000000; /* Cambia el color del texto a negro */
 }
@@ -26,7 +25,7 @@ strong {
 .documento-container {
     padding: 20px;
     color: #FFFFFF; /* Texto en blanco */
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 /* Tarjetas de documento */
@@ -37,7 +36,7 @@ strong {
     padding: 20px;
     margin-bottom: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 /* Títulos de las tarjetas */
@@ -48,7 +47,7 @@ strong {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 15px;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 .documento-card h3 i {
@@ -66,7 +65,7 @@ strong {
     color: #BBBBBB;
     text-align: center;
     margin-bottom: 15px;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 /* Botones */
@@ -83,7 +82,7 @@ strong {
     border: 1px solid #5A5A5A;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-right: 10px;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 .boton:hover {
@@ -109,7 +108,7 @@ input[type="file"] {
     border: 1px solid #5A5A5A;
     color: #FFFFFF;
     background-color: #2A2A2A;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 input[type="file"]:hover {
@@ -123,7 +122,7 @@ h1 {
     text-align: left;
     color: #333;
     margin-bottom: 20px;
-    font-family: 'Jost', sans-serif; /* Aplica la fuente Jost */
+    font-family: 'Helvetica', Arial, sans-serif; /* Aplica la fuente Helvetica */
 }
 
 /* Estilos de responsividad */

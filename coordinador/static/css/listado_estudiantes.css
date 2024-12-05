@@ -8,7 +8,7 @@
 }
 
 body {
-    font-family: 'Jost', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     background-color: #CBCFD2;
     justify-content: center;
 }
@@ -78,9 +78,9 @@ h1 {
     padding: 20px;
 }
 .form-header h1 {
-    color: black;
+    /*color: black;
+    font-weight: bold;*/
     font-size: 2.5rem;
-    font-weight: bold;
 }
 
 /* Tarjetas de estudiantes */
