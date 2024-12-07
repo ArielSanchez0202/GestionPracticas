@@ -1386,10 +1386,13 @@ def completar_formulario(request, token):
             # Crear la instancia pero no guardarla aún en la base de datos
             informe_confidencial = form.save(commit=False)
 
+            # Asignar la práctica asociada a la ficha de inscripción
+            informe_confidencial.practica = ficha.practica
+
             # Calcular la nota antes de guardar el informe
             informe_confidencial.calcular_nota()
 
-            # Guardar el informe con la nota calculada
+            # Guardar el informe con la nota calculada y la práctica asignada
             informe_confidencial.save()
 
             # Marcar el formulario como exitosamente completado
@@ -1411,7 +1414,6 @@ def completar_formulario(request, token):
             'form_success': form_success,  # Indica si se debe mostrar el modal
         }
     )
-
 
 def listado_informes_confidenciales(request):
     # Obtener todos los informes confidenciales
